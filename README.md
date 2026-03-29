@@ -9,7 +9,7 @@ Sigue estos pasos para clonar el repositorio y configurar la rama principal en t
 Ejecuta el siguiente comando en tu terminal para obtener una copia local del proyecto:
 
 ```bash
-git clone [https://github.com/EduardoC06/IntegradorII.git](https://github.com/EduardoC06/IntegradorII.git)
+git clone [Hoteleria-app](https://github.com/EduardoC06/IntegradorII.git)
 2. Ingresar a la carpeta del proyecto
 Muévete al directorio que se acaba de crear:
 
@@ -28,3 +28,4 @@ git branch -v
 Salida esperada:
 Deberías ver algo similar a esto:
 * main 123abc7 Mensaje del último commit
+```
