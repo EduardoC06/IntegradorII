@@ -3,8 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EL Cielo Hotel</title>
-    <link rel="icon" href="" type="image/webp">
+    <title>The Fluid Architect | Reserva de Hotel de Lujo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
@@ -31,7 +30,6 @@
             
             --editorial-shadow: 0 8px 32px -4px rgba(25, 28, 30, 0.06);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
 
         /* ==================== RESET ==================== */
@@ -47,43 +45,60 @@
             vertical-align: middle;
         }
 
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 6%; 
-        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 6%; }
 
-        /* ==================== ANIMATED NAVBAR ==================== */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 90px;
-            z-index: 50;
-            background-color: transparent;
-            border-radius: 0;
-            border: 1px solid transparent;
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-            backdrop-filter: blur(0px);
+        /* ==================== ANIMATED NAVBAR COREOGRAFÍA PERFECTA ==================== */
+        .navbar { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 90px; 
+            z-index: 50; 
+            background-color: transparent; 
+            border-radius: 0; 
+            border: 1px solid transparent; 
+            backdrop-filter: blur(0px); 
             -webkit-backdrop-filter: blur(0px);
+            
+            transition: 
+                top 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                width 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s,
+                left 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s,
+                background-color 0.4s ease,
+                backdrop-filter 0.4s ease,
+                box-shadow 0.4s ease;
         }
 
-        .navbar.scrolled {
-            top: 24px;
-            left: 24px;
-            width: 80px;
-            height: calc(100vh - 48px);
-            border-radius: 40px;
-            background-color: rgba(0, 0, 0, 0.4); 
-            backdrop-filter: blur(20px) saturate(120%);
-            -webkit-backdrop-filter: blur(20px) saturate(120%);
+        .navbar.scrolled { 
+            top: 24px; 
+            left: 24px; 
+            width: 80px; 
+            height: calc(100vh - 48px); 
+            border-radius: 40px; 
+            background-image: url(https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/POINTSAQP.webp);
+            background-position: center;
+            background-size: cover;
+            backdrop-filter: blur(20px) saturate(120%); 
+            -webkit-backdrop-filter: blur(20px) saturate(120%); 
             border: 1px solid rgba(255, 255, 255, 0.15); 
             box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3); 
+            
+            transition: 
+                width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                left 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                top 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s,
+                height 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s,
+                border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s,
+                background-color 0.4s ease,
+                backdrop-filter 0.4s ease,
+                box-shadow 0.4s ease;
         }
 
-        .nav-horizontal { position: absolute; top: 0; left: 0; width: 100vw; height: 90px; display: flex; justify-content: space-between; align-items: center; padding: 0 4%; opacity: 1; pointer-events: auto; transform: translateY(0); transition: opacity 0.5s ease 0.3s, transform 0.5s ease 0.3s; }
-        .navbar.scrolled .nav-horizontal { opacity: 0; transform: translateY(-10px); pointer-events: none; transition: opacity 0.3s ease, transform 0.3s ease; }
+        .nav-horizontal { position: absolute; top: 0; left: 0; width: 100vw; height: 90px; display: flex; justify-content: space-between; align-items: center; padding: 0 4%; opacity: 1; pointer-events: auto; transform: translateY(0); transition: opacity 0.3s ease 0.4s, transform 0.3s ease 0.4s; }
+        .navbar.scrolled .nav-horizontal { opacity: 0; transform: translateY(-10px); pointer-events: none; transition: opacity 0.2s ease, transform 0.2s ease; }
 
         .nav-brand { font-size: 1.25rem; font-weight: 700; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.4); }
         .nav-links { display: none; gap: 2rem; align-items: center; }
@@ -95,18 +110,63 @@
         .btn-book:hover { transform: scale(1.02); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3); }
 
         .nav-vertical { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; padding: 2.5rem 0; gap: 2.5rem; opacity: 0; pointer-events: none; transform: scale(0.9); transition: opacity 0.2s ease, transform 0.2s ease; }
-        .navbar.scrolled .nav-vertical { opacity: 1; pointer-events: auto; transform: scale(1); transition: opacity 0.6s ease 0.5s, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.5s; }
-        .vert-brand { width: 48px; height: 48px; background: rgba(255, 255, 255, 0.1); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; margin-bottom: 0.5rem; }
-        .vert-links { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; flex: 1; width: 100%; }
-        .vert-links a { color: rgba(255, 255, 255, 0.75); display: flex; flex-direction: column; align-items: center; gap: 0.25rem; transition: all 0.3s ease; position: relative; }
-        .vert-links a:hover, .vert-links a.active { color: #ffffff; transform: translateY(-2px); text-shadow: 0 0 12px rgba(255, 255, 255, 0.6); }
+        .navbar.scrolled .nav-vertical { opacity: 1; pointer-events: auto; transform: scale(1); transition: opacity 0.4s ease 0.6s, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s; }
+        
+        .vert-brand { width: 48px; height: 48px; background: rgba(255, 255, 255, 0.1); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; margin-bottom: 0.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .vert-links { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; flex: 1; width: 100%; }
+        
+        .vert-links a { 
+            color: rgba(255, 255, 255, 0.9); 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            transition: all 0.3s ease; 
+            position: relative; 
+            background: rgba(0, 0, 0, 0.4); 
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            width: 48px;
+            height: 48px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .vert-links a:hover, .vert-links a.active { background: var(--primary); border-color: rgba(255, 255, 255, 0.3); color: #ffffff; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4); }
+        
         .vert-icon { font-size: 1.5rem; }
-        .vert-divider { width: 32px; height: 1px; background-color: rgba(255, 255, 255, 0.2); margin: 0.5rem 0; border-radius: 2px; }
+        .vert-divider { width: 32px; height: 1px; background-color: rgba(255, 255, 255, 0.3); margin: 0.25rem 0; border-radius: 2px; }
         .vert-actions { margin-top: auto; }
+        
         .btn-book-vert { background: rgba(255, 255, 255, 0.95); color: var(--primary); width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         .btn-book-vert:hover { transform: scale(1.1); background: #ffffff; }
 
-        /* ==================== HERO SECTION ==================== */
+        /* ==================== SIDEBAR EXPANSION (PC & TABLET) ==================== */
+        @media (min-width: 768px) {
+            .navbar.scrolled { overflow: hidden; }
+            .navbar.scrolled:hover { width: 240px; border-radius: 24px; transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.4s; }
+            
+            .nav-vertical { align-items: flex-start; padding-left: 0; }
+            .vert-brand { margin-left: 16px; transition: all 0.4s ease; }
+            
+            .vert-links { align-items: flex-start; padding-left: 16px; }
+            .vert-links a { flex-direction: row; padding-left: 11px; justify-content: flex-start; gap: 1.25rem; border-radius: 24px; overflow: hidden; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+            .navbar.scrolled:hover .vert-links a { width: 208px; }
+            
+            .vert-text { opacity: 0; white-space: nowrap; transition: all 0.3s ease; transform: translateX(-10px); font-size: 0.95rem; font-weight: 600; pointer-events: none; }
+            .navbar.scrolled:hover .vert-text { opacity: 1; transform: translateX(0); pointer-events: auto; transition-delay: 0.1s; } 
+            
+            .vert-divider { margin-left: 24px; transition: width 0.4s ease; }
+            .navbar.scrolled:hover .vert-divider { width: 192px; }
+            
+            .vert-actions { padding-left: 16px; width: 100%; }
+            .btn-book-vert { justify-content: flex-start; padding-left: 12px; width: 48px; border-radius: 24px; overflow: hidden; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); gap: 1.25rem; }
+            .navbar.scrolled:hover .btn-book-vert { width: 208px; }
+            .btn-book-vert .vert-text { color: var(--primary); }
+            .btn-book-vert:hover .vert-text { color: #ffffff; }
+        }
+
+        /* ==================== HERO ==================== */
         .hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 0 1.5rem; overflow: hidden; }
         .hero-bg { position: absolute; inset: 0; z-index: 0; }
         .hero-bg img { width: 100%; height: 100%; object-fit: cover; }
@@ -116,64 +176,42 @@
         .text-accent { color: var(--secondary-fixed); }
         .hero-subtitle { font-size: 1.25rem; color: rgba(255, 255, 255, 0.95); font-weight: 500; max-width: 42rem; margin: 0 auto; text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); }
 
-        /* ==================== SEARCH BAR (MEJORADO CON MÁS ESPACIO) ==================== */
-        .search-bar { 
-            background-color: rgba(255, 255, 255, 0.95); 
-            backdrop-filter: blur(16px); 
-            padding: 1.25rem; /* Aumentado */
-            border-radius: 1.5rem; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: 1rem; /* Aumentado */
-            max-width: 60rem; /* Aumentado para que respire más en PC */
-            margin: 0 auto; 
-        }
-        .search-inputs { 
-            display: grid; 
-            grid-template-columns: 1fr; 
-            gap: 1rem; /* Aumentado */
-            width: 100%; 
-            padding: 0; 
-            flex: 1; 
-        }
-        .search-field { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: flex-start; 
-            padding: 0.75rem 1rem; /* Aumentado: Más espacio interno a cada campo */
-        }
-        .search-label { 
-            font-size: 0.65rem; 
-            text-transform: uppercase; 
-            letter-spacing: 0.1em; 
-            color: var(--on-surface-variant); 
-            font-weight: 700; 
-            margin-bottom: 0.5rem; /* Aumentado: Separación clara del label al input */
-        }
-        .search-input { 
-            background: transparent; 
-            border: none; 
-            color: var(--on-surface); 
-            font-weight: 600; 
-            width: 100%; 
-            font-size: 1.1rem; /* Ligeramente más grande para mayor elegancia */
-            padding: 0.25rem 0; /* Aumentado: Espacio vertical del input */
-        }
-        .search-input::placeholder { color: #727783; }
-        .btn-search { 
-            background-color: var(--primary); 
-            color: white; 
-            height: 3.5rem; 
-            width: 100%; 
-            border-radius: 9999px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
-        }
+        /* ==================== SEARCH BAR ==================== */
+        .search-bar { background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); padding: 1.25rem; border-radius: 1.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.2); display: flex; flex-direction: column; align-items: center; gap: 1rem; max-width: 60rem; margin: 0 auto; }
+        .search-inputs { display: grid; grid-template-columns: 1fr; gap: 1rem; width: 100%; padding: 0; flex: 1; }
+        
+        .search-field { display: flex; flex-direction: column; align-items: flex-start; padding: 0.75rem 1rem; position: relative; cursor: pointer; border-radius: 1rem; transition: background 0.3s ease; }
+        .search-field:hover { background-color: rgba(0,0,0,0.02); }
+        
+        .search-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--on-surface-variant); font-weight: 700; margin-bottom: 0.5rem; }
+        .search-value { color: #727783; font-weight: 600; font-size: 1.1rem; padding: 0.25rem 0; width: 100%; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .search-value.selected { color: var(--on-surface); }
+
+        .btn-search { background-color: var(--primary); color: white; height: 3.5rem; width: 100%; border-radius: 999px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; font-weight: 700; font-size: 1.1rem; }
         .btn-search:hover { transform: scale(1.05); box-shadow: 0 8px 16px rgba(0,71,141,0.3); }
+
+        /* --- POPOVERS --- */
+        .search-popover { position: absolute; top: calc(100% + 15px); left: 0; width: max-content; min-width: 100%; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(0,0,0,0.05); border-radius: 1.25rem; box-shadow: 0 15px 35px rgba(0,0,0,0.15); padding: 1.25rem; opacity: 0; pointer-events: none; transform: translateY(-10px); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 100; }
+        .search-popover.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .search-popover::before { content: ''; position: absolute; top: -6px; left: 2rem; width: 12px; height: 12px; background: rgba(255, 255, 255, 0.98); transform: rotate(45deg); border-left: 1px solid rgba(0,0,0,0.05); border-top: 1px solid rgba(0,0,0,0.05); }
+
+        .popover-option { padding: 0.875rem 1.25rem; border-radius: 0.75rem; transition: background 0.2s; font-weight: 600; color: var(--on-surface); display: flex; align-items: center; gap: 0.75rem; }
+        .popover-option:hover { background: var(--surface-container-low); color: var(--primary); }
+        .popover-option .material-symbols-outlined { color: var(--outline-variant); font-size: 1.25rem; }
+        .popover-option:hover .material-symbols-outlined { color: var(--primary); }
+
+        .date-inputs { display: flex; gap: 1rem; }
+        .date-inputs div { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+        .date-inputs label { font-size: 0.75rem; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; }
+        .date-inputs input[type="date"] { border: 1px solid var(--outline-variant); border-radius: 0.5rem; padding: 0.75rem; font-family: inherit; font-weight: 600; color: var(--on-surface); outline: none; transition: border-color 0.3s ease; cursor: pointer; }
+        .date-inputs input[type="date"]:focus { border-color: var(--primary); }
+
+        .guest-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; font-weight: 600; color: var(--on-surface); gap: 2rem; }
+        .guest-row:last-child { margin-bottom: 0; }
+        .guest-controls { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
+        .btn-guest { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--outline-variant); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; transition: all 0.2s; color: var(--on-surface-variant); }
+        .btn-guest:hover { border-color: var(--primary); color: var(--primary); background: var(--surface-container-low); }
+        .guest-count { min-width: 20px; text-align: center; }
 
         /* ==================== ROOMS SECTION ==================== */
         .rooms-section { position: relative; padding: 6rem 0; background-image: url('https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/fondosillar.webp'); background-size: cover; background-position: center; background-attachment: fixed; }
@@ -248,8 +286,6 @@
         .footer-bottom { border-top: 1px solid rgba(226, 232, 240, 0.5); padding-top: 2rem; text-align: center; color: #94a3b8; font-size: 0.75rem; }
 
         /* ==================== RESPONSIVIDAD ==================== */
-        
-        /* --- MÓVIL (Hasta 767px) --- */
         @media (max-width: 767px) {
             .container { padding: 0 1.5rem; }
             .hero-title { font-size: 2.5rem; }
@@ -262,12 +298,31 @@
             .btn-signin { display: none; }
             .btn-book { padding: 0.5rem 1rem; font-size: 0.875rem; }
             
-            .navbar.scrolled { top: auto !important; bottom: 1.5rem !important; left: 5% !important; width: 90% !important; height: 70px !important; border-radius: 35px !important; }
+            /* Navbar inferior móvil con imagen dedicada */
+            .navbar.scrolled { 
+                top: auto !important; 
+                bottom: 1.5rem !important; 
+                left: 5% !important; 
+                width: 90% !important; 
+                height: 70px !important; 
+                border-radius: 35px !important; 
+                background-image: url('https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1000&auto=format&fit=crop') !important; 
+            }
+            
             .navbar.scrolled .nav-vertical { flex-direction: row !important; padding: 0 1.5rem !important; gap: 1rem !important; justify-content: space-between; transform: scale(1); }
             .vert-brand, .vert-divider { display: none !important; }
-            .vert-links { flex-direction: row !important; gap: 1.5rem !important; width: auto !important; flex: unset !important; align-items: center; }
-            .vert-actions { margin-top: 0 !important; display: flex; align-items: center; }
-            .btn-book-vert { width: 44px !important; height: 44px !important; }
+            .vert-links { flex-direction: row !important; gap: 1rem !important; width: auto !important; flex: unset !important; align-items: center; padding-left: 0; }
+            .vert-links a { flex-direction: row !important; width: 44px !important; height: 44px !important; border-radius: 12px !important; padding: 0 !important; }
+            .vert-actions { margin-top: 0 !important; display: flex; align-items: center; padding-left: 0; width: auto; }
+            .btn-book-vert { width: 44px !important; height: 44px !important; padding: 0 !important; justify-content: center !important; }
+            .vert-text { display: none !important; }
+
+            .search-popover { position: absolute; top: calc(100% + 10px); left: 0; width: 100%; min-width: 100%; border-radius: 1rem; padding: 1.25rem; box-shadow: 0 15px 35px rgba(0,0,0,0.15); z-index: 1000; }
+            .search-popover::before { display: none; } 
+            .date-inputs { flex-direction: column; gap: 1rem; }
+            .guest-row { gap: 0.5rem; }
+            .btn-guest { width: 32px; height: 32px; font-size: 1.1rem; } 
+            .guest-count { min-width: 16px; }
 
             .carousel-controls { display: none !important; }
             .carousel-dots { justify-content: center; margin-top: 1.5rem; }
@@ -282,21 +337,21 @@
             .room-info-right { text-align: left; margin-top: auto; }
         }
 
-        /* --- TABLET (768px a 1023px) --- */
         @media (min-width: 768px) and (max-width: 1023px) {
             .nav-links { display: flex; }
             .hero-title { font-size: 4rem; }
             
-            /* Buscador: Convertir a fila con más espacio */
             .search-bar { flex-direction: row; border-radius: 9999px; padding: 0.75rem 1rem; gap: 0.5rem; }
             .search-inputs { grid-template-columns: repeat(3, 1fr); padding: 0 1rem; gap: 0; }
             .search-field { padding: 0.5rem 1.5rem; }
             .search-field:not(:last-child) { border-right: 1px solid var(--outline-variant); }
-            .btn-search { width: 4rem; height: 4rem; } /* Botón más grande */
+            .btn-search { width: 4rem; height: 4rem; } 
+            .search-popover { min-width: 300px; }
 
             .section-header { flex-direction: row; align-items: flex-end; justify-content: space-between; }
             .section-title-wrap { width: auto; }
             .carousel-dots { justify-content: center; margin-top: 2rem; }
+            
             .small-rooms-wrap { flex-direction: row; display: flex; gap: 2rem; }
             .small-rooms-wrap .room-card { flex: 1; }
             .js-hide-desktop { display: none !important; }
@@ -305,17 +360,16 @@
             .footer-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
-        /* --- ESCRITORIO (1024px en adelante) --- */
         @media (min-width: 1024px) {
             .nav-links { display: flex; }
             .hero-title { font-size: 4.5rem; }
             
-            /* Buscador: Máximo espacio y bordes redondeados (Pill shape) */
             .search-bar { flex-direction: row; border-radius: 9999px; padding: 0.75rem 1rem; gap: 1rem; max-width: 65rem; }
             .search-inputs { grid-template-columns: repeat(3, 1fr); padding: 0 2rem; gap: 0; }
-            .search-field { padding: 0.5rem 2rem; } /* Mucho más aire lateral */
+            .search-field { padding: 0.5rem 2rem; } 
             .search-field:not(:last-child) { border-right: 1px solid var(--outline-variant); }
-            .btn-search { width: 4rem; height: 4rem; } /* Botón proporcional */
+            .btn-search { width: 4rem; height: 4rem; } 
+            .search-popover { min-width: 320px; }
 
             .section-header { flex-direction: row; align-items: flex-end; justify-content: space-between; }
             .section-title-wrap { width: auto; }
@@ -336,7 +390,6 @@
             .large-room .room-info-right { text-align: right; margin-top: 0; min-width: max-content; }
             .large-room .room-price { margin-top: 0; font-size: 1.875rem; }
             .large-room .btn-view { width: auto; margin-top: 0.5rem; }
-            
             .small-rooms-wrap .room-info-right { margin-top: auto; }
             
             .experience-grid { grid-template-columns: 1fr 1fr; }
@@ -354,7 +407,7 @@
             <div style="display: flex; align-items: center; gap: 2rem;">
                 <span class="nav-brand js-hotel-name">Nombre del Hotel</span>
                 <div class="nav-links">
-                    <a href="#habitaciones" class="active">Habitaciones</a>
+                    <a href="#habitaciones">Habitaciones</a>
                     <a href="#experiencia">Experiencia</a>
                     <a href="/ofertas.html">Ofertas</a>
                 </div>
@@ -368,15 +421,33 @@
         <div class="nav-vertical">
             <a href="#inicio" style="text-decoration: none;"><div class="vert-brand js-hotel-initials">XX</div></a>
             <div class="vert-links">
-                <a href="#inicio" title="Ir a Inicio"><span class="material-symbols-outlined vert-icon">home</span></a>
-                <a href="#habitaciones" class="active" title="Ir a Habitaciones"><span class="material-symbols-outlined vert-icon">king_bed</span></a>
-                <a href="#experiencia" title="Ir a Experiencias"><span class="material-symbols-outlined vert-icon">spa</span></a>
+                <a href="#inicio" title="Ir a Inicio">
+                    <span class="material-symbols-outlined vert-icon">home</span>
+                    <span class="vert-text">Inicio</span>
+                </a>
+                <a href="#habitaciones" title="Ir a Habitaciones">
+                    <span class="material-symbols-outlined vert-icon">king_bed</span>
+                    <span class="vert-text">Habitaciones</span>
+                </a>
+                <a href="#experiencia" title="Ir a Experiencias">
+                    <span class="material-symbols-outlined vert-icon">spa</span>
+                    <span class="vert-text">Experiencia</span>
+                </a>
                 <div class="vert-divider"></div>
-                <a href="/ofertas.html" title="Ver Ofertas Externas"><span class="material-symbols-outlined vert-icon">sell</span></a>
-                <a href="/contacto.html" title="Ir a Contacto"><span class="material-symbols-outlined vert-icon">mail</span></a>
+                <a href="/ofertas.html" title="Ver Ofertas Externas">
+                    <span class="material-symbols-outlined vert-icon">sell</span>
+                    <span class="vert-text">Ofertas</span>
+                </a>
+                <a href="/contacto.html" title="Ir a Contacto">
+                    <span class="material-symbols-outlined vert-icon">mail</span>
+                    <span class="vert-text">Contacto</span>
+                </a>
             </div>
             <div class="vert-actions">
-                <a href="#habitaciones" title="Reservar Ahora" class="btn-book-vert"><span class="material-symbols-outlined">calendar_month</span></a>
+                <a href="#habitaciones" title="Reservar Ahora" class="btn-book-vert">
+                    <span class="material-symbols-outlined">calendar_month</span>
+                    <span class="vert-text">Reservar</span>
+                </a>
             </div>
         </div>
     </nav>
@@ -392,20 +463,66 @@
                     <h1 class="hero-title">Elegancia en cada <span class="text-accent">Transición</span></h1>
                     <p class="hero-subtitle">Experimenta el conserje digital—donde el lujo se encuentra con la intuición perfecta.</p>
                 </div>
+                
                 <div class="search-bar">
                     <div class="search-inputs">
-                        <div class="search-field">
-                            <span class="search-label">Destino</span>
-                            <input type="text" class="search-input" placeholder="¿A dónde vas?">
+                        
+                        <div class="search-field" id="trigger-sede">
+                            <span class="search-label">Sede</span>
+                            <div class="search-value" id="val-sede">¿A dónde vas?</div>
+                            
+                            <div class="search-popover" id="popover-sede">
+                                <div class="popover-option js-opt-sede" data-val="Arequipa">
+                                    <span class="material-symbols-outlined">location_on</span> Arequipa, Perú
+                                </div>
+                                <div class="popover-option js-opt-sede" data-val="Cuzco">
+                                    <span class="material-symbols-outlined">location_on</span> Cuzco, Perú
+                                </div>
+                            </div>
                         </div>
-                        <div class="search-field">
-                            <span class="search-label">Entrada y Salida</span>
-                            <input type="text" class="search-input" placeholder="12 Oct - 15 Oct">
+
+                        <div class="search-field" id="trigger-fechas">
+                            <span class="search-label">Check-in / Check-out</span>
+                            <div class="search-value" id="val-fechas">Selecciona fechas</div>
+                            
+                            <div class="search-popover" id="popover-fechas">
+                                <div class="date-inputs">
+                                    <div>
+                                        <label>Llegada</label>
+                                        <input type="date" id="date-in">
+                                    </div>
+                                    <div>
+                                        <label>Salida</label>
+                                        <input type="date" id="date-out">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="search-field">
+
+                        <div class="search-field" id="trigger-huespedes">
                             <span class="search-label">Huéspedes</span>
-                            <input type="text" class="search-input" placeholder="2 Adultos, 0 Niños">
+                            <div class="search-value" id="val-huespedes">2 Adultos, 0 Niños</div>
+                            
+                            <div class="search-popover" id="popover-huespedes">
+                                <div class="guest-row">
+                                    <span>Adultos</span>
+                                    <div class="guest-controls">
+                                        <button class="btn-guest" id="btn-adults-minus">-</button>
+                                        <span class="guest-count" id="count-adults">2</span>
+                                        <button class="btn-guest" id="btn-adults-plus">+</button>
+                                    </div>
+                                </div>
+                                <div class="guest-row">
+                                    <span>Niños</span>
+                                    <div class="guest-controls">
+                                        <button class="btn-guest" id="btn-kids-minus">-</button>
+                                        <span class="guest-count" id="count-kids">0</span>
+                                        <button class="btn-guest" id="btn-kids-plus">+</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                     <button class="btn-search"><span class="material-symbols-outlined">search</span></button>
                 </div>
@@ -414,7 +531,6 @@
 
         <section id="habitaciones" class="rooms-section">
             <div class="container rooms-wrapper">
-                
                 <div class="section-header">
                     <div>
                         <div class="section-title-wrap">
@@ -423,7 +539,6 @@
                         </div>
                         <p class="section-desc">Diseñadas para el viajero moderno, nuestras habitaciones combinan precisión arquitectónica con un confort inigualable.</p>
                     </div>
-                    
                     <div class="carousel-controls">
                         <button id="btn-prev" class="carousel-btn"><span class="material-symbols-outlined">arrow_back</span></button>
                         <button id="btn-next" class="carousel-btn"><span class="material-symbols-outlined">arrow_forward</span></button>
@@ -432,7 +547,6 @@
 
                 <div class="rooms-carousel-wrapper">
                     <div class="rooms-grid">
-                        
                         <div class="room-card large-room" id="card-l">
                             <div class="room-image-wrap">
                                 <img id="l-img" src="" alt="Habitación" class="room-image">
@@ -503,17 +617,15 @@
                     </div>
 
                     <div class="carousel-dots">
-                        <button class="dot active" data-index="0" aria-label="Ir a habitación 1"></button>
-                        <button class="dot" data-index="1" aria-label="Ir a habitación 2"></button>
-                        <button class="dot" data-index="2" aria-label="Ir a habitación 3"></button>
+                        <button class="dot active" data-index="0"></button>
+                        <button class="dot" data-index="1"></button>
+                        <button class="dot" data-index="2"></button>
                     </div>
-
                 </div>
 
                 <div class="view-more-wrap">
                     <button class="btn-outline">Ver todas las habitaciones <span class="material-symbols-outlined" style="font-size: 20px;">arrow_forward</span></button>
                 </div>
-
             </div>
         </section>
 
@@ -597,66 +709,119 @@
             document.querySelectorAll('.js-hotel-year').forEach(el => el.textContent = hotelInfo.anioActual);
             document.querySelectorAll('.js-hotel-email').forEach(el => { el.textContent = hotelInfo.correo; el.href = `mailto:${hotelInfo.correo}`; });
 
-            window.addEventListener('scroll', () => {
-                document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 150);
+            // Navbar
+            window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 150); });
+
+            // --- LÓGICA SEARCH BAR ---
+            const fields = document.querySelectorAll('.search-field');
+            const popovers = document.querySelectorAll('.search-popover');
+
+            fields.forEach(field => {
+                field.addEventListener('click', (e) => {
+                    if(e.target.closest('.search-popover')) return; 
+                    const myPopover = field.querySelector('.search-popover');
+                    const isActive = myPopover.classList.contains('active');
+                    popovers.forEach(p => p.classList.remove('active')); 
+                    if (!isActive) myPopover.classList.add('active'); 
+                });
             });
 
-            // Variables Generales del Carrusel
-            let currentIndex = 0;
-            let mobileIndex = 0;
-            let autoPlayTimer;
-            let isAnimating = false;
-            const cycleTime = 12000;
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.search-field')) { popovers.forEach(p => p.classList.remove('active')); }
+            });
 
+            // Sede
+            const valSede = document.getElementById('val-sede');
+            document.querySelectorAll('.js-opt-sede').forEach(opt => {
+                opt.addEventListener('click', () => {
+                    valSede.textContent = opt.dataset.val; valSede.classList.add('selected');
+                    opt.closest('.search-popover').classList.remove('active');
+                });
+            });
+
+            // --- LÓGICA DE FECHAS ---
+            const dateIn = document.getElementById('date-in'), 
+                  dateOut = document.getElementById('date-out'), 
+                  valFechas = document.getElementById('val-fechas');
+
+            const today = new Date();
+            const future = new Date();
+            future.setFullYear(today.getFullYear() + 2);
+
+            const formatDateInput = (date) => {
+                const y = date.getFullYear();
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const d = String(date.getDate()).padStart(2, '0');
+                return `${y}-${m}-${d}`;
+            };
+
+            const minDateStr = formatDateInput(today);
+            const maxDateStr = formatDateInput(future);
+
+            dateIn.min = minDateStr; dateIn.max = maxDateStr;
+            dateOut.min = minDateStr; dateOut.max = maxDateStr;
+
+            const formatFechas = () => {
+                if(dateIn.value) {
+                    dateOut.min = dateIn.value;
+                    if(dateOut.value && dateOut.value < dateIn.value) {
+                        dateOut.value = dateIn.value;
+                    }
+                }
+
+                if(dateIn.value && dateOut.value) {
+                    const [y1, m1, d1] = dateIn.value.split('-');
+                    const [y2, m2, d2] = dateOut.value.split('-');
+                    
+                    const objIn = new Date(y1, m1 - 1, d1);
+                    const objOut = new Date(y2, m2 - 1, d2);
+
+                    const strIn = objIn.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+                    const strOut = objOut.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+                    
+                    valFechas.textContent = `${strIn} - ${strOut}`; 
+                    valFechas.classList.add('selected');
+                }
+            };
+            dateIn.addEventListener('change', formatFechas); 
+            dateOut.addEventListener('change', formatFechas);
+
+            // Huéspedes
+            let adults = 2, kids = 0;
+            const valHuespedes = document.getElementById('val-huespedes'), cAdults = document.getElementById('count-adults'), cKids = document.getElementById('count-kids');
+            const updateHuespedesText = () => {
+                cAdults.textContent = adults; cKids.textContent = kids;
+                valHuespedes.textContent = `${adults} Adulto${adults!==1?'s':''}, ${kids} Niño${kids!==1?'s':''}`;
+                valHuespedes.classList.add('selected');
+            };
+            document.getElementById('btn-adults-plus').addEventListener('click', () => { adults++; updateHuespedesText(); });
+            document.getElementById('btn-adults-minus').addEventListener('click', () => { if(adults>1) adults--; updateHuespedesText(); });
+            document.getElementById('btn-kids-plus').addEventListener('click', () => { kids++; updateHuespedesText(); });
+            document.getElementById('btn-kids-minus').addEventListener('click', () => { if(kids>0) kids--; updateHuespedesText(); });
+
+            // --- LÓGICA DEL CARRUSEL ---
+            let currentIndex = 0; let mobileIndex = 0; let autoPlayTimer; let isAnimating = false; const cycleTime = 12000;
             const cards = [document.getElementById('card-l'), document.getElementById('card-s1'), document.getElementById('card-s2')];
-            const dots = document.querySelectorAll('.dot');
-            const roomsGrid = document.querySelector('.rooms-grid');
+            const dots = document.querySelectorAll('.dot'); const roomsGrid = document.querySelector('.rooms-grid');
 
-            // Inicializar las 3 tarjetas con los datos
             function injectData(cardPrefix, data) {
-                document.getElementById(`${cardPrefix}-img`).src = data.img;
-                document.getElementById(`${cardPrefix}-badge`).textContent = data.badge;
-                document.getElementById(`${cardPrefix}-title`).textContent = data.title;
-                document.getElementById(`${cardPrefix}-desc`).textContent = data.desc;
-                document.getElementById(`${cardPrefix}-size`).textContent = data.size;
-                document.getElementById(`${cardPrefix}-bed`).textContent = data.bed;
-                document.getElementById(`${cardPrefix}-extra`).textContent = data.extra;
-                document.getElementById(`${cardPrefix}-price`).textContent = data.price;
+                document.getElementById(`${cardPrefix}-img`).src = data.img; document.getElementById(`${cardPrefix}-badge`).textContent = data.badge; document.getElementById(`${cardPrefix}-title`).textContent = data.title; document.getElementById(`${cardPrefix}-desc`).textContent = data.desc; document.getElementById(`${cardPrefix}-size`).textContent = data.size; document.getElementById(`${cardPrefix}-bed`).textContent = data.bed; document.getElementById(`${cardPrefix}-extra`).textContent = data.extra; document.getElementById(`${cardPrefix}-price`).textContent = data.price;
             }
-            
-            injectData('l', roomsData[0]);
-            injectData('s1', roomsData[1]);
-            injectData('s2', roomsData[2]);
+            injectData('l', roomsData[0]); injectData('s1', roomsData[1]); injectData('s2', roomsData[2]);
 
-            // --- FUNCIONES ESCRITORIO ---
             function updateDesktopSequence(targetIndex) {
                 if (isAnimating || targetIndex === currentIndex) return;
-                isAnimating = true;
-                currentIndex = targetIndex;
-
-                const roomL = roomsData[currentIndex];
-                const roomS1 = roomsData[(currentIndex + 1) % 3];
-                const roomS2 = roomsData[(currentIndex + 2) % 3];
+                isAnimating = true; currentIndex = targetIndex;
+                const roomL = roomsData[currentIndex], roomS1 = roomsData[(currentIndex + 1) % 3], roomS2 = roomsData[(currentIndex + 2) % 3];
 
                 const triggerFade = (cardElement, prefix, data, delay) => {
-                    setTimeout(() => {
-                        cardElement.classList.add('fade-out');
-                        setTimeout(() => {
-                            injectData(prefix, data);
-                            cardElement.classList.remove('fade-out');
-                        }, 600); 
-                    }, delay);
+                    setTimeout(() => { cardElement.classList.add('fade-out'); setTimeout(() => { injectData(prefix, data); cardElement.classList.remove('fade-out'); }, 600); }, delay);
                 };
 
-                triggerFade(cards[0], 'l', roomL, 0);
-                triggerFade(cards[1], 's1', roomS1, 400); 
-                triggerFade(cards[2], 's2', roomS2, 800); 
-
-                updateDots(currentIndex);
-                setTimeout(() => { isAnimating = false; }, 2000); 
+                triggerFade(cards[0], 'l', roomL, 0); triggerFade(cards[1], 's1', roomS1, 400); triggerFade(cards[2], 's2', roomS2, 800); 
+                updateDots(currentIndex); setTimeout(() => { isAnimating = false; }, 2000); 
             }
 
-            // --- FUNCIONES MÓVIL ---
             function updateMobileScroll(targetIndex) {
                 mobileIndex = targetIndex;
                 const scrollPos = cards[targetIndex].offsetLeft - roomsGrid.offsetLeft;
@@ -664,76 +829,58 @@
                 updateDots(targetIndex);
             }
 
-            function updateDots(activeIndex) {
-                dots.forEach((dot, idx) => dot.classList.toggle('active', idx === activeIndex));
-            }
+            function updateDots(activeIndex) { dots.forEach((dot, idx) => dot.classList.toggle('active', idx === activeIndex)); }
+            function goNext() { if (window.innerWidth < 768) { updateMobileScroll((mobileIndex + 1) % 3); } else { updateDesktopSequence((currentIndex + 1) % 3); } }
+            function goPrev() { if (window.innerWidth < 768) { updateMobileScroll((mobileIndex - 1 + 3) % 3); } else { updateDesktopSequence((currentIndex - 1 + 3) % 3); } }
+            function startTimer() { clearInterval(autoPlayTimer); autoPlayTimer = setInterval(goNext, cycleTime); }
 
-            function goNext() {
-                if (window.innerWidth < 768) {
-                    updateMobileScroll((mobileIndex + 1) % 3);
-                } else {
-                    updateDesktopSequence((currentIndex + 1) % 3);
-                }
-            }
-
-            function goPrev() {
-                if (window.innerWidth < 768) {
-                    updateMobileScroll((mobileIndex - 1 + 3) % 3);
-                } else {
-                    updateDesktopSequence((currentIndex - 1 + 3) % 3);
-                }
-            }
-
-            function startTimer() {
-                clearInterval(autoPlayTimer);
-                autoPlayTimer = setInterval(goNext, cycleTime);
-            }
-
-            // --- EVENTOS ---
             document.getElementById('btn-next').addEventListener('click', () => { goNext(); startTimer(); });
             document.getElementById('btn-prev').addEventListener('click', () => { goPrev(); startTimer(); });
+            dots.forEach((dot, index) => { dot.addEventListener('click', () => { if (window.innerWidth < 768) { updateMobileScroll(index); } else { updateDesktopSequence(index); } startTimer(); }); });
 
-            dots.forEach((dot, index) => {
-                dot.addEventListener('click', () => {
-                    if (window.innerWidth < 768) { updateMobileScroll(index); } else { updateDesktopSequence(index); }
-                    startTimer();
-                });
-            });
-
-            // Swipe táctil en móvil
             let scrollTimeout;
             roomsGrid.addEventListener('scroll', () => {
                 if (window.innerWidth >= 768) return;
-                
                 clearTimeout(scrollTimeout);
                 scrollTimeout = setTimeout(() => {
                     const gridCenter = roomsGrid.getBoundingClientRect().left + (roomsGrid.clientWidth / 2);
-                    let closestIdx = 0;
-                    let minDistance = Infinity;
-
+                    let closestIdx = 0, minDistance = Infinity;
                     cards.forEach((card, idx) => {
                         const cardCenter = card.getBoundingClientRect().left + (card.clientWidth / 2);
                         const distance = Math.abs(gridCenter - cardCenter);
-                        if (distance < minDistance) {
-                            minDistance = distance;
-                            closestIdx = idx;
-                        }
+                        if (distance < minDistance) { minDistance = distance; closestIdx = idx; }
                     });
-
-                    if (mobileIndex !== closestIdx) {
-                        mobileIndex = closestIdx;
-                        updateDots(mobileIndex);
-                        startTimer(); 
-                    }
+                    if (mobileIndex !== closestIdx) { mobileIndex = closestIdx; updateDots(mobileIndex); startTimer(); }
                 }, 100);
             });
 
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) { startTimer(); } else { clearInterval(autoPlayTimer); }
-                });
-            }, { threshold: 0.15 });
+            const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { startTimer(); } else { clearInterval(autoPlayTimer); } }); }, { threshold: 0.15 });
             observer.observe(document.getElementById('habitaciones'));
+
+            // --- LÓGICA DE SCROLLSPY (NAVEGACIÓN DINÁMICA) ---
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-links a, .vert-links a');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    // Detecta si la sección ha entrado al menos 1/3 en la pantalla
+                    if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    // Si el href del link coincide con la sección actual, se marca como activo
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
         });
     </script>
 </body>
