@@ -47,7 +47,7 @@
 
         .container { max-width: 1280px; margin: 0 auto; padding: 0 6%; }
 
-        /* ==================== ANIMATED NAVBAR COREOGRAFÍA PERFECTA ==================== */
+        /* ==================== ANIMATED NAVBAR ==================== */
         .navbar { 
             position: fixed; 
             top: 0; 
@@ -130,6 +130,7 @@
             border-radius: 16px;
             width: 48px;
             height: 48px;
+            padding: 0; /* Candado de estructura */
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         .vert-links a:hover, .vert-links a.active { background: var(--primary); border-color: rgba(255, 255, 255, 0.3); color: #ffffff; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4); }
@@ -138,7 +139,7 @@
         .vert-divider { width: 32px; height: 1px; background-color: rgba(255, 255, 255, 0.3); margin: 0.25rem 0; border-radius: 2px; }
         .vert-actions { margin-top: auto; }
         
-        .btn-book-vert { background: rgba(255, 255, 255, 0.95); color: var(--primary); width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .btn-book-vert { padding: 0; background: rgba(255, 255, 255, 0.95); color: var(--primary); width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
         .btn-book-vert:hover { transform: scale(1.1); background: #ffffff; }
 
         /* ==================== SIDEBAR EXPANSION (PC & TABLET) ==================== */
@@ -149,18 +150,41 @@
             .nav-vertical { align-items: flex-start; padding-left: 0; }
             .vert-brand { margin-left: 16px; transition: all 0.4s ease; }
             
+            /* --- MAGIA DE CENTRADO: Contenedor con margen izquierdo fijo --- */
             .vert-links { align-items: flex-start; padding-left: 16px; }
-            .vert-links a { flex-direction: row; padding-left: 11px; justify-content: flex-start; gap: 1.25rem; border-radius: 24px; overflow: hidden; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+            .vert-links a { 
+                flex-direction: row; 
+                justify-content: flex-start; 
+                border-radius: 24px; 
+                overflow: hidden; 
+                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            }
             .navbar.scrolled:hover .vert-links a { width: 208px; }
             
-            .vert-text { opacity: 0; white-space: nowrap; transition: all 0.3s ease; transform: translateX(-10px); font-size: 0.95rem; font-weight: 600; pointer-events: none; }
+            /* Caja rígida para el icono: Evita que el texto empuje la alineación */
+            .vert-icon { 
+                width: 48px; 
+                height: 48px; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                flex-shrink: 0; 
+            }
+            
+            .vert-text { opacity: 0; white-space: nowrap; transition: all 0.3s ease; transform: translateX(-10px); font-size: 0.95rem; font-weight: 600; pointer-events: none; padding-right: 1.5rem; }
             .navbar.scrolled:hover .vert-text { opacity: 1; transform: translateX(0); pointer-events: auto; transition-delay: 0.1s; } 
             
             .vert-divider { margin-left: 24px; transition: width 0.4s ease; }
             .navbar.scrolled:hover .vert-divider { width: 192px; }
             
             .vert-actions { padding-left: 16px; width: 100%; }
-            .btn-book-vert { justify-content: flex-start; padding-left: 12px; width: 48px; border-radius: 24px; overflow: hidden; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); gap: 1.25rem; }
+            .btn-book-vert { 
+                justify-content: flex-start; 
+                width: 48px; 
+                border-radius: 24px; 
+                overflow: hidden; 
+                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            }
             .navbar.scrolled:hover .btn-book-vert { width: 208px; }
             .btn-book-vert .vert-text { color: var(--primary); }
             .btn-book-vert:hover .vert-text { color: #ffffff; }
@@ -261,7 +285,7 @@
         .btn-outline:hover { background-color: var(--primary); color: white; transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,71,141,0.2); }
 
         /* ==================== EXPERIENCE & FOOTER ==================== */
-        .experience-section { padding: 6rem 0; background-color: white; overflow: hidden; }
+        .experience-section { padding: 6rem 0; background-image: url(https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/fondoexp.webp); overflow: hidden; }
         .experience-grid { display: grid; grid-template-columns: 1fr; gap: 4rem; align-items: center; }
         .exp-image-wrap { border-radius: 1.5rem; overflow: hidden; box-shadow: var(--editorial-shadow); transform: rotate(2deg); transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); position: relative; z-index: 10; }
         .exp-image-wrap:hover { transform: rotate(0deg); }
@@ -298,7 +322,6 @@
             .btn-signin { display: none; }
             .btn-book { padding: 0.5rem 1rem; font-size: 0.875rem; }
             
-            /* Navbar inferior móvil con imagen dedicada */
             .navbar.scrolled { 
                 top: auto !important; 
                 bottom: 1.5rem !important; 
@@ -445,7 +468,7 @@
             </div>
             <div class="vert-actions">
                 <a href="#habitaciones" title="Reservar Ahora" class="btn-book-vert">
-                    <span class="material-symbols-outlined">calendar_month</span>
+                    <span class="material-symbols-outlined vert-icon">calendar_month</span>
                     <span class="vert-text">Reservar</span>
                 </a>
             </div>
@@ -709,7 +732,7 @@
             document.querySelectorAll('.js-hotel-year').forEach(el => el.textContent = hotelInfo.anioActual);
             document.querySelectorAll('.js-hotel-email').forEach(el => { el.textContent = hotelInfo.correo; el.href = `mailto:${hotelInfo.correo}`; });
 
-            // Navbar
+            // Navbar Scroll
             window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 150); });
 
             // --- LÓGICA SEARCH BAR ---
@@ -739,7 +762,7 @@
                 });
             });
 
-            // --- LÓGICA DE FECHAS ---
+            // Fechas
             const dateIn = document.getElementById('date-in'), 
                   dateOut = document.getElementById('date-out'), 
                   valFechas = document.getElementById('val-fechas');
@@ -755,18 +778,13 @@
                 return `${y}-${m}-${d}`;
             };
 
-            const minDateStr = formatDateInput(today);
-            const maxDateStr = formatDateInput(future);
-
-            dateIn.min = minDateStr; dateIn.max = maxDateStr;
-            dateOut.min = minDateStr; dateOut.max = maxDateStr;
+            dateIn.min = formatDateInput(today); dateIn.max = formatDateInput(future);
+            dateOut.min = formatDateInput(today); dateOut.max = formatDateInput(future);
 
             const formatFechas = () => {
                 if(dateIn.value) {
                     dateOut.min = dateIn.value;
-                    if(dateOut.value && dateOut.value < dateIn.value) {
-                        dateOut.value = dateIn.value;
-                    }
+                    if(dateOut.value && dateOut.value < dateIn.value) { dateOut.value = dateIn.value; }
                 }
 
                 if(dateIn.value && dateOut.value) {
@@ -866,7 +884,7 @@
                 sections.forEach(section => {
                     const sectionTop = section.offsetTop;
                     const sectionHeight = section.clientHeight;
-                    // Detecta si la sección ha entrado al menos 1/3 en la pantalla
+                    // Detecta qué sección está actualmente en vista (con un margen de gracia)
                     if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
                         current = section.getAttribute('id');
                     }
@@ -874,7 +892,7 @@
 
                 navLinks.forEach(link => {
                     link.classList.remove('active');
-                    // Si el href del link coincide con la sección actual, se marca como activo
+                    // Si el link apunta a la sección actual, se marca como activo
                     if (link.getAttribute('href').includes(current)) {
                         link.classList.add('active');
                     }
