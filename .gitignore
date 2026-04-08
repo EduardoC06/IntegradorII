@@ -1,1 +1,6 @@
 .env
+.agents
+.vscode
+.idea
+__pycache__
+.claude

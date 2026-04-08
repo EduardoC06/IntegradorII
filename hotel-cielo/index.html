@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- UI/UX Pro Max: width=device-width initial-scale=1 -->
+    <title>Hotel EL CIELO - Sistema de Reservas</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Feather Icons for minimalist SVG icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- Sidebar Navigation -->
+      <nav class="sidebar">
+        <div class="sidebar-header">
+          <i data-feather="cloud" class="brand-icon"></i>
+          <h1 class="brand-name">EL CIELO</h1>
+        </div>
+
+        <ul class="nav-links">
+          <li class="nav-item active">
+            <a href="#" class="nav-link"
+              ><i data-feather="grid"></i>
+              <span class="nav-text">Dashboard</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link"
+              ><i data-feather="calendar"></i>
+              <span class="nav-text">Reservas</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link"
+              ><i data-feather="key"></i>
+              <span class="nav-text">Habitaciones</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link"
+              ><i data-feather="users"></i>
+              <span class="nav-text">Clientes</span></a
+            >
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link"
+              ><i data-feather="credit-card"></i>
+              <span class="nav-text">Pagos</span></a
+            >
+          </li>
+        </ul>
+
+        <div class="sidebar-footer">
+          <a href="#" class="nav-link logout-btn"
+            ><i data-feather="log-out"></i>
+            <span class="nav-text">Cerrar Sesión</span></a
+          >
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="top-header">
+          <div class="header-title">
+            <h2 class="page-title">Resumen de Hoy</h2>
+            <p class="page-subtitle">Miércoles, 1 de Abril 2026</p>
+          </div>
+
+          <div class="header-actions">
+            <button class="icon-btn" aria-label="Notificaciones">
+              <i data-feather="bell"></i>
+            </button>
+            <div class="user-profile">
+              <img
+                src="https://i.pravatar.cc/150?img=33"
+                alt="Admin Profile"
+                class="avatar"
+              />
+              <div class="user-info">
+                <span class="user-name">Ana L.</span>
+                <span class="user-role">Recepcionista</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="content-wrapper">
+          <!-- Stats Section -->
+          <section class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon"><i data-feather="check-circle"></i></div>
+              <div class="stat-data">
+                <h3>Disponibles</h3>
+                <p class="stat-value">24</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i data-feather="calendar"></i></div>
+              <div class="stat-data">
+                <h3>Reservadas</h3>
+                <p class="stat-value">18</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i data-feather="users"></i></div>
+              <div class="stat-data">
+                <h3>Llegadas Hoy</h3>
+                <p class="stat-value">5</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon"><i data-feather="trending-up"></i></div>
+              <div class="stat-data">
+                <h3>Ocupación</h3>
+                <p class="stat-value">82%</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="dashboard-split">
+            <!-- Room Availability Grid -->
+            <section class="rooms-section">
+              <div class="section-header">
+                <h3>Disponibilidad en Tiempo Real</h3>
+                <button class="text-btn">
+                  Ver todas <i data-feather="arrow-right"></i>
+                </button>
+              </div>
+
+              <div class="rooms-grid">
+                <!-- Room Cards -->
+                <article class="room-card available">
+                  <div
+                    class="room-img"
+                    style="
+                      background-image: url(&quot;https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&q=80&w=400&quot;);
+                    "
+                  >
+                    <span class="room-status-badge">Disponible</span>
+                  </div>
+                  <div class="room-info">
+                    <h4>Suite Presidencial</h4>
+                    <p class="room-number">Hab. 401</p>
+                    <div class="room-footer">
+                      <span class="room-price">$450<span>/noche</span></span>
+                      <button class="btn btn-primary btn-book" data-room="401">
+                        Reservar
+                      </button>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="room-card occupied">
+                  <div
+                    class="room-img"
+                    style="
+                      background-image: url(&quot;https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&q=80&w=400&quot;);
+                    "
+                  >
+                    <span class="room-status-badge">Ocupada</span>
+                  </div>
+                  <div class="room-info">
+                    <h4>Doble Deluxe</h4>
+                    <p class="room-number">Hab. 305</p>
+                    <div class="room-footer">
+                      <span class="room-guest">Carlos Mendoza</span>
+                      <span class="room-checkout">Salida: Mañana</span>
+                    </div>
+                  </div>
+                </article>
+
+                <article class="room-card maintenance">
+                  <div
+                    class="room-img"
+                    style="
+                      background-image: url(&quot;https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&q=80&w=400&quot;);
+                    "
+                  >
+                    <span class="room-status-badge">Mantenimiento</span>
+                  </div>
+                  <div class="room-info">
+                    <h4>Superior King</h4>
+                    <p class="room-number">Hab. 210</p>
+                    <div class="room-footer">
+                      <span class="room-issue">Limpieza Profunda</span>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <!-- Quick Booking Sidebar -->
+            <section class="quick-booking" id="booking-accordion">
+              <div class="booking-card">
+                <div
+                  class="accordion-header"
+                  onclick="toggleAccordion('booking-accordion')"
+                >
+                  <div class="accordion-title-area">
+                    <h3>Reserva Rápida</h3>
+                    <p>Ingresa los detalles para bloquear una habitación.</p>
+                  </div>
+                  <i data-feather="chevron-down" class="accordion-icon"></i>
+                </div>
+
+                <div class="accordion-content">
+                  <form id="booking-form" class="gsap-form">
+                    <div class="form-group">
+                      <label for="cliente">Nombre del Cliente</label>
+                      <input
+                        type="text"
+                        id="cliente"
+                        placeholder="Ej. Mariana Ríos"
+                        required
+                      />
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group">
+                        <label for="checkin">Check-in</label>
+                        <input type="date" id="checkin" required />
+                      </div>
+                      <div class="form-group">
+                        <label for="checkout">Check-out</label>
+                        <input type="date" id="checkout" required />
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label for="tipo">Tipo de Habitación</label>
+                      <select id="tipo">
+                        <option value="suite">Suite Presidencial</option>
+                        <option value="deluxe">Doble Deluxe</option>
+                        <option value="king">Superior King</option>
+                      </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                      Confirmar Reserva
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+  </body>
+</html>
