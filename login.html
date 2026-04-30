@@ -1,11 +1,615 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nombre</title>
-</head>
-<body>
-    
-</body>
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Acceso | Hotel El Cielo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+      /* === ESTÉTICA AREQUIPEÑA COLONIAL === */
+      :root {
+        --sillar-light: #ffffff24; /* Blanco sillar iluminado translúcido */
+        --sillar-base: #ebe7df; /* Blanco sillar sombra */
+        --rojo-colonial: #6e2b25; /* Rojo Santa Catalina */
+        --fierro-forjado: #000000; /* Negro Puro para la izquierda */
+        --blur-form: 12px; /* Blur activado */
+        --blanco-puro: #ffffff; /* Ajustado para que el texto resalte */
+        --oro-viejo: #b08d5b; /* Detalles en madera tallada o bronce */
+        --font-headings: "Playfair Display", Georgia, serif;
+        --font-body: "Lora", "Times New Roman", serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-image: url(https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/fondologin2.webp);
+        background-size: cover;
+        background-position: center;
+        font-family: var(--font-body);
+        color: var(--blanco-puro);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        line-height: 1.6;
+      }
+
+      /* === CONTENEDOR PRINCIPAL === */
+      .main-container {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+      }
+
+      .card {
+        display: flex;
+        flex-direction: row;
+        background-color: var(--sillar-light);
+        width: 100%;
+        max-width: 1050px;
+        min-height: 600px;
+        box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      /* === PANEL IZQUIERDO (HOTEL) === */
+      .brand-panel {
+        flex: 1;
+        background-image: url(https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/PortadaLogin.webp);
+        background-size: cover;
+        background-position: start;
+        color: #000000;
+        padding: 60px 50px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        position: relative;
+      }
+
+      /* Detalle de marco interno imitando portón */
+      .brand-panel::before {
+        content: "";
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        bottom: 20px;
+        left: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        pointer-events: none;
+      }
+
+      .brand-title {
+        font-family: var(--font-headings);
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        line-height: 1;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      .brand-divider {
+        width: 80px;
+        height: 2px;
+        background-color: var(--oro-viejo);
+        margin-bottom: 30px;
+        position: relative;
+      }
+
+      /* Adorno central en el divisor */
+      .brand-divider::after {
+        content: "✦";
+        position: absolute;
+        top: -10px;
+        left: calc(50% - 6px);
+        color: var(--oro-viejo);
+        font-size: 14px;
+      }
+
+      .brand-subtitle {
+        font-size: 1.3rem;
+        font-style: italic;
+        opacity: 0.9;
+        max-width: 90%;
+        line-height: 1.8;
+        font-weight: 400;
+      }
+
+      /* Información de pie de página reubicada dentro del panel izquierdo */
+      .panel-footer {
+        position: absolute;
+        bottom: 35px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-family: var(--font-headings);
+        font-size: 0.85rem;
+        color: var(--fierro-forjado);
+        letter-spacing: 1px;
+        padding: 0 30px;
+      }
+
+      .panel-footer-links {
+        margin-top: 5px;
+      }
+
+      .panel-footer-links a {
+        color: var(--fierro-forjado);
+        text-decoration: underline;
+        margin: 0 10px;
+        font-style: italic;
+        transition: color 0.3s;
+        color: var(--blanco-puro);
+      }
+
+      .panel-footer-links a:hover {
+        color: var(--oro-viejo);
+        text-decoration: none;
+      }
+
+      /* === PANEL DERECHO (FORMULARIOS) === */
+      .form-panel {
+        flex: 1.2;
+        padding: 60px 60px;
+        display: flex;
+        flex-direction: column;
+        -webkit-backdrop-filter: blur(var(--blur-form));
+        backdrop-filter: blur(var(--blur-form));
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+
+      /* Navegación por pestañas */
+      .form-tabs {
+        display: flex;
+        margin-bottom: 40px;
+        border-bottom: 1px solid var(--blanco-puro);
+        justify-content: center;
+      }
+
+      .tab-btn {
+        background: none;
+        border: none;
+        font-family: var(--font-headings);
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--blanco-puro);
+        padding: 10px 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        top: 1px;
+      }
+
+      .tab-btn.active {
+        color: var(--blanco-puro);
+        font-weight: 700;
+        border-bottom: 3px solid var(--blanco-puro);
+      }
+
+      .tab-btn:hover:not(.active) {
+        color: var(--blanco-puro);
+        opacity: 0.7;
+      }
+
+      /* Formularios */
+      .form-section {
+        display: none;
+        animation: fadeIn 0.5s ease;
+      }
+
+      .form-section.active {
+        display: block;
+      }
+
+      .form-header {
+        text-align: center;
+        margin-bottom: 35px;
+      }
+
+      .form-header h2 {
+        font-family: var(--font-headings);
+        font-size: 2.2rem;
+        color: var(--blanco-puro);
+        margin-bottom: 8px;
+        font-style: italic;
+      }
+
+      .form-header p {
+        color: rgba(255, 255, 255, 0.85);
+        font-size: 1rem;
+      }
+
+      .input-group {
+        margin-bottom: 25px;
+      }
+
+      .input-group label {
+        display: block;
+        font-family: var(--font-headings);
+        font-size: 0.85rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--blanco-puro);
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+      }
+
+      .input-group input[type="text"],
+      .input-group input[type="email"],
+      .input-group input[type="password"] {
+        width: 100%;
+        padding: 10px 5px;
+        border: none;
+        border-bottom: 1px solid var(--blanco-puro);
+        background-color: rgba(255, 255, 255, 0.1);
+        font-family: var(--font-body);
+        font-size: 1.1rem;
+        color: var(--blanco-puro);
+        transition:
+          border-color 0.3s,
+          background-color 0.3s;
+      }
+
+      .input-group input:focus {
+        outline: none;
+        border-bottom: 2px solid var(--blanco-puro);
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .input-group input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+        font-style: italic;
+      }
+
+      .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 35px;
+        margin-top: 10px;
+      }
+
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        font-size: 0.95rem;
+        color: var(--blanco-puro);
+      }
+
+      .checkbox-group input {
+        margin-right: 10px;
+        accent-color: var(--blanco-puro);
+      }
+
+      .forgot-link {
+        font-size: 0.95rem;
+        color: var(--blanco-puro);
+        text-decoration: underline;
+        font-style: italic;
+        transition: color 0.3s;
+      }
+
+      .forgot-link:hover {
+        color: var(--oro-viejo);
+      }
+
+      /* Botón Clásico */
+      .btn-submit {
+        width: 100%;
+        padding: 16px;
+        background-color: transparent;
+        color: var(--blanco-puro);
+        border: 2px solid var(--blanco-puro);
+        font-family: var(--font-headings);
+        font-size: 1.1rem;
+        font-weight: bold;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition:
+          background-color 0.3s,
+          color 0.3s;
+      }
+
+      .btn-submit:hover {
+        background-color: var(--blanco-puro);
+        color: #000000;
+      }
+
+      /* === RESPONSIVO === */
+      @media (max-width: 850px) {
+        .card {
+          flex-direction: column;
+          border: 1px solid var(--blanco-puro);
+        }
+        .brand-panel {
+          padding: 50px 30px 100px 30px;
+          border-right: none;
+          border-bottom: 2px solid var(--blanco-puro);
+        }
+        .brand-title {
+          font-size: 2.5rem;
+        }
+        .form-panel {
+          padding: 40px 30px;
+        }
+        .form-actions {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 15px;
+        }
+        .panel-footer {
+          bottom: 20px;
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* === TOAST NOTIFICATIONS === */
+      .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .toast {
+        background: rgba(0, 0, 0, 0.85);
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+        color: white;
+        padding: 16px 24px;
+        border-radius: 8px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 300px;
+        border-left: 4px solid var(--oro-viejo);
+        transform: translateX(120%);
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        font-family: var(--font-body);
+      }
+
+      .toast.show {
+        transform: translateX(0);
+      }
+
+      .toast.error {
+        border-left-color: #ff4d4d;
+      }
+
+      .toast.success {
+        border-left-color: #4caf50;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="main-container">
+      <div class="card">
+        <div class="brand-panel">
+          <img
+            src="https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/ImagenDePerroIng.S.jpeg"
+            alt="Logo Hotel El Cielo"
+            style="
+              width: 124px;
+              height: 124px;
+              margin-bottom: 20px;
+              border-radius: 190%;
+              border: 3px solid var(--oro-viejo);
+            "
+          />
+          <h1 class="brand-title" style="color: var(--blanco-puro)">
+            Hotel El Cielo
+          </h1>
+          <div class="brand-divider"></div>
+          <p class="brand-subtitle" style="color: var(--blanco-puro)">
+            Descubra la majestuosidad y elegancia colonial en el corazón de la
+            Ciudad Blanca.
+          </p>
+
+          <div class="panel-footer" style="color: var(--blanco-puro)">
+            <strong>Hotel El Cielo</strong> &copy; 2026. Arequipa, Perú.
+            <div class="panel-footer-links">
+              <a href="#">Privacidad</a>
+              <a href="#">Términos de Reserva</a>
+              <a href="#">Conserjería</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-panel">
+          <div class="form-tabs">
+            <button
+              class="tab-btn active"
+              onclick="switchTab('login')"
+              id="tab-login"
+            >
+              Huésped Frecuente
+            </button>
+            <button
+              class="tab-btn"
+              onclick="switchTab('register')"
+              id="tab-register"
+            >
+              Nuevo Registro
+            </button>
+          </div>
+
+          <div class="form-section active" id="section-login">
+            <div class="form-header">
+              <h2>Bienvenido a su estancia</h2>
+              <p>Acceda a sus reservas y preferencias de habitación.</p>
+            </div>
+
+            <form id="login-form">
+              <div class="input-group">
+                <label for="login-email">Correo Electrónico</label>
+                <input
+                  type="email"
+                  id="login-email"
+                  name="email"
+                  placeholder="su.nombre@correo.com"
+                  required
+                />
+              </div>
+
+              <div class="input-group">
+                <label for="login-password">Contraseña</label>
+                <input
+                  type="password"
+                  id="login-password"
+                  name="password"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+
+              <div class="form-actions">
+                <div class="checkbox-group">
+                  <input type="checkbox" id="remember" name="remember" />
+                  <label
+                    for="remember"
+                    style="
+                      font-family: var(--font-body);
+                      font-weight: normal;
+                      text-transform: none;
+                      letter-spacing: normal;
+                      margin-bottom: 0;
+                    "
+                    >Recordar mi información</label
+                  >
+                </div>
+                <a href="#" class="forgot-link">¿Recupera tu contraseña?</a>
+              </div>
+
+              <button type="submit" class="btn-submit">Ingresar</button>
+            </form>
+          </div>
+
+          <div class="form-section" id="section-register">
+            <div class="form-header">
+              <h2>Únase a Nosotros</h2>
+              <p>Registre sus datos para una experiencia personalizada.</p>
+            </div>
+
+            <form id="register-form">
+              <div class="input-group">
+                <label for="reg-name">Nombre de Huésped</label>
+                <input
+                  type="text"
+                  id="reg-name"
+                  name="name"
+                  placeholder="Ej. Carlos Mendoza"
+                  required
+                />
+              </div>
+
+              <div class="input-group">
+                <label for="reg-email">Correo Electrónico</label>
+                <input
+                  type="email"
+                  id="reg-email"
+                  name="email"
+                  placeholder="su.nombre@correo.com"
+                  required
+                />
+              </div>
+
+              <div class="input-group">
+                <label for="reg-password">Clave de Acceso</label>
+                <input
+                  type="password"
+                  id="reg-password"
+                  name="password"
+                  placeholder="Mínimo 8 caracteres"
+                  required
+                />
+              </div>
+
+              <button type="submit" class="btn-submit">
+                Finalizar Registro
+              </button>
+            </form>
+          </div>
+
+          <div class="form-section" id="section-verify">
+            <div class="form-header">
+              <h2>Verificación Requerida</h2>
+              <p>
+                Hemos enviado un código a su correo electrónico. Por favor,
+                ingréselo a continuación.
+              </p>
+            </div>
+
+            <form id="verify-form">
+              <div class="input-group">
+                <label for="verify-code">Código de Seguridad</label>
+                <input
+                  type="text"
+                  id="verify-code"
+                  name="code"
+                  placeholder="Ej. 123456"
+                  required
+                  style="
+                    text-align: center;
+                    letter-spacing: 5px;
+                    font-size: 1.5rem;
+                  "
+                />
+              </div>
+
+              <div
+                class="form-actions"
+                style="justify-content: center; gap: 20px"
+              >
+                <a
+                  href="#"
+                  class="forgot-link"
+                  onclick="
+                    switchTab('register');
+                    return false;
+                  "
+                  >Corregir correo</a
+                >
+                <a href="#" class="forgot-link">Reenviar código</a>
+              </div>
+
+              <button type="submit" class="btn-submit">Verificar Cuenta</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="assets/js/supabase-config.js"></script>
+    <script src="assets/js/Auth-login/app-log-EC.js"></script>
+  </body>
 </html>

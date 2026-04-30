@@ -1,0 +1,1092 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Reservas | El cielo</title>
+
+    <!-- Supabase Auth -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase-config.js"></script>
+    <script>
+      // Proteger la ruta antes de renderizar
+      window.requireAuth();
+    </script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        /* Colors (Extracted from Tailwind Config) */
+        --background: #f7f9fb;
+        --on-background: #191c1e;
+        --primary: #00478d;
+        --on-surface-variant: #424752;
+        --surface-container-low: #f2f4f6;
+        --surface-container-lowest: #ffffff;
+        --surface-container-high: #e6e8ea;
+        --on-surface: #191c1e;
+        --outline-variant: #c2c6d4;
+        --surface-container: #eceef0;
+        --tertiary: #00514d;
+        --tertiary-fixed: #79f6ed;
+        --tertiary-container: #006b66;
+        --on-tertiary: #ffffff;
+        --secondary-container: #8cf3f3;
+        --on-secondary-container: #007070;
+
+        /* Fonts & Radii */
+        --font-headline: "Manrope", sans-serif;
+        --font-body: "Inter", sans-serif;
+        --radius-sm: 0.25rem;
+        --radius-lg: 0.5rem;
+        --radius-xl: 0.75rem;
+        --radius-full: 9999px;
+      }
+
+      /* Base Reset */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: var(--background);
+        color: var(--on-background);
+        font-family: var(--font-body);
+        -webkit-font-smoothing: antialiased;
+        line-height: 1.5;
+      }
+
+      /* Material Icons Config */
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .material-symbols-outlined.fill-icon {
+        font-variation-settings: "FILL" 1;
+      }
+      .icon-sm {
+        font-size: 1rem;
+      }
+
+      /* Navbar puro*/
+
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 90px;
+        z-index: 50;
+        background-color: transparent;
+        border-radius: 0;
+        border: 1px solid transparent;
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(0px);
+
+        transition:
+          top 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          width 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s,
+          left 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s,
+          background-color 0.4s ease,
+          backdrop-filter 0.4s ease,
+          box-shadow 0.4s ease;
+      }
+
+      /* ESTADO SCROLL: Navbar flotante inferior central */
+      .navbar.scrolled {
+        position: fixed;
+        top: auto;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: max-content;
+        height: 70px;
+        border-radius: 35px;
+        background-image: url("https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/POINTSAQP.webp");
+        background-position: center;
+        background-size: cover;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+        padding: 0 0.5rem;
+      }
+
+      /* Layout horizontal original (arriba) */
+      .nav-horizontal {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 90px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 4%;
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+        transition: all 0.3s ease 0.4s;
+      }
+      .navbar.scrolled .nav-horizontal {
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+        transition: all 0.2s ease;
+      }
+
+      .nav-brand {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #ffffff;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
+      .nav-links {
+        display: none;
+        gap: 2rem;
+        align-items: center;
+      }
+      .nav-links a {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s ease;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: #ffffff;
+        border-bottom: 2px solid #ffffff;
+        padding-bottom: 0.25rem;
+      }
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .btn-signin {
+        color: #ffffff;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        display: none;
+      }
+      .btn-book {
+        background: linear-gradient(
+          to bottom right,
+          var(--primary),
+          var(--primary-container)
+        );
+        color: white;
+        padding: 0.625rem 1.5rem;
+        border-radius: 999px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+      .btn-book:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+      }
+
+      @media (min-width: 768px) {
+        .nav-links {
+          display: flex;
+        }
+        .btn-signin {
+          display: block;
+        }
+      }
+
+      /* Layout vertical interno (se vuelve horizontal al bajar) */
+      .nav-vertical {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(0.9);
+        transition: all 0.2s ease;
+      }
+
+      .navbar.scrolled .nav-vertical {
+        position: relative;
+        opacity: 1;
+        pointer-events: auto;
+        transform: scale(1);
+        transition: all 0.4s ease 0.6s;
+        flex-direction: row;
+        padding: 0;
+        gap: 0.5rem;
+        justify-content: center;
+      }
+
+      /* Ocultar textos por defecto (Versión pequeña para Móvil) */
+      .vert-text {
+        display: none;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+      }
+
+      .vert-links {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .vert-links a {
+        color: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        white-space: nowrap;
+      }
+      .vert-links a:hover,
+      .vert-links a.active {
+        background: var(--primary);
+        color: #ffffff;
+      }
+      .vert-icon {
+        font-size: 1.25rem;
+      }
+
+      .vert-actions {
+        display: flex;
+        align-items: center;
+      }
+      .btn-book-vert {
+        background: rgba(255, 255, 255, 0.95);
+        color: var(--primary);
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      /* Versión GRANDE para Escritorio (Navbar flotante expandido) */
+      @media (min-width: 768px) {
+        .navbar.scrolled {
+          padding: 0 1rem;
+        }
+        .navbar.scrolled .vert-text {
+          display: block;
+        }
+        .navbar.scrolled .vert-links a {
+          width: auto;
+          padding: 0 1.25rem;
+          border-radius: 999px;
+        }
+        .navbar.scrolled .btn-book-vert {
+          width: auto;
+          padding: 0 1.5rem;
+          border-radius: 999px;
+        }
+      }
+
+      /* Fin navbar*/
+
+      /* Header */
+      .header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .glass-header {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+      }
+      .logo {
+        font-size: 1.25rem;
+        font-weight: 700;
+        letter-spacing: -0.05em;
+        color: var(--primary);
+      }
+      .secure-badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--on-surface-variant);
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      /* Layout */
+      .main-content {
+        max-width: 80rem; /* 1280px */
+        margin: 0 auto;
+        padding: 3rem 2rem;
+      }
+      .layout-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        align-items: start;
+      }
+      @media (min-width: 1024px) {
+        .main-content {
+          padding: 5rem 2rem;
+        }
+        .layout-grid {
+          grid-template-columns: repeat(12, 1fr);
+        }
+        .payment-column {
+          grid-column: span 7;
+        }
+        .summary-column {
+          grid-column: span 5;
+          position: sticky;
+          top: 7rem;
+        }
+      }
+
+      /* Typography */
+      .page-title {
+        font-family: var(--font-headline);
+        font-size: 2.25rem;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        color: var(--on-surface);
+        margin-bottom: 0.5rem;
+      }
+      .page-subtitle {
+        color: var(--on-surface-variant);
+        font-size: 1rem;
+      }
+      .payment-column {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+      }
+
+      /* Toggle Buttons */
+      .toggle-group {
+        display: flex;
+        gap: 1rem;
+        padding: 0.25rem;
+        background-color: var(--surface-container-low);
+        border-radius: var(--radius-xl);
+        width: fit-content;
+      }
+      .toggle-btn {
+        padding: 0.5rem 1.5rem;
+        border-radius: var(--radius-lg);
+        font-size: 0.875rem;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s ease-in-out;
+      }
+      .toggle-btn.active {
+        background-color: var(--surface-container-lowest);
+        color: var(--primary);
+        font-weight: 600;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+      .toggle-btn.inactive {
+        background-color: transparent;
+        color: var(--on-surface-variant);
+        font-weight: 500;
+      }
+      .toggle-btn.inactive:hover {
+        background-color: var(--surface-container-high);
+      }
+
+      /* Forms */
+      .form-card {
+        padding: 2rem;
+        background-color: var(--surface-container-low);
+        border-radius: var(--radius-xl);
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      @media (min-width: 768px) {
+        .form-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .form-group-full {
+          grid-column: span 2;
+        }
+      }
+      .form-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--on-surface-variant);
+        margin-bottom: 0.5rem;
+        margin-left: 0.25rem;
+      }
+      .form-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        background-color: var(--surface-container-lowest);
+        border: none;
+        border-bottom: 2px solid transparent;
+        border-radius: var(--radius-lg);
+        color: var(--on-surface);
+        font-family: inherit;
+        font-size: 1rem;
+        outline: none;
+        transition: all 0.3s ease;
+      }
+      .form-input:focus {
+        border-bottom-color: var(--primary);
+      }
+      .input-wrapper {
+        position: relative;
+      }
+      .input-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--on-surface-variant);
+        opacity: 0.4;
+        display: flex;
+      }
+
+      /* Checkbox */
+      .checkbox-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding-top: 1rem;
+      }
+      .checkbox-input {
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--outline-variant);
+        accent-color: var(--primary);
+        cursor: pointer;
+      }
+      .checkbox-label {
+        font-size: 0.875rem;
+        color: var(--on-surface-variant);
+        cursor: pointer;
+      }
+
+      /* Trust Badges */
+      .trust-badges {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 2rem;
+        padding-top: 1rem;
+        filter: grayscale(100%);
+        opacity: 0.6;
+      }
+      .badge {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .badge-text {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--on-background);
+      }
+
+      /* Summary Card */
+      .summary-card {
+        background-color: var(--surface-container-lowest);
+        padding: 2rem;
+        border-radius: var(--radius-xl);
+        box-shadow: 0 32px 64px -12px rgba(25, 28, 30, 0.06);
+        border: 1px solid rgba(194, 198, 212, 0.15);
+      }
+      .summary-title {
+        font-family: var(--font-headline);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--on-surface);
+        margin-bottom: 1.5rem;
+      }
+      .property-info {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .property-image-wrapper {
+        width: 6rem;
+        height: 6rem;
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        flex-shrink: 0;
+        background-color: var(--surface-container);
+      }
+      .property-image-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .property-name {
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 1.125rem;
+        margin-bottom: 0.25rem;
+      }
+      .property-location {
+        font-size: 0.875rem;
+        color: var(--on-surface-variant);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+      .free-cancel {
+        margin-top: 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        color: var(--tertiary);
+        background-color: var(--tertiary-fixed);
+        padding: 0.25rem 0.5rem;
+        border-radius: var(--radius-full);
+        width: fit-content;
+      }
+
+      /* Lists and Details */
+      .details-list {
+        border-top: 1px solid var(--surface-container);
+        padding: 1.5rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        font-size: 0.875rem;
+        color: var(--on-surface-variant);
+      }
+      .detail-row,
+      .price-row {
+        display: flex;
+        justify-content: space-between;
+      }
+      .detail-val {
+        font-weight: 600;
+        color: var(--on-surface);
+      }
+      .price-list {
+        border-top: 1px solid var(--surface-container);
+        padding-top: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        color: var(--on-surface-variant);
+      }
+      .price-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1rem;
+      }
+      .total-label {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--on-surface);
+      }
+      .total-val {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--primary);
+        letter-spacing: -0.025em;
+      }
+
+      /* Button & Terms */
+      .btn-submit {
+        width: 100%;
+        margin-top: 2rem;
+        padding: 1rem;
+        background: linear-gradient(
+          to bottom right,
+          var(--tertiary),
+          var(--tertiary-container)
+        );
+        color: var(--on-tertiary);
+        border: none;
+        border-radius: var(--radius-lg);
+        font-weight: 700;
+        font-size: 1.125rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        box-shadow: 0 10px 15px -3px rgba(0, 81, 77, 0.2);
+        transition: opacity 0.3s;
+      }
+      .btn-submit:hover {
+        opacity: 0.9;
+      }
+      .terms-text {
+        text-align: center;
+        font-size: 0.75rem;
+        color: var(--on-surface-variant);
+        margin-top: 1rem;
+        line-height: 1.6;
+      }
+      .terms-text a {
+        color: var(--primary);
+        text-decoration: underline;
+      }
+
+      /* Support Card */
+      .support-card {
+        background-color: var(--surface-container-low);
+        padding: 1.5rem;
+        border-radius: var(--radius-xl);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-top: 1.5rem;
+      }
+      .support-icon-wrapper {
+        width: 3rem;
+        height: 3rem;
+        border-radius: var(--radius-full);
+        background-color: var(--secondary-container);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .support-icon-wrapper .material-symbols-outlined {
+        color: var(--on-secondary-container);
+      }
+      .support-title {
+        font-weight: 600;
+        color: var(--on-surface);
+      }
+      .support-desc {
+        font-size: 0.75rem;
+        color: var(--on-surface-variant);
+      }
+
+      /* Footer */
+      .footer {
+        margin-top: 5rem;
+        padding: 3rem 2rem;
+        border-top: 1px solid var(--surface-container-high);
+        background-color: var(--surface-container-lowest);
+      }
+      .footer-content {
+        max-width: 80rem;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: center;
+      }
+      @media (min-width: 768px) {
+        .footer-content {
+          flex-direction: row;
+          justify-content: space-between;
+        }
+      }
+      .footer-text {
+        font-size: 0.875rem;
+        color: var(--on-surface-variant);
+      }
+      .footer-links {
+        display: flex;
+        gap: 2rem;
+      }
+      .footer-link {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--on-surface-variant);
+        text-decoration: none;
+        transition: color 0.3s;
+      }
+      .footer-link:hover {
+        color: var(--primary);
+      }
+      .footer-payments {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        opacity: 0.5;
+      }
+      .footer-payments img {
+        height: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar" id="navbar">
+      <div class="nav-horizontal">
+        <div style="display: flex; align-items: center; gap: 2rem">
+          <a class="nav-brand js-hotel-name" href="ElCielo.html">El Cielo</a>
+          <div class="nav-links">
+            <a href="catalogo.html#habitaciones">Habitaciones</a>
+            <a href="catalogo.html#experiencia">Experiencia</a>
+            <a href="ofertas.html">Ofertas</a>
+          </div>
+        </div>
+        <div class="nav-actions">
+          <button class="btn-signin">Iniciar Sesión</button>
+          <button class="btn-book">Reservar Ahora</button>
+        </div>
+      </div>
+
+      <div class="nav-vertical">
+        <div class="vert-links">
+          <a href="ElCielo.html" title="Ir a Inicio">
+            <span class="material-symbols-outlined vert-icon">home</span>
+            <span class="vert-text">Inicio</span>
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main-content">
+      <div class="layout-grid">
+        <div class="payment-column">
+          <section>
+            <a
+              href="catalogo.html"
+              style="
+                display: inline-flex;
+                align-items: center;
+                gap: 0.5rem;
+                color: var(--primary);
+                font-weight: 600;
+                font-size: 0.875rem;
+                margin-bottom: 1.5rem;
+                transition: opacity 0.3s;
+              "
+            >
+              <span class="material-symbols-outlined" style="font-size: 1.2rem"
+                >arrow_back</span
+              >
+              Volver al catálogo
+            </a>
+            <h1 class="page-title">Completa tu Reserva</h1>
+            <p class="page-subtitle">
+              Asegura tu experiencia con nuestro sistema de pago encriptado.
+            </p>
+          </section>
+
+          <div class="toggle-group">
+            <button class="toggle-btn active" id="btn-card">
+              Tarjeta de Crédito
+            </button>
+            <button class="toggle-btn inactive" id="btn-wallet">
+              Billetera Digital
+            </button>
+          </div>
+
+          <div class="form-card">
+            <div class="form-grid">
+              <div class="form-group-full">
+                <label class="form-label">Nombre del Titular</label>
+                <input
+                  class="form-input"
+                  placeholder="Juan Pérez"
+                  type="text"
+                />
+              </div>
+              <div class="form-group-full">
+                <label class="form-label">Número de Tarjeta</label>
+                <div class="input-wrapper">
+                  <input
+                    class="form-input"
+                    placeholder="0000 0000 0000 0000"
+                    type="text"
+                  />
+                  <div class="input-icon">
+                    <span class="material-symbols-outlined">credit_card</span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <label class="form-label">Fecha de Expiración</label>
+                <input class="form-input" placeholder="MM / AA" type="text" />
+              </div>
+              <div>
+                <label class="form-label">CVV</label>
+                <input class="form-input" placeholder="***" type="password" />
+              </div>
+            </div>
+
+            <div class="checkbox-wrapper">
+              <input class="checkbox-input" id="save-card" type="checkbox" />
+              <label class="checkbox-label" for="save-card"
+                >Guardar esta tarjeta para futuras reservas</label
+              >
+            </div>
+          </div>
+
+          <div class="trust-badges">
+            <div class="badge">
+              <span class="material-symbols-outlined">verified_user</span>
+              <span class="badge-text">PCI Level 1</span>
+            </div>
+            <div class="badge">
+              <span class="material-symbols-outlined">gpp_good</span>
+              <span class="badge-text">256-Bit SSL</span>
+            </div>
+            <div class="badge">
+              <span class="material-symbols-outlined">shield</span>
+              <span class="badge-text">Protección Antifraude</span>
+            </div>
+          </div>
+        </div>
+
+        <aside class="summary-column">
+          <div class="summary-card">
+            <h2 class="summary-title">Resumen de Reserva</h2>
+
+            <!-- Habitaciones seleccionadas (dinámico desde JS) -->
+            <div id="summary-rooms-list"></div>
+
+            <div class="details-list" id="summary-details">
+              <!-- Renderizado por JS -->
+            </div>
+
+            <div class="price-list" id="summary-prices">
+              <!-- Renderizado por JS -->
+            </div>
+
+            <button class="btn-submit" id="btn-pay">
+              <span class="material-symbols-outlined fill-icon">lock</span>
+              Pagar y Confirmar
+            </button>
+
+            <p class="terms-text">
+              Al hacer clic en "Pagar y Confirmar", aceptas nuestros
+              <a href="#">Términos de Servicio</a> y nuestra
+              <a href="#">Política de Cancelación</a>.
+            </p>
+          </div>
+
+          <div class="support-card">
+            <div class="support-icon-wrapper">
+              <span class="material-symbols-outlined">headset_mic</span>
+            </div>
+            <div>
+              <h4 class="support-title">¿Necesitas ayuda?</h4>
+              <p class="support-desc">
+                Contacta a nuestro Concierge Digital 24/7.
+              </p>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-text js-hotel-name">
+          © 2026 El Cielo. Todos los derechos reservados.
+        </div>
+        <div class="footer-links">
+          <a href="#" class="footer-link">Privacidad</a>
+          <a href="#" class="footer-link">Seguridad</a>
+          <a href="#" class="footer-link">Términos</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script>
+      // Comportamiento de Scroll Navbar
+      window.addEventListener("scroll", () => {
+        const isScrolled = window.scrollY > 50;
+        document
+          .getElementById("navbar")
+          ?.classList.toggle("scrolled", isScrolled);
+      });
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // Nombre del hotel dinámico
+        document.querySelectorAll(".js-hotel-name").forEach((el) => {
+          if (typeof hotelInfo !== "undefined" && hotelInfo.nombre) {
+            el.textContent = hotelInfo.nombre;
+          }
+        });
+
+        // Leer carrito y datos de reserva desde localStorage
+        const cart = JSON.parse(localStorage.getItem("elcielo_cart") || "[]");
+        const booking = JSON.parse(
+          localStorage.getItem("elcielo_booking") || "{}",
+        );
+
+        // Si el carrito está vacío, redirigir al catálogo
+        if (cart.length === 0) {
+          window.location.href = "catalogo.html";
+          return;
+        }
+
+        // Función auxiliar para formatear fechas
+        const formatDate = (dateStr) => {
+          if (!dateStr) return "—";
+          const months = [
+            "Ene",
+            "Feb",
+            "Mar",
+            "Abr",
+            "May",
+            "Jun",
+            "Jul",
+            "Ago",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dic",
+          ];
+          const d = new Date(dateStr + "T00:00:00");
+          return `${d.getDate()} ${months[d.getMonth()]}, ${d.getFullYear()}`;
+        };
+
+        // Calcular noches
+        let nights = 1;
+        if (booking.checkin && booking.checkout) {
+          const d1 = new Date(booking.checkin);
+          const d2 = new Date(booking.checkout);
+          const diff = Math.ceil((d2 - d1) / (1000 * 60 * 60 * 24));
+          if (diff > 0) nights = diff;
+        }
+
+        // Renderizar habitaciones en el resumen
+        const roomsListEl = document.getElementById("summary-rooms-list");
+        let roomsHTML = "";
+        cart.forEach((room, i) => {
+          roomsHTML += `
+            <div class="property-info" style="${i > 0 ? "border-top: 1px solid var(--surface-container); padding-top: 1.5rem;" : ""}">
+              <div class="property-image-wrapper">
+                <img alt="${room.name}" src="${room.images[0]}" />
+              </div>
+              <div>
+                <h3 class="property-name">${room.name}</h3>
+                <p class="property-location">
+                  <span class="material-symbols-outlined icon-sm">location_on</span>
+                  ${room.location || room.sede}
+                </p>
+                <div class="free-cancel">Cancelación Gratuita</div>
+              </div>
+            </div>
+          `;
+        });
+        roomsListEl.innerHTML = roomsHTML;
+
+        // Renderizar detalles
+        const detailsEl = document.getElementById("summary-details");
+        const adultsText = `${booking.adults || 2} Adulto${(booking.adults || 2) !== 1 ? "s" : ""}`;
+        const kidsText = booking.kids
+          ? `, ${booking.kids} Niño${booking.kids !== 1 ? "s" : ""}`
+          : "";
+
+        detailsEl.innerHTML = `
+          <div class="detail-row">
+            <span>Check-in</span>
+            <span class="detail-val">${formatDate(booking.checkin)}</span>
+          </div>
+          <div class="detail-row">
+            <span>Check-out</span>
+            <span class="detail-val">${formatDate(booking.checkout)}</span>
+          </div>
+          <div class="detail-row">
+            <span>Noches</span>
+            <span class="detail-val">${nights}</span>
+          </div>
+          <div class="detail-row">
+            <span>Huéspedes</span>
+            <span class="detail-val">${adultsText}${kidsText}</span>
+          </div>
+          <div class="detail-row">
+            <span>Habitaciones</span>
+            <span class="detail-val">${cart.length}</span>
+          </div>
+        `;
+
+        // Renderizar precios
+        const pricesEl = document.getElementById("summary-prices");
+        const pricePerNight = cart.reduce((sum, r) => sum + r.price, 0);
+        const subtotal = pricePerNight * nights;
+        const serviceFee = Math.round(subtotal * 0.05);
+        const taxes = Math.round(subtotal * 0.03);
+        const total = subtotal + serviceFee + taxes;
+
+        let pricesHTML = "";
+        cart.forEach((room) => {
+          pricesHTML += `
+            <div class="price-row">
+              <span>${room.name}</span>
+              <span>S/. ${room.price} / noche</span>
+            </div>
+          `;
+        });
+
+        pricesHTML += `
+          <div class="price-row" style="border-top: 1px solid var(--surface-container); padding-top: 0.75rem;">
+            <span>Subtotal (${nights} noche${nights !== 1 ? "s" : ""})</span>
+            <span>S/. ${subtotal.toFixed(2)}</span>
+          </div>
+          <div class="price-row">
+            <span>Tarifa de Servicio</span>
+            <span>S/. ${serviceFee.toFixed(2)}</span>
+          </div>
+          <div class="price-row">
+            <span>Impuestos</span>
+            <span>S/. ${taxes.toFixed(2)}</span>
+          </div>
+          <div class="price-total">
+            <span class="total-label">Total</span>
+            <span class="total-val">S/. ${total.toFixed(2)}</span>
+          </div>
+        `;
+        pricesEl.innerHTML = pricesHTML;
+
+        // Botón de pagar
+        document.getElementById("btn-pay")?.addEventListener("click", () => {
+          alert("¡Reserva confirmada! Gracias por elegir El Cielo.");
+          localStorage.removeItem("elcielo_cart");
+          localStorage.removeItem("elcielo_booking");
+          window.location.href = "ElCielo.html";
+        });
+      });
+    </script>
+  </body>
+</html>

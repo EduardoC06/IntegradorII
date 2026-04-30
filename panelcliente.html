@@ -1,0 +1,1530 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mis habitaciones - El cielo</title>
+
+    <!-- Supabase Auth -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase-config.js"></script>
+    <script>
+      window.requireAuth();
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ==========================================================================
+   CSS Variables & Reset
+   ========================================================================== */
+      :root {
+        --primary: #00478d;
+        --primary-container: #005eb8;
+        --primary-fixed: #d6e3ff;
+        --on-primary-fixed-variant: #00468c;
+        --tertiary: #00514d;
+        --secondary-container: #8cf3f3;
+        --on-secondary-container: #007070;
+        --background: #f7f9fb;
+        --on-background: #191c1e;
+        --surface-container-lowest: #ffffff;
+        --surface-container-low: #f2f4f6;
+        --surface-container-high: #e6e8ea;
+        --surface-container-highest: #e0e3e5;
+        --on-surface: #191c1e;
+        --on-surface-variant: #424752;
+        --error-container: #ffdad6;
+        --on-error-container: #93000a;
+
+        --font-headline: "Manrope", sans-serif;
+        --font-body: "Inter", sans-serif;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: var(--background);
+        color: var(--on-background);
+        font-family: var(--font-body);
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+      }
+
+      a {
+        text-decoration: none;
+      }
+      button {
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+      }
+
+      /* Icon Settings */
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .text-primary-color {
+        color: var(--primary);
+      }
+
+      /* ==========================================================================
+   Typography
+   ========================================================================== */
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      .logo {
+        font-family: var(--font-headline);
+        color: var(--on-surface);
+      }
+      .logo {
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        color: #1e3a8a;
+      }
+
+      /* ==========================================================================
+   Components
+   ========================================================================== */
+
+      /* ==================== NAVBAR ==================== */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 90px;
+        z-index: 50;
+        background-color: transparent;
+        border-radius: 0;
+        border: 1px solid transparent;
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(0px);
+
+        transition:
+          top 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          width 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s,
+          left 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s,
+          background-color 0.4s ease,
+          backdrop-filter 0.4s ease,
+          box-shadow 0.4s ease;
+      }
+
+      /* ESTADO SCROLL: Navbar flotante inferior central */
+      .navbar.scrolled {
+        position: fixed;
+        top: auto;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: max-content;
+        height: 70px;
+        border-radius: 35px;
+        background-image: url("https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/POINTSAQP.webp");
+        background-position: center;
+        background-size: cover;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+        padding: 0 0.5rem;
+      }
+
+      /* Layout horizontal original (arriba) */
+      .nav-horizontal {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 90px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 4%;
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+        transition: all 0.3s ease 0.4s;
+      }
+      .navbar.scrolled .nav-horizontal {
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+        transition: all 0.2s ease;
+      }
+
+      .nav-brand {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #ffffff;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
+      .nav-links {
+        display: none;
+        gap: 2rem;
+        align-items: center;
+      }
+      .nav-links a {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s ease;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: #ffffff;
+        border-bottom: 2px solid #ffffff;
+        padding-bottom: 0.25rem;
+      }
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .btn-signin {
+        color: #ffffff;
+        font-weight: 500;
+        background-color: transparent;
+        padding: 0.5rem 1rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        display: none;
+      }
+      .btn-book {
+        background: linear-gradient(
+          to bottom right,
+          var(--primary),
+          var(--primary-container)
+        );
+        color: white;
+        padding: 0.625rem 1.5rem;
+        border-radius: 999px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+      .btn-book:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+      }
+
+      @media (min-width: 768px) {
+        .nav-links {
+          display: flex;
+        }
+        .btn-signin {
+          display: block;
+        }
+      }
+
+      .nav-vertical {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(0.9);
+        transition: all 0.2s ease;
+      }
+      .navbar.scrolled .nav-vertical {
+        position: relative;
+        opacity: 1;
+        pointer-events: auto;
+        transform: scale(1);
+        transition: all 0.4s ease 0.6s;
+        flex-direction: row;
+        padding: 0;
+        gap: 0.5rem;
+        justify-content: center;
+      }
+
+      .vert-text {
+        display: none;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+      }
+      .vert-links {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .vert-links a {
+        color: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        white-space: nowrap;
+      }
+      .vert-links a:hover,
+      .vert-links a.active {
+        background: var(--primary);
+        color: #ffffff;
+      }
+      .vert-icon {
+        font-size: 1.25rem;
+      }
+
+      .vert-actions {
+        display: flex;
+        align-items: center;
+      }
+      .btn-book-vert {
+        background: rgba(255, 255, 255, 0.95);
+        color: var(--primary);
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      @media (min-width: 768px) {
+        .navbar.scrolled {
+          padding: 0 1rem;
+        }
+        .navbar.scrolled .vert-text {
+          display: block;
+        }
+        .navbar.scrolled .vert-links a {
+          width: auto;
+          padding: 0 1.25rem;
+          border-radius: 999px;
+        }
+        .navbar.scrolled .btn-book-vert {
+          width: auto;
+          padding: 0 1.5rem;
+          border-radius: 999px;
+        }
+      }
+
+      /* Cart drawer */
+      .cart-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: #d32f2f;
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 800;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translate(25%, -25%);
+      }
+      .cart-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+      .cart-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .cart-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        max-width: 400px;
+        background: var(--background);
+        z-index: 1001;
+        box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+      }
+      .cart-drawer.active {
+        transform: translateX(0);
+      }
+      .cart-drawer-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--surface-container-high);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .cart-drawer-header h2 {
+        font-family: var(--font-headline);
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--on-surface);
+        margin: 0;
+      }
+      .close-cart-btn {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: var(--on-surface-variant);
+      }
+      .cart-items-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .cart-empty-message {
+        text-align: center;
+        color: var(--on-surface-variant);
+        margin-top: 2rem;
+      }
+      .cart-item {
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--surface-container-high);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        display: flex;
+        gap: 1rem;
+        position: relative;
+      }
+      .cart-item-img {
+        width: 80px;
+        height: 60px;
+        border-radius: 0.5rem;
+        object-fit: cover;
+      }
+      .cart-item-info {
+        flex: 1;
+      }
+      .cart-item-title {
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+        color: var(--on-surface);
+      }
+      .cart-item-price {
+        color: var(--primary);
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      .remove-item-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: transparent;
+        border: none;
+        color: var(--on-surface-variant);
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+      .remove-item-btn:hover {
+        color: #d32f2f;
+      }
+      .cart-drawer-footer {
+        padding: 1.5rem;
+        border-top: 1px solid var(--surface-container-high);
+        background: var(--surface-container-lowest);
+      }
+      .cart-total {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 800;
+        color: var(--on-surface);
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+      }
+      .btn-checkout {
+        width: 100%;
+        padding: 1rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      .btn-checkout:hover {
+        background: #153243;
+      }
+
+      /* Buttons */
+      .btn-primary {
+        background: linear-gradient(
+          to bottom right,
+          var(--primary),
+          var(--primary-container)
+        );
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        transition: all 0.2s;
+        transform: scale(0.95);
+      }
+      .btn-primary:hover {
+        opacity: 0.9;
+        transform: scale(0.97);
+      }
+
+      /* ==================== HERO PANEL ==================== */
+      .panel-hero {
+        position: relative;
+        height: 20vh;
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .panel-hero-bg {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+      }
+      .panel-hero-bg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .panel-hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.8) 0%,
+          rgba(0, 0, 0, 0.4) 100%
+        );
+      }
+      .dashboard-header {
+        position: relative;
+        z-index: 1;
+        padding: 0 1.5rem;
+        max-width: 800px;
+        margin-top: 60px;
+      }
+      .dashboard-header h1 {
+        font-family: var(--font-headline);
+        font-size: 1.5rem;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        color: #ffffff;
+        margin-bottom: 0.25rem;
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      }
+      .dashboard-header p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.875rem;
+        line-height: 1.4;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Main Layout */
+      .main-container {
+        padding: 0 1rem 3rem 1rem;
+        max-width: 90rem;
+        margin: 0 auto;
+        width: 100%;
+        flex: 1;
+      }
+
+      @media (min-width: 768px) {
+        .panel-hero {
+          height: 12vh;
+          margin-bottom: 3rem;
+        }
+        .dashboard-header {
+          padding: 0 2rem;
+        }
+        .dashboard-header h1 {
+          font-size: 3rem;
+          margin-bottom: 0.5rem;
+        }
+        .dashboard-header p {
+          font-size: 1.125rem;
+          line-height: 1.6;
+        }
+        .main-container {
+          padding: 0 2rem 3rem 2rem;
+        }
+      }
+
+      .dashboard-layout {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      @media (min-width: 1024px) {
+        .dashboard-layout {
+          grid-template-columns: 3fr 9fr;
+        }
+      }
+
+      /* Sidebar */
+      .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        min-width: 0;
+      }
+      .profile-card {
+        background: var(--surface-container-low);
+        padding: 1rem;
+        border-radius: 0.75rem;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .profile-avatar {
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 50%;
+        background: var(--primary-fixed);
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .profile-info h3 {
+        font-weight: 700;
+        font-size: 1rem;
+      }
+      .profile-info p {
+        font-size: 0.75rem;
+        color: var(--on-surface-variant);
+      }
+
+      .sidebar-nav {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        scrollbar-width: none; /* Firefox */
+      }
+      .sidebar-nav::-webkit-scrollbar {
+        display: none; /* Chrome/Safari */
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.5rem;
+        color: #64748b;
+        font-weight: 500;
+        font-size: 0.875rem;
+        white-space: nowrap;
+        transition:
+          transform 0.3s,
+          background 0.3s;
+      }
+      .nav-item .material-symbols-outlined {
+        font-size: 1.25rem;
+      }
+      .nav-item:hover {
+        background: rgba(226, 232, 240, 0.5);
+      }
+      .nav-item.active {
+        background: white;
+        color: var(--primary);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        font-weight: 600;
+      }
+
+      @media (min-width: 1024px) {
+        .profile-card {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 1.5rem;
+          gap: 0;
+          margin-bottom: 1rem;
+        }
+        .profile-avatar {
+          width: 5rem;
+          height: 5rem;
+          margin-bottom: 1rem;
+        }
+        .profile-info h3 {
+          font-size: 1.125rem;
+        }
+        .profile-info p {
+          font-size: 0.875rem;
+        }
+        .sidebar-nav {
+          flex-direction: column;
+          overflow-x: visible;
+          padding-bottom: 0;
+        }
+        .nav-item {
+          padding: 0.75rem 1rem;
+          font-size: 1rem;
+        }
+        .nav-item:hover {
+          transform: translateX(4px);
+        }
+      }
+
+      /* Sections */
+      .main-content {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+      }
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+      .section h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+      }
+      .badge {
+        background: var(--secondary-container);
+        color: var(--on-secondary-container);
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+      }
+
+      /* Reservation Card */
+      .reservation-card {
+        background: var(--surface-container-lowest);
+        border-radius: 0.75rem;
+        padding: 0.25rem;
+        box-shadow: 0 8px 32px rgba(25, 28, 30, 0.06);
+        overflow: hidden;
+      }
+      .card-layout {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+      .card-image {
+        height: 16rem;
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.5rem 0.5rem 0 0;
+      }
+      .card-image img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .card-details {
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      @media (min-width: 768px) {
+        .card-layout {
+          grid-template-columns: 2fr 3fr;
+        }
+        .card-image {
+          height: 100%;
+          border-radius: 0.5rem 0 0 0.5rem;
+        }
+      }
+
+      .card-title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+      }
+      .subtitle {
+        color: var(--tertiary);
+        font-weight: 700;
+        font-size: 0.875rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .card-title-row h3 {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-top: 0.25rem;
+      }
+      .conf-number {
+        text-align: right;
+        font-size: 0.875rem;
+        color: var(--on-surface-variant);
+      }
+
+      .dates-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+      .date-box {
+        background: var(--surface-container-low);
+        padding: 1rem;
+        border-radius: 0.5rem;
+      }
+      .date-label {
+        font-size: 0.75rem;
+        color: var(--on-surface-variant);
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+      .date-value {
+        font-weight: 700;
+        color: var(--on-surface);
+      }
+
+      .card-actions {
+        display: flex;
+        gap: 1rem;
+      }
+      .flex-1 {
+        flex: 1;
+      }
+      .btn-primary.flex-1 {
+        padding: 0.75rem;
+        border-radius: 0.75rem;
+      }
+      .btn-danger {
+        background: var(--surface-container-highest);
+        color: var(--on-surface);
+        padding: 0.75rem;
+        border-radius: 0.75rem;
+        font-weight: 700;
+        transition: all 0.3s;
+      }
+      .btn-danger:hover {
+        background: var(--error-container);
+        color: var(--on-error-container);
+      }
+
+      /* Historical Bookings */
+      .history-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .history-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+        background: var(--surface-container-low);
+        border-radius: 0.75rem;
+        transition: background 0.3s;
+        cursor: pointer;
+      }
+      .history-item:hover {
+        background: white;
+      }
+      .history-info {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+      }
+      .history-image {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 0.5rem;
+        overflow: hidden;
+      }
+      .history-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s;
+      }
+      .history-item:hover .history-image img {
+        transform: scale(1.1);
+      }
+      .history-info h4 {
+        font-weight: 700;
+      }
+      .history-info p {
+        font-size: 0.875rem;
+        color: var(--on-surface-variant);
+      }
+
+      .history-actions {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+      }
+      .history-price {
+        text-align: right;
+        display: none;
+      }
+      @media (min-width: 768px) {
+        .history-price {
+          display: block;
+        }
+      }
+      .history-price .price {
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: var(--tertiary);
+      }
+      .history-price .status {
+        font-size: 0.75rem;
+        color: var(--on-surface-variant);
+      }
+      .btn-icon {
+        background: transparent;
+        padding: 0.5rem;
+        border-radius: 50%;
+        transition: background 0.3s;
+        color: var(--on-surface-variant);
+      }
+      .btn-icon:hover {
+        background: var(--surface-container-highest);
+      }
+
+      /* Settings Widget */
+      .settings-widget {
+        background: var(--surface-container-high);
+        padding: 2rem;
+        border-radius: 0.75rem;
+      }
+      .settings-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+      .settings-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      @media (min-width: 768px) {
+        .settings-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .settings-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .field-group label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--on-surface-variant);
+        margin-bottom: 0.5rem;
+      }
+      .field-box {
+        background: var(--surface-container-lowest);
+        padding: 1rem;
+        border-radius: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .field-box span {
+        font-weight: 500;
+      }
+      .btn-text-primary {
+        background: transparent;
+        color: var(--primary);
+        font-size: 0.875rem;
+        font-weight: 700;
+      }
+
+      .settings-promo {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+      .promo-box {
+        background: var(--primary-fixed);
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        border-left: 4px solid var(--primary);
+      }
+      .promo-title {
+        color: var(--on-primary-fixed-variant);
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .promo-desc {
+        font-size: 0.875rem;
+        color: var(--on-primary-fixed-variant);
+        opacity: 0.8;
+        margin-bottom: 1rem;
+      }
+      .btn-solid-primary {
+        background: var(--primary);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 700;
+      }
+
+      /* ==========================================================================
+   Footer
+   ========================================================================== */
+      .footer {
+        background-color: #f8fafc;
+        padding: 3rem 2rem;
+        margin-top: auto;
+        border-top: 1px solid #e2e8f0;
+      }
+      .footer-grid {
+        max-width: 80rem;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      @media (min-width: 768px) {
+        .footer-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      .footer-brand p {
+        font-size: 0.875rem;
+        color: #64748b;
+        margin-top: 1rem;
+      }
+      .footer-links h5 {
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .footer-links a {
+        display: block;
+        color: #64748b;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+      }
+      .footer-links a:hover {
+        color: #3b82f6;
+      }
+
+      .newsletter-form {
+        display: flex;
+        margin-top: 0.5rem;
+      }
+      .newsletter-form input {
+        flex: 1;
+        background: var(--surface-container-low);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem 0 0 0.5rem;
+        font-size: 0.875rem;
+        outline: none;
+      }
+      .newsletter-form input:focus {
+        box-shadow: inset 0 0 0 1px var(--primary);
+      }
+      .newsletter-form button {
+        background: var(--primary);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0 0.5rem 0.5rem 0;
+        display: flex;
+        align-items: center;
+      }
+
+      .footer-bottom {
+        max-width: 80rem;
+        margin: 3rem auto 0;
+        padding-top: 2rem;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+      }
+      @media (min-width: 768px) {
+        .footer-bottom {
+          flex-direction: row;
+        }
+      }
+      .footer-bottom p {
+        color: #64748b;
+        font-size: 0.75rem;
+      }
+      .footer-icons {
+        display: flex;
+        gap: 1.5rem;
+        color: #94a3b8;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar" id="navbar">
+      <div class="nav-horizontal">
+        <div style="display: flex; align-items: center; gap: 2rem">
+          <a class="nav-brand js-hotel-name" href="ElCielo.html">El Cielo</a>
+          <div class="nav-links">
+            <a href="#habitaciones">Habitaciones</a>
+            <a href="#experiencia">Experiencia</a>
+            <a href="/ofertas.html">Ofertas</a>
+          </div>
+        </div>
+        <div class="nav-actions">
+          <button class="btn-signin">Iniciar Sesión</button>
+          <button class="btn-book">Reservar Ahora</button>
+        </div>
+      </div>
+
+      <div class="nav-vertical">
+        <div class="vert-links">
+          <a href="ElCielo.html" title="Ir a Inicio">
+            <span class="material-symbols-outlined vert-icon">home</span>
+            <span class="vert-text">Inicio</span>
+          </a>
+          <a href="catalogo.html" title="Ver Habitaciones">
+            <span class="material-symbols-outlined vert-icon">hotel</span>
+            <span class="vert-text">Habitaciones</span>
+          </a>
+          <div
+            class="vert-divider"
+            style="
+              width: 1px;
+              height: 100%;
+              background-color: #ffffff;
+              margin: 0 0.5rem;
+            "
+          ></div>
+          <a href="/ofertas.html" title="Ver Ofertas Externas">
+            <span class="material-symbols-outlined vert-icon">sell</span>
+            <span class="vert-text">Ofertas</span>
+          </a>
+        </div>
+        <div class="vert-actions">
+          <button
+            id="open-cart-btn"
+            class="btn-book-vert"
+            style="position: relative; border: none; cursor: pointer"
+            title="Tus Habitaciones"
+          >
+            <span class="material-symbols-outlined vert-icon">luggage</span>
+            <span class="vert-text">Cuartos</span>
+            <span
+              class="cart-badge"
+              id="cart-badge"
+              style="
+                display: none;
+                right: -5px;
+                top: -5px;
+                transform: scale(0.9);
+              "
+              >0</span
+            >
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- CART DRAWER -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-drawer" id="cart-drawer">
+      <div class="cart-drawer-header">
+        <h2>
+          <span class="material-symbols-outlined">luggage</span> Tus
+          Habitaciones
+        </h2>
+        <button class="close-cart-btn" id="close-cart-btn">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="cart-items-container" id="cart-items-container">
+        <!-- Render desde JS -->
+      </div>
+      <div class="cart-drawer-footer">
+        <div class="cart-total">
+          <span>Total / noche:</span>
+          <span id="cart-total-price">S/. 0</span>
+        </div>
+        <button class="btn-checkout" id="btn-checkout">
+          Completar Reserva
+        </button>
+      </div>
+    </div>
+
+    <div class="panel-hero">
+      <div class="panel-hero-bg">
+        <img
+          src="https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/fondosillar.webp"
+          alt="Hero Image"
+        />
+      </div>
+      <div class="panel-hero-overlay"></div>
+      <div class="dashboard-header">
+        <h1>Bienvenido de nuevo, Alexander</h1>
+        <p>Gestiona tus retiros arquitectónicos y preferencias.</p>
+      </div>
+    </div>
+
+    <main class="main-container">
+      <div class="dashboard-layout">
+        <aside class="sidebar">
+          <div class="profile-card">
+            <div class="profile-avatar">
+              <img
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB7ksAzoma4QXxkoswzZcg8vGaFeVNMiiudYzM2yzEMFLeF9GcYIztkT7J-xGYWXEos7jz3-KMlSCNtQfmyZTHDm7_EiLYB8eOV188SvK_BanFak_9ZW2P13DOHse4ul5nAQti99f7OR1xBRdCIj4NohtDeuTQP2wnzrac5dxcqwrAoVWcGnY9-H2CV7YSmKPY-nijuMoxqUMz5pOHyEoYisriigEA5kxCFi8u1RsSQl-sbcSet1pQodepC5ctQUHng29Uo6eIXzM"
+                alt="Foto de Perfil"
+              />
+            </div>
+            <div class="profile-info">
+              <h3>Alexander Vance</h3>
+              <p>Miembro desde Oct 2023</p>
+            </div>
+          </div>
+          <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">
+              <span class="material-symbols-outlined">dashboard</span>
+              <span>Panel Principal</span>
+            </a>
+            <a href="#" class="nav-item">
+              <span class="material-symbols-outlined">calendar_today</span>
+              <span>Mis Reservas</span>
+            </a>
+            <a href="#" class="nav-item">
+              <span class="material-symbols-outlined">credit_card</span>
+              <span>Métodos de Pago</span>
+            </a>
+            <a href="#" class="nav-item">
+              <span class="material-symbols-outlined">settings</span>
+              <span>Ajustes de Perfil</span>
+            </a>
+          </nav>
+        </aside>
+
+        <div class="main-content">
+          <section class="section">
+            <div class="section-header">
+              <h2>Reservas Activas</h2>
+              <span class="badge">1 PRÓXIMA</span>
+            </div>
+
+            <div class="reservation-card">
+              <div class="card-layout">
+                <div class="card-image">
+                  <img
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC9RdX9-8ePLun3odLipPIKCf3YMS2HLXoOjrv6-AE45_Rv_dVkCjO87cxWgE1aQQPOI-g3QzCrpHrEuKldaksX2zNaazcE7dlRvTkYBfvY-Cqw9tlDLkUMh9l84jfCJnXVMMQkd3J76xPnbbk4TwEzJjusA2uhIu8dSqz3nNwWC9q7K-rE9UjMz-VnyK2cQtsF22-cQE0cZRcbwTLfHTOIqhGrCcfz57nULYLFMrsGd1D6eAMHL7Q4INU5euMmS3YY_KEiB-W6mA"
+                    alt="Santuario junto al lago"
+                  />
+                </div>
+                <div class="card-details">
+                  <div>
+                    <div class="card-title-row">
+                      <div>
+                        <p class="subtitle">LA SUITE FLOTANTE</p>
+                        <h3>Santuario junto al lago</h3>
+                      </div>
+                      <div class="conf-number">
+                        <p>Conf. #FA-99281</p>
+                      </div>
+                    </div>
+                    <div class="dates-grid">
+                      <div class="date-box">
+                        <p class="date-label">Entrada</p>
+                        <p class="date-value">12 Dic, 2024</p>
+                      </div>
+                      <div class="date-box">
+                        <p class="date-label">Salida</p>
+                        <p class="date-value">15 Dic, 2024</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card-actions">
+                    <button class="btn-primary flex-1">Modificar</button>
+                    <button class="btn-danger flex-1">Cancelar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <h2>Historial de Reservas</h2>
+            <div class="history-list">
+              <div class="history-item">
+                <div class="history-info">
+                  <div class="history-image">
+                    <img
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGd2-GdxvDv-iSvjn9E9qvL16HUc8vbWKkW5-TdYdngsXNrvdCm72CSvUnHmMCcV7UGTUG5spg11aCI1hHpS_3xpu5Buk0F6PempDBvmMUVIpcyoDY6lFdWOhYhb_lr54rzEGefapmofy8SCjpLhyQB2TrpZx-DbLT_hzr-9GOFUvQO2OXX7uCXw0-or5WafhoVnjlckfCf2DKynlFk6yt96Mm01fiOm6GzPzjiorxZrwNQot3-WFfJPQuAA51-Ax3Ujwl2wnDgvI"
+                      alt="Chalet"
+                    />
+                  </div>
+                  <div>
+                    <h4>Chalet Pacific Drift</h4>
+                    <p>04 Sept - 08 Sept, 2024</p>
+                  </div>
+                </div>
+                <div class="history-actions">
+                  <div class="history-price">
+                    <p class="price">$1,420.00</p>
+                    <p class="status">Completada</p>
+                  </div>
+                  <button class="btn-icon">
+                    <span class="material-symbols-outlined">receipt_long</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="history-item">
+                <div class="history-info">
+                  <div class="history-image">
+                    <img
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmJPellWV1xMs4D70HpA4dUm1FhuJbIvAE8q7IA3frcnLQ6198u_0-UXMAeOS3i6j5xlVty-TXw1Rd2RcIeMcLDdPD35gfqR9IiZOZNPn76R3G7WGQwELLptkX9jF5KeP3Rj7RLDoZt5Mil3LOePeWs-fVonGF6DPCgYn7SEsONlOYBp81Yfr9nAtuI641mOLISjvmfpujpMP8ECyj3gZH8wUejv3oyaLmmF3BJKCcLEqJ7MVy9URorV5eKjExaRrvsSGJXtkHvDU"
+                      alt="Lodge"
+                    />
+                  </div>
+                  <div>
+                    <h4>El Pico de Concreto</h4>
+                    <p>15 May - 18 May, 2024</p>
+                  </div>
+                </div>
+                <div class="history-actions">
+                  <div class="history-price">
+                    <p class="price">$2,850.00</p>
+                    <p class="status">Completada</p>
+                  </div>
+                  <button class="btn-icon">
+                    <span class="material-symbols-outlined">receipt_long</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="settings-widget">
+            <div class="settings-header">
+              <h2>Seguridad de la Cuenta</h2>
+              <span class="material-symbols-outlined text-primary-color"
+                >verified_user</span
+              >
+            </div>
+            <div class="settings-grid">
+              <div class="settings-fields">
+                <div class="field-group">
+                  <label>Dirección de Correo</label>
+                  <div class="field-box">
+                    <span>a.vance@architect.com</span>
+                    <button class="btn-text-primary">Editar</button>
+                  </div>
+                </div>
+                <div class="field-group">
+                  <label>Número de Teléfono</label>
+                  <div class="field-box">
+                    <span>+1 (555) 012-3456</span>
+                    <button class="btn-text-primary">Editar</button>
+                  </div>
+                </div>
+              </div>
+              <div class="settings-promo">
+                <div class="promo-box">
+                  <p class="promo-title">Autenticación de Dos Factores</p>
+                  <p class="promo-desc">
+                    Añadiendo una capa extra de seguridad a tus retiros
+                    arquitectónicos.
+                  </p>
+                  <button class="btn-solid-primary">Habilitar 2FA</button>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo">The Fluid Architect</div>
+          <p>
+            Curando experiencias arquitectónicas sin esfuerzo para el viajero
+            moderno. Cada estancia es una obra maestra de diseño y confort.
+          </p>
+        </div>
+        <div class="footer-links">
+          <h5>Navegación</h5>
+          <a href="#">Política de Privacidad</a>
+          <a href="#">Términos de Servicio</a>
+          <a href="#">Contáctanos</a>
+          <a href="#">Mapa del Sitio</a>
+        </div>
+        <div class="footer-links">
+          <h5>Social</h5>
+          <a href="#">Instagram</a>
+          <a href="#">LinkedIn</a>
+          <a href="#">Vimeo</a>
+        </div>
+        <div class="footer-newsletter">
+          <h5>Boletín Informativo</h5>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Correo electrónico" />
+            <button type="button">
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 The Fluid Architect. Todos los derechos reservados.</p>
+        <div class="footer-icons">
+          <span class="material-symbols-outlined">payments</span>
+          <span class="material-symbols-outlined">shield</span>
+          <span class="material-symbols-outlined">eco</span>
+        </div>
+      </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Nombre del hotel desde data.js
+        document
+          .querySelectorAll(".js-hotel-name")
+          .forEach((el) => (el.textContent = hotelInfo.nombre));
+
+        // Comportamiento de Scroll Navbar
+        window.addEventListener("scroll", () => {
+          const isScrolled = window.scrollY > 100;
+          document
+            .getElementById("navbar")
+            .classList.toggle("scrolled", isScrolled);
+          document.body.classList.toggle("nav-is-scrolled", isScrolled);
+        });
+
+        // =======================
+        // LÓGICA DE CARRITO (CART)
+        // =======================
+        let cart = JSON.parse(localStorage.getItem("elcielo_cart") || "[]");
+        const cartBadge = document.getElementById("cart-badge");
+        const cartItemsContainer = document.getElementById(
+          "cart-items-container",
+        );
+        const cartTotalEl = document.getElementById("cart-total-price");
+        const cartDrawer = document.getElementById("cart-drawer");
+        const cartOverlay = document.getElementById("cart-overlay");
+
+        const toggleCart = () => {
+          cartDrawer.classList.toggle("active");
+          cartOverlay.classList.toggle("active");
+        };
+        document
+          .getElementById("open-cart-btn")
+          ?.addEventListener("click", toggleCart);
+        document
+          .getElementById("close-cart-btn")
+          ?.addEventListener("click", toggleCart);
+        cartOverlay?.addEventListener("click", toggleCart);
+
+        const saveCart = () => {
+          localStorage.setItem("elcielo_cart", JSON.stringify(cart));
+        };
+
+        const updateCartUI = () => {
+          cartBadge.textContent = cart.length;
+          cartBadge.style.display = cart.length > 0 ? "flex" : "none";
+
+          if (cart.length === 0) {
+            cartItemsContainer.innerHTML =
+              '<div class="cart-empty-message">No has agregado ninguna habitación todavía.</div>';
+            cartTotalEl.textContent = "S/. 0";
+            return;
+          }
+
+          let total = 0;
+          cartItemsContainer.innerHTML = "";
+          cart.forEach((item, index) => {
+            total += item.price;
+            cartItemsContainer.innerHTML += `
+              <div class="cart-item">
+                <img src="${item.images[0]}" class="cart-item-img" alt="${item.name}">
+                <div class="cart-item-info">
+                  <div class="cart-item-title">${item.name}</div>
+                  <div class="cart-item-price">S/.${item.price} / noche</div>
+                </div>
+                <button class="remove-item-btn" onclick="removeFromCart(${index})">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
+            `;
+          });
+          cartTotalEl.textContent = `S/. ${total}`;
+        };
+
+        window.removeFromCart = (index) => {
+          cart.splice(index, 1);
+          saveCart();
+          updateCartUI();
+        };
+
+        updateCartUI();
+
+        // Botón Completar Reserva
+        document
+          .getElementById("btn-checkout")
+          ?.addEventListener("click", () => {
+            if (cart.length === 0) {
+              alert(
+                "Agrega al menos una habitación antes de completar la reserva.",
+              );
+              return;
+            }
+            window.location.href = "reservas.html";
+          });
+      });
+    </script>
+  </body>
+</html>

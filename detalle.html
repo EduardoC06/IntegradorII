@@ -1,0 +1,1574 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="page-title">Detalles | El cielo</title>
+
+    <!-- Supabase Auth -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase-config.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ==================== VARIABLES Y RESET ==================== */
+      :root {
+        --primary: #00478d;
+        --primary-container: #005eb8;
+        --on-primary: #ffffff;
+        --surface: #f7f9fb;
+        --on-surface: #191c1e;
+        --on-surface-variant: #424752;
+        --surface-container-low: #f2f4f6;
+        --surface-container-lowest: #ffffff;
+        --outline: #727783;
+        --outline-variant: #c2c6d4;
+        --tertiary: #00514d;
+
+        --font-headline: "Manrope", sans-serif;
+        --font-body: "Inter", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: var(--font-body);
+        background-color: var(--surface);
+        color: var(--on-surface);
+        line-height: 1.5;
+        text-align: left;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      button {
+        cursor: pointer;
+        border: none;
+        background: none;
+        font-family: inherit;
+      }
+      ul {
+        list-style: none;
+      }
+
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        vertical-align: middle;
+      }
+
+      /* ==================== NAVBAR ==================== */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 90px;
+        z-index: 50;
+        background-color: transparent;
+        border-radius: 0;
+        border: 1px solid transparent;
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(0px);
+
+        transition:
+          top 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          width 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s,
+          left 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s,
+          background-color 0.4s ease,
+          backdrop-filter 0.4s ease,
+          box-shadow 0.4s ease;
+      }
+
+      /* ESTADO SCROLL: Navbar flotante inferior central */
+      .navbar.scrolled {
+        position: fixed;
+        top: auto;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: max-content;
+        height: 70px;
+        border-radius: 35px;
+        background-image: url("https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/POINTSAQP.webp");
+        background-position: center;
+        background-size: cover;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+        padding: 0 0.5rem;
+      }
+
+      /* Layout horizontal original (arriba) */
+      .nav-horizontal {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 90px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 4%;
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+        transition: all 0.3s ease 0.4s;
+      }
+      .navbar.scrolled .nav-horizontal {
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+        transition: all 0.2s ease;
+      }
+
+      .nav-brand {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #ffffff;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
+      .nav-links {
+        display: none;
+        gap: 2rem;
+        align-items: center;
+      }
+      .nav-links a {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s ease;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: #ffffff;
+        border-bottom: 2px solid #ffffff;
+        padding-bottom: 0.25rem;
+      }
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .btn-signin {
+        color: #ffffff;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        display: none;
+      }
+      .btn-book {
+        background: linear-gradient(
+          to bottom right,
+          var(--primary),
+          var(--primary-container)
+        );
+        color: white;
+        padding: 0.625rem 1.5rem;
+        border-radius: 999px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+      .btn-book:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+      }
+
+      @media (min-width: 768px) {
+        .nav-links {
+          display: flex;
+        }
+        .btn-signin {
+          display: block;
+        }
+      }
+
+      .nav-vertical {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(0.9);
+        transition: all 0.2s ease;
+      }
+
+      .navbar.scrolled .nav-vertical {
+        position: relative;
+        opacity: 1;
+        pointer-events: auto;
+        transform: scale(1);
+        transition: all 0.4s ease 0.6s;
+        flex-direction: row;
+        padding: 0;
+        gap: 0.5rem;
+        justify-content: center;
+      }
+
+      .vert-text {
+        display: none;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+      }
+
+      .vert-links {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.25rem;
+      }
+      .vert-links a {
+        color: rgba(255, 255, 255, 0.9);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        white-space: nowrap;
+      }
+      .vert-links a:hover,
+      .vert-links a.active {
+        background: var(--primary);
+        color: #ffffff;
+      }
+      .vert-icon {
+        font-size: 1.25rem;
+      }
+
+      .vert-actions {
+        display: flex;
+        align-items: center;
+      }
+      .btn-book-vert {
+        background: rgba(255, 255, 255, 0.95);
+        color: var(--primary);
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      @media (min-width: 768px) {
+        .navbar.scrolled {
+          padding: 0 1rem;
+        }
+        .navbar.scrolled .vert-text {
+          display: block;
+        }
+        .navbar.scrolled .vert-links a {
+          width: auto;
+          padding: 0 1.25rem;
+          border-radius: 999px;
+        }
+        .navbar.scrolled .btn-book-vert {
+          width: auto;
+          padding: 0 1.5rem;
+          border-radius: 999px;
+        }
+      }
+
+      /* ==================== CART DRAWER ==================== */
+      .cart-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: #d32f2f;
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 800;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translate(25%, -25%);
+      }
+      .cart-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+      .cart-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .cart-drawer {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        max-width: 400px;
+        background: var(--surface);
+        z-index: 1001;
+        box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+      }
+      .cart-drawer.active {
+        transform: translateX(0);
+      }
+      .cart-drawer-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--outline-variant);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .cart-drawer-header h2 {
+        font-family: var(--font-headline);
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--on-surface);
+        margin: 0;
+      }
+      .close-cart-btn {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: var(--on-surface-variant);
+      }
+      .cart-items-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .cart-empty-message {
+        text-align: center;
+        color: var(--on-surface-variant);
+        margin-top: 2rem;
+      }
+      .cart-item {
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--outline-variant);
+        border-radius: 0.75rem;
+        padding: 1rem;
+        display: flex;
+        gap: 1rem;
+        position: relative;
+      }
+      .cart-item-img {
+        width: 80px;
+        height: 60px;
+        border-radius: 0.5rem;
+        object-fit: cover;
+      }
+      .cart-item-info {
+        flex: 1;
+      }
+      .cart-item-title {
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+        color: var(--on-surface);
+      }
+      .cart-item-price {
+        color: var(--primary);
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      .remove-item-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: transparent;
+        border: none;
+        color: var(--outline);
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+      .remove-item-btn:hover {
+        color: #d32f2f;
+      }
+      .cart-drawer-footer {
+        padding: 1.5rem;
+        border-top: 1px solid var(--outline-variant);
+        background: var(--surface-container-lowest);
+      }
+      .cart-total {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 800;
+        color: var(--on-surface);
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+      }
+      .btn-checkout {
+        width: 100%;
+        padding: 1rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+      .btn-checkout:hover {
+        background: #153243;
+      }
+
+      /* ==================== TOAST NOTIFICATION ==================== */
+      .toast-notification {
+        position: fixed;
+        top: 1.5rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(-120%);
+        background: var(--surface-container-lowest);
+        border: 1px solid var(--outline-variant);
+        border-left: 4px solid #f44336;
+        border-radius: 0.75rem;
+        padding: 1rem 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
+        opacity: 0;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        max-width: 420px;
+        width: max-content;
+      }
+      .toast-notification.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+      .toast-notification .toast-icon {
+        color: #f44336;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+      }
+      .toast-notification .toast-msg {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--on-surface);
+        line-height: 1.4;
+      }
+      .toast-notification.success {
+        border-left-color: #4caf50;
+      }
+      .toast-notification.success .toast-icon {
+        color: #4caf50;
+      }
+
+      /* ==================== FOOTER ==================== */
+      .footer {
+        border-top: 1px solid var(--outline-variant);
+        background: var(--surface-container-low);
+        padding: 3rem 2rem;
+        text-align: left;
+        padding-bottom: 120px;
+      }
+      .footer-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+      @media (min-width: 768px) {
+        .footer-content {
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+      }
+
+      .footer-brand {
+        font-family: var(--font-headline);
+        font-weight: 800;
+        color: var(--primary);
+        font-size: 1.25rem;
+        text-align: left;
+      }
+      .footer-links {
+        display: flex;
+        gap: 2rem;
+        flex-wrap: wrap;
+      }
+      .footer-links a {
+        color: var(--on-surface-variant);
+        font-size: 0.875rem;
+        transition: color 0.3s;
+      }
+      .footer-links a:hover {
+        color: var(--primary);
+      }
+      .footer-copy {
+        color: var(--outline);
+        font-size: 0.875rem;
+        text-align: left;
+      }
+
+      /* ==================== CUSTOM MODAL ==================== */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .modal-overlay.active {
+        display: flex;
+        opacity: 1;
+      }
+      .modal-content {
+        background: var(--surface, #ffffff);
+        padding: 2rem;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 450px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+      }
+      .modal-overlay.active .modal-content {
+        transform: translateY(0);
+      }
+      .modal-title {
+        font-family: var(--font-headline, sans-serif);
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--on-surface, #333333);
+      }
+      .modal-text {
+        font-size: 1rem;
+        color: var(--on-surface-variant, #555555);
+        line-height: 1.5;
+        margin-bottom: 2rem;
+      }
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+      }
+
+      /* ==================== HERO DETALLE ==================== */
+      .detail-hero {
+        position: relative;
+        height: 45vh;
+        min-height: 380px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+      .detail-hero-bg {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+      }
+      .detail-hero-bg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .detail-hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.8) 0%,
+          rgba(0, 0, 0, 0.4) 100%
+        );
+      }
+      .detail-hero-content {
+        position: relative;
+        z-index: 1;
+        padding: 0 2rem;
+        max-width: 800px;
+        margin-top: 50px;
+      }
+      .detail-page-title {
+        font-family: var(--font-headline);
+        font-size: 3rem;
+        font-weight: 800;
+        color: #ffffff;
+        margin-bottom: 1rem;
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      }
+      .detail-page-subtitle {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.125rem;
+        line-height: 1.6;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+      @media (min-width: 768px) {
+        .detail-page-title {
+          font-size: 4rem;
+        }
+        .detail-page-subtitle {
+          font-size: 1.25rem;
+        }
+      }
+
+      /* ==================== DETALLE LAYOUT ==================== */
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      main.container {
+        padding-top: 20px;
+        padding-bottom: 50px;
+      }
+
+      /* Bento Gallery */
+      .gallery {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        grid-template-rows: 250px 250px;
+        gap: 15px;
+        margin-bottom: 40px;
+      }
+      .gallery img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 15px;
+        transition: transform 0.3s ease;
+      }
+      .gallery img:hover {
+        transform: scale(1.02);
+      }
+      .gallery .main-img {
+        grid-column: 1 / 2;
+        grid-row: 1 / 3;
+      }
+
+      /* Content Layout */
+      .layout {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 60px;
+      }
+
+      /* Ribbon */
+      .ribbon {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 40px;
+        padding: 25px 0;
+        border-top: 1px solid var(--outline-variant);
+        border-bottom: 1px solid var(--outline-variant);
+        margin-bottom: 40px;
+      }
+      .ribbon-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .icon-box {
+        background: var(--surface-container-low);
+        padding: 10px;
+        border-radius: 10px;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Amenities */
+      .amenities {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 30px;
+      }
+      .amenity-card {
+        background: var(--surface-container-low);
+        padding: 20px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        transition: background 0.3s;
+      }
+      .amenity-card:hover {
+        background: #e0e6ed;
+      }
+
+      /* Sidebar Card */
+      .booking-card {
+        background: var(--surface-container-lowest);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        border-top: 5px solid var(--primary);
+        position: sticky;
+        top: 110px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .btn-book-sidebar {
+        width: 100%;
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 18px;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition:
+          background 0.3s,
+          transform 0.2s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-book-sidebar:hover {
+        background: var(--primary-container);
+        transform: translateY(-2px);
+      }
+      .btn-book-sidebar:disabled {
+        background: #4caf50;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .btn-back {
+        width: 100%;
+        background: transparent;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+        padding: 15px;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: none; /* Hidden by default */
+        text-align: center;
+        text-decoration: none;
+      }
+      .btn-back.show {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-back:hover {
+        background: var(--primary);
+        color: white;
+      }
+
+      /* ==================== REVIEWS SECTION ==================== */
+      .reviews-section {
+        margin-top: 60px;
+        padding-top: 40px;
+        border-top: 1px solid var(--outline-variant);
+      }
+      .reviews-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-top: 30px;
+      }
+      @media (min-width: 768px) {
+        .reviews-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .review-card {
+        background: var(--surface-container-low);
+        padding: 25px;
+        border-radius: 16px;
+      }
+      .review-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 15px;
+      }
+      .reviewer-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.2rem;
+      }
+      .review-stars {
+        color: #ffc107;
+        font-size: 1.2rem;
+      }
+
+      /* ==================== SIMILAR ROOMS ==================== */
+      .similar-rooms-section {
+        margin-top: 60px;
+        padding-top: 40px;
+        border-top: 1px solid var(--outline-variant);
+      }
+      .catalog-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin-top: 30px;
+      }
+      @media (min-width: 768px) {
+        .catalog-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (min-width: 1024px) {
+        .catalog-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      /* Card styles from catalogo */
+      .card {
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        text-align: left;
+        transition: transform 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+      }
+      .card:hover .card-img {
+        transform: scale(1.05);
+      }
+      .card:hover .card-title {
+        color: var(--primary);
+      }
+      .card-img-wrap {
+        position: relative;
+        aspect-ratio: 4/3;
+        overflow: hidden;
+        border-radius: 1rem;
+        margin-bottom: 1rem;
+        background: var(--surface-container-low);
+      }
+      .card-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+      }
+      .card-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--primary);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .card-title {
+        font-family: var(--font-headline);
+        font-size: 1.25rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        transition: color 0.3s ease;
+      }
+      .card-features {
+        display: flex;
+        gap: 1rem;
+        color: var(--on-surface-variant);
+        font-size: 0.875rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+      }
+      .card-features span {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+      }
+      .price {
+        font-family: var(--font-headline);
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--tertiary);
+      }
+      .price small {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--outline);
+      }
+
+      /* ==================== RESPONSIVE ==================== */
+      @media (max-width: 900px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+        .gallery {
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: auto;
+        }
+        .gallery .main-img {
+          grid-column: span 2;
+          height: 350px;
+        }
+        .booking-card {
+          position: static;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar" id="navbar">
+      <div class="nav-horizontal">
+        <div style="display: flex; align-items: center; gap: 2rem">
+          <a class="nav-brand js-hotel-name" href="ElCielo.html">El Cielo</a>
+          <div class="nav-links">
+            <a href="#habitaciones">Habitaciones</a>
+            <a href="#experiencia">Experiencia</a>
+            <a href="/ofertas.html">Ofertas</a>
+          </div>
+        </div>
+        <div class="nav-actions">
+          <button class="btn-signin">Iniciar Sesión</button>
+          <button class="btn-book">Reservar Ahora</button>
+        </div>
+      </div>
+
+      <div class="nav-vertical">
+        <div class="vert-links">
+          <a href="ElCielo.html" title="Ir a Inicio">
+            <span class="material-symbols-outlined vert-icon">home</span>
+            <span class="vert-text">Inicio</span>
+          </a>
+          <a href="catalogo.html" title="Ir a Catálogo">
+            <span class="material-symbols-outlined vert-icon">bed</span>
+            <span class="vert-text">Habitaciones</span>
+          </a>
+          <div
+            class="vert-divider"
+            style="
+              width: 1px;
+              height: 100%;
+              background-color: #ffffff;
+              margin: 0 0.5rem;
+            "
+          ></div>
+          <a href="ofertas.html" title="Ver Ofertas Externas">
+            <span class="material-symbols-outlined vert-icon">sell</span>
+            <span class="vert-text">Ofertas</span>
+          </a>
+        </div>
+        <div class="vert-actions">
+          <button
+            id="open-cart-btn"
+            class="btn-book-vert"
+            style="position: relative; border: none; cursor: pointer"
+            title="Tus Habitaciones"
+          >
+            <span class="material-symbols-outlined vert-icon">luggage</span>
+            <span class="vert-text">Cuartos</span>
+            <span
+              class="cart-badge"
+              id="cart-badge"
+              style="
+                display: none;
+                right: -5px;
+                top: -5px;
+                transform: scale(0.9);
+              "
+              >0</span
+            >
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <div id="hero-container"></div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="container">
+      <div id="room-content">
+        <!-- Content will be injected here if room exists -->
+      </div>
+    </main>
+
+    <!-- CART DRAWER -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-drawer" id="cart-drawer">
+      <div class="cart-drawer-header">
+        <h2>
+          <span class="material-symbols-outlined">luggage</span> Tus
+          Habitaciones
+        </h2>
+        <button class="close-cart-btn" id="close-cart-btn">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="cart-items-container" id="cart-items-container">
+        <!-- Render desde JS -->
+      </div>
+      <div class="cart-drawer-footer">
+        <div class="cart-total">
+          <span>Total / noche:</span>
+          <span id="cart-total-price">S/. 0</span>
+        </div>
+        <button class="btn-checkout" id="btn-checkout">
+          Completar Reserva
+        </button>
+      </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast-notification" id="toast-notification">
+      <span class="material-symbols-outlined toast-icon" id="toast-icon"
+        >error</span
+      >
+      <span class="toast-msg" id="toast-msg">Mensaje</span>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-brand js-hotel-name">El Cielo</div>
+        <div class="footer-links">
+          <a href="#">Política de Privacidad</a>
+          <a href="#">Términos de Servicio</a>
+          <a href="#">Accesibilidad</a>
+          <a href="#">Contacto</a>
+        </div>
+        <div class="footer-copy">
+          © 2026 <span class="js-hotel-name">El Cielo</span>. Todos los derechos
+          reservados.
+        </div>
+      </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Inicializar nombre del hotel
+        document
+          .querySelectorAll(".js-hotel-name")
+          .forEach((el) => (el.textContent = hotelInfo.nombre));
+
+        // Scroll Navbar
+        window.addEventListener("scroll", () => {
+          const isScrolled = window.scrollY > 100;
+          document
+            .getElementById("navbar")
+            .classList.toggle("scrolled", isScrolled);
+        });
+
+        // Toast
+        const showToast = (message, type = "error") => {
+          const toast = document.getElementById("toast-notification");
+          const toastIcon = document.getElementById("toast-icon");
+          const toastMsg = document.getElementById("toast-msg");
+          toastMsg.textContent = message;
+          toast.classList.remove("success");
+          if (type === "success") {
+            toast.classList.add("success");
+            toastIcon.textContent = "check_circle";
+          } else {
+            toastIcon.textContent = "error";
+          }
+          toast.classList.add("show");
+          setTimeout(() => toast.classList.remove("show"), 3500);
+        };
+
+        // Lógica de Carrito
+        let cart = JSON.parse(localStorage.getItem("elcielo_cart") || "[]");
+        const cartBadge1 = document.getElementById("cart-badge");
+        const cartBadge2 = document.getElementById("nav-cart-badge");
+        const cartItemsContainer = document.getElementById(
+          "cart-items-container",
+        );
+        const cartTotalEl = document.getElementById("cart-total-price");
+        const cartDrawer = document.getElementById("cart-drawer");
+        const cartOverlay = document.getElementById("cart-overlay");
+
+        const toggleCart = () => {
+          cartDrawer.classList.toggle("active");
+          cartOverlay.classList.toggle("active");
+        };
+
+        document
+          .getElementById("open-cart-btn")
+          ?.addEventListener("click", toggleCart);
+        document
+          .getElementById("nav-open-cart")
+          ?.addEventListener("click", toggleCart);
+        document
+          .getElementById("close-cart-btn")
+          ?.addEventListener("click", toggleCart);
+        cartOverlay?.addEventListener("click", toggleCart);
+
+        const saveCart = () => {
+          localStorage.setItem("elcielo_cart", JSON.stringify(cart));
+        };
+
+        const updateCartUI = () => {
+          const len = cart.length;
+          if (cartBadge1) {
+            cartBadge1.textContent = len;
+            cartBadge1.style.display = len > 0 ? "flex" : "none";
+          }
+          if (cartBadge2) {
+            cartBadge2.textContent = len;
+            cartBadge2.style.display = len > 0 ? "flex" : "none";
+          }
+
+          if (len === 0) {
+            cartItemsContainer.innerHTML =
+              '<div class="cart-empty-message">No has agregado ninguna habitación todavía.</div>';
+            cartTotalEl.textContent = "S/. 0";
+            return;
+          }
+
+          let total = 0;
+          cartItemsContainer.innerHTML = "";
+          cart.forEach((item, index) => {
+            total += item.price;
+            cartItemsContainer.innerHTML += `
+              <div class="cart-item">
+                <img src="${item.images[0]}" class="cart-item-img" alt="${item.name}">
+                <div class="cart-item-info">
+                  <div class="cart-item-title">${item.name}</div>
+                  <div class="cart-item-price">S/.${item.price} / noche</div>
+                </div>
+                <button class="remove-item-btn" onclick="removeFromCart(${index})">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
+            `;
+          });
+          cartTotalEl.textContent = `S/. ${total}`;
+
+          if (window.updateRoomButtons) window.updateRoomButtons();
+        };
+
+        window.removeFromCart = (index) => {
+          cart.splice(index, 1);
+          saveCart();
+          updateCartUI();
+        };
+
+        document
+          .getElementById("btn-checkout")
+          ?.addEventListener("click", () => {
+            if (cart.length === 0) {
+              showToast("Agrega al menos una habitación.");
+              return;
+            }
+            window.location.href = "reservas.html";
+          });
+
+        // Obtener Habitación
+        const params = new URLSearchParams(window.location.search);
+        const roomId = parseInt(params.get("room"));
+        const room = roomsData.find((r) => r.id === roomId);
+
+        const roomContentEl = document.getElementById("room-content");
+
+        if (room) {
+          document.getElementById("page-title").innerText =
+            `${room.name} | El cielo`;
+
+          // Renderizar Hero
+          document.getElementById("hero-container").innerHTML = `
+            <section class="detail-hero">
+              <div class="detail-hero-bg">
+                <img src="${room.images[0]}" alt="${room.name}">
+                <div class="detail-hero-overlay"></div>
+              </div>
+              <div class="detail-hero-content">
+                <h1 class="detail-page-title">${room.name}</h1>
+                <p class="detail-page-subtitle">
+                  <span class="material-symbols-outlined">location_on</span> ${room.location}
+                </p>
+              </div>
+            </section>
+          `;
+
+          // Renderizar Contenido
+          roomContentEl.innerHTML = `
+            <section class="gallery" id="gallery">
+              <img src="${room.images[0]}" class="main-img">
+              <img src="${room.images[1] || room.images[0]}">
+              <img src="${room.images[2] || room.images[0]}">
+              <img src="${room.images[3] || room.images[0]}">
+            </section>
+
+            <div class="layout">
+              <div class="details">
+                <div class="ribbon" id="room-ribbon">
+                  <div class="ribbon-item">
+                    <div class="icon-box"><span class="material-symbols-outlined">square_foot</span></div>
+                    <div>
+                      <div style="font-size: 0.7rem; color: gray; font-weight: 700; text-transform: uppercase;">Espacio</div>
+                      <div style="font-weight: 600;">${room.size}</div>
+                    </div>
+                  </div>
+                  <div class="ribbon-item">
+                    <div class="icon-box"><span class="material-symbols-outlined">king_bed</span></div>
+                    <div>
+                      <div style="font-size: 0.7rem; color: gray; font-weight: 700; text-transform: uppercase;">Cama</div>
+                      <div style="font-weight: 600;">${room.bed}</div>
+                    </div>
+                  </div>
+                  <div class="ribbon-item">
+                    <div class="icon-box"><span class="material-symbols-outlined">visibility</span></div>
+                    <div>
+                      <div style="font-size: 0.7rem; color: gray; font-weight: 700; text-transform: uppercase;">Vista</div>
+                      <div style="font-weight: 600;">${room.view}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <h2 style="font-family: var(--font-headline);">La Experiencia</h2>
+                <p id="room-desc" style="line-height: 1.8; color: var(--on-surface-variant); font-size: 1.1rem; margin-top: 15px;">${room.description}</p>
+
+                <h3 style="font-family: var(--font-headline); margin-top: 40px;">Amenidades Curadas</h3>
+                <div class="amenities" id="room-amenities">
+                  ${room.amenities
+                    .map(
+                      (a) => `
+                    <div class="amenity-card">
+                      <span class="material-symbols-outlined" style="color: var(--primary); font-size: 2rem;">${a.i}</span>
+                      <span style="font-weight: 600; font-size: 0.9rem; color: var(--on-surface);">${a.n}</span>
+                    </div>
+                  `,
+                    )
+                    .join("")}
+                </div>
+              </div>
+
+              <aside class="sidebar">
+                <div class="booking-card">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                    <span id="room-price" style="font-size: 2.2rem; font-weight: 800; color: var(--primary);">S/.${room.price}</span>
+                    <span style="color: var(--outline); margin-bottom: 8px;">/ noche</span>
+                  </div>
+
+                  <div style="margin-top: 20px; margin-bottom: 15px; display: flex; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                      <label style="font-size: 0.8rem; font-weight: 700; color: var(--outline); text-transform: uppercase;">Entrada</label>
+                      <input type="date" id="detail-checkin" style="width: 100%; padding: 12px; border: 1px solid var(--outline-variant); border-radius: 8px; font-family: inherit; outline: none; cursor: pointer;">
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                      <label style="font-size: 0.8rem; font-weight: 700; color: var(--outline); text-transform: uppercase;">Salida</label>
+                      <input type="date" id="detail-checkout" style="width: 100%; padding: 12px; border: 1px solid var(--outline-variant); border-radius: 8px; font-family: inherit; outline: none; cursor: pointer;">
+                    </div>
+                  </div>
+
+                  <button id="btn-add-detail" class="btn-book-sidebar">Reservar Ahora</button>
+                  <a href="catalogo.html" id="btn-back-detail" class="btn-back">
+                    <span class="material-symbols-outlined">arrow_back</span> Volver al Catálogo
+                  </a>
+                  <p style="text-align: center; font-size: 0.85rem; color: var(--outline); margin-top: 5px;">
+                    No se realizará ningún cargo todavía
+                  </p>
+                </div>
+              </aside>
+            </div>
+
+            <!-- Experiencias de Usuarios -->
+            <section class="reviews-section">
+              <h2 style="font-family: var(--font-headline); font-size: 2rem; color: var(--on-surface);">Experiencias de nuestros huéspedes</h2>
+              <div class="reviews-grid">
+                <div class="review-card">
+                  <div class="review-header">
+                    <div class="reviewer-avatar">M</div>
+                    <div>
+                      <div style="font-weight: 700; color: var(--on-surface);">María G.</div>
+                      <div class="review-stars">★★★★★</div>
+                    </div>
+                  </div>
+                  <p style="color: var(--on-surface-variant); font-size: 0.95rem;">"Una estancia increíble. La habitación era exactamente como en las fotos, súper limpia y con una vista espectacular. El servicio de primera."</p>
+                </div>
+                <div class="review-card">
+                  <div class="review-header">
+                    <div class="reviewer-avatar" style="background: var(--tertiary);">C</div>
+                    <div>
+                      <div style="font-weight: 700; color: var(--on-surface);">Carlos R.</div>
+                      <div class="review-stars">★★★★★</div>
+                    </div>
+                  </div>
+                  <p style="color: var(--on-surface-variant); font-size: 0.95rem;">"Las camas son comodísimas y el detalle de las amenidades le da un toque muy especial. Definitivamente volvería a reservar en este hotel."</p>
+                </div>
+              </div>
+            </section>
+
+            <!-- Habitaciones Similares -->
+            <section class="similar-rooms-section">
+              <h2 style="font-family: var(--font-headline); font-size: 2rem; color: var(--on-surface);">Otras habitaciones que te podrían interesar</h2>
+              <div class="catalog-grid" id="similar-rooms-grid">
+                <!-- JS render -->
+              </div>
+            </section>
+          `;
+
+          // Lógica del Botón Reservar en detalle
+          const btnAdd = document.getElementById("btn-add-detail");
+          const btnBack = document.getElementById("btn-back-detail");
+
+          window.updateRoomButtons = () => {
+            if (!btnAdd) return;
+            const inCart = cart.some((item) => item.id === room.id);
+            if (inCart) {
+              btnAdd.innerHTML = `<span class="material-symbols-outlined">check</span> En tu carrito`;
+              btnAdd.disabled = true;
+              btnBack.classList.add("show");
+            } else {
+              btnAdd.innerHTML = `Reservar Ahora`;
+              btnAdd.disabled = false;
+              btnBack.classList.remove("show");
+            }
+          };
+
+          // Inicializar inputs de fecha
+          const detailCheckin = document.getElementById("detail-checkin");
+          const detailCheckout = document.getElementById("detail-checkout");
+
+          const today = new Date();
+          const todayStr = today.toISOString().split("T")[0];
+          detailCheckin.min = todayStr;
+          detailCheckout.min = todayStr;
+
+          const savedBooking = JSON.parse(
+            localStorage.getItem("elcielo_booking") || "null",
+          );
+          if (savedBooking && savedBooking.checkin) {
+            detailCheckin.value = savedBooking.checkin;
+          } else {
+            detailCheckin.value = todayStr;
+          }
+          if (savedBooking && savedBooking.checkout) {
+            detailCheckout.value = savedBooking.checkout;
+          }
+
+          const saveDetailDates = () => {
+            const b = JSON.parse(
+              localStorage.getItem("elcielo_booking") || "{}",
+            );
+            b.checkin = detailCheckin.value;
+            b.checkout = detailCheckout.value;
+            localStorage.setItem("elcielo_booking", JSON.stringify(b));
+          };
+
+          detailCheckin.addEventListener("change", () => {
+            detailCheckout.min = detailCheckin.value;
+            if (
+              detailCheckout.value &&
+              detailCheckout.value <= detailCheckin.value
+            ) {
+              detailCheckout.value = "";
+            }
+            saveDetailDates();
+          });
+
+          detailCheckout.addEventListener("change", saveDetailDates);
+
+          btnAdd.addEventListener("click", () => {
+            const checkin = detailCheckin.value;
+            const checkout = detailCheckout.value;
+
+            if (!checkin || !checkout) {
+              showToast(
+                "Selecciona las fechas de entrada y salida antes de reservar.",
+              );
+              return;
+            }
+
+            if (checkout <= checkin) {
+              showToast(
+                "La fecha de salida debe ser posterior a la fecha de entrada.",
+              );
+              return;
+            }
+
+            let finalCheckout = checkout;
+
+            const executeAddToCart = (adjustedCheckout) => {
+              // Guardar fechas temporalmente para checkout
+              const guestsAdults = savedBooking ? savedBooking.adults : 2;
+              const guestsKids = savedBooking ? savedBooking.kids : 0;
+              localStorage.setItem(
+                "elcielo_booking",
+                JSON.stringify({
+                  checkin,
+                  checkout: adjustedCheckout,
+                  adults: guestsAdults,
+                  kids: guestsKids,
+                }),
+              );
+
+              const inCart = cart.some((item) => item.id === room.id);
+              if (!inCart) {
+                cart.push(room);
+                saveCart();
+                updateCartUI();
+                showToast("Habitación agregada al carrito.", "success");
+                toggleCart();
+              }
+            };
+
+            if (room.bookedDates && room.bookedDates.length > 0) {
+              const selectedStart = new Date(checkin);
+              const selectedEnd = new Date(checkout);
+
+              const conflictingRes = room.bookedDates.find((reserva) => {
+                const resStart = new Date(reserva.start);
+                const resEnd = new Date(reserva.end);
+                return selectedStart < resEnd && selectedEnd > resStart;
+              });
+
+              if (conflictingRes) {
+                const resStart = new Date(conflictingRes.start);
+                if (resStart <= selectedStart) {
+                  showToast(
+                    `La habitación está ocupada en estas fechas. Disponible desde el ${conflictingRes.end}.`,
+                  );
+                  return;
+                } else {
+                  finalCheckout = conflictingRes.start;
+
+                  const modal = document.getElementById("date-conflict-modal");
+                  const msgEl = document.getElementById("date-conflict-msg");
+                  msgEl.textContent = `Esta habitación solo estará disponible hasta el ${finalCheckout} porque hay una reserva posterior que ingresa a las 10:00 am. ¿Deseas ajustar tu fecha de salida al ${finalCheckout} y agregarla al carrito?`;
+
+                  modal.classList.add("active");
+
+                  document.getElementById("modal-cancel").onclick = () => {
+                    modal.classList.remove("active");
+                  };
+                  document.getElementById("modal-accept").onclick = () => {
+                    detailCheckout.value = finalCheckout;
+                    saveDetailDates();
+                    modal.classList.remove("active");
+                    executeAddToCart(finalCheckout);
+                  };
+                  return; // Stop execution here, wait for user input
+                }
+              }
+            }
+
+            executeAddToCart(finalCheckout);
+          });
+
+          updateRoomButtons();
+
+          // Renderizar Habitaciones Similares (mismo tipo o cercanas, excluyendo la actual, max 3)
+          const similarRooms = roomsData
+            .filter((r) => r.id !== room.id && r.estado === true)
+            .slice(0, 3);
+
+          const similarGrid = document.getElementById("similar-rooms-grid");
+          similarGrid.innerHTML = similarRooms
+            .map(
+              (r) => `
+            <a href="detalle.html?room=${r.id}" class="card">
+              <div class="card-img-wrap">
+                <img class="card-img" src="${r.images[0]}" alt="${r.name}">
+                ${r.badge ? `<div class="card-badge">${r.badge}</div>` : ""}
+              </div>
+              <h3 class="card-title">${r.name}</h3>
+              <div class="card-features">
+                  <span><span class="material-symbols-outlined">square_foot</span> ${r.size || "N/A"}</span>
+                  <span><span class="material-symbols-outlined">king_bed</span> ${r.bed || "Estándar"}</span>
+              </div>
+              <div class="card-footer">
+                  <div class="price">S/.${r.price} <small>/ noche</small></div>
+              </div>
+            </a>
+          `,
+            )
+            .join("");
+        } else {
+          roomContentEl.innerHTML =
+            "<div style='text-align:center; padding: 100px 20px;'><h1 style='color: var(--on-surface); font-size: 2rem; margin-bottom:20px;'>Habitación no encontrada</h1><a href='catalogo.html' style='color: var(--primary); font-weight: bold; text-decoration: underline;'>Volver al catálogo</a></div>";
+        }
+
+        // Initialize UI
+        updateCartUI();
+      });
+    </script>
+    <!-- MODAL DE CONFIRMACIÓN DE FECHAS -->
+    <div class="modal-overlay" id="date-conflict-modal">
+      <div class="modal-content">
+        <h3 class="modal-title">Aviso Importante</h3>
+        <p class="modal-text" id="date-conflict-msg"></p>
+        <div class="modal-actions">
+          <button class="btn-outline" id="modal-cancel">Cancelar</button>
+          <button class="btn-primary" id="modal-accept">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

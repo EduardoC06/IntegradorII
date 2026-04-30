@@ -1,0 +1,1719 @@
+<!doctype html>
+<html lang="es" class="html-adm">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>El Arquitecto Fluido | Panel Administrativo</title>
+
+    <!-- Supabase Auth -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase-config.js"></script>
+    <script>
+      window.requireAdmin();
+    </script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* =========================================
+           RESET Y VARIABLES
+           ========================================= */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary-adm: #00478d;
+        --primary-container-adm: #005eb8;
+        --primary-light-adm: #d6e3ff;
+        --secondary-adm: #007070;
+        --secondary-light-adm: #8cf3f3;
+        --tertiary-adm: #00514d;
+        --tertiary-light-adm: #79f6ed;
+        --danger-adm: #ba1a1a;
+        --danger-light-adm: #ffdad6;
+
+        --bg-adm: #f7f9fb;
+        --surface-adm: #ffffff;
+        --surface-alt-adm: #f2f4f6;
+        --surface-hover-adm: #e6e8ea;
+        --sidebar-bg-adm: #f8fafc;
+
+        --text-main-adm: #191c1e;
+        --text-muted-adm: #424752;
+        --border-adm: #e2e8f0;
+        --border-dark-adm: #c2c6d4;
+        --shadow-sm-adm:
+          0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        --shadow-md-adm:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-lg-adm:
+          0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+
+      body.body-adm {
+        font-family: "Inter", sans-serif;
+        color: var(--text-main-adm);
+        background-color: var(--bg-adm);
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5 {
+        font-family: "Manrope", sans-serif;
+      }
+
+      /* Iconos */
+      .icon-adm {
+        font-family: "Material Symbols Outlined";
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 1;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .icon-fill-adm {
+        font-variation-settings:
+          "FILL" 1,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+      }
+      .icon-sm-adm {
+        font-size: 18px;
+      }
+
+      /* =========================================
+           ESTRUCTURA PRINCIPAL Y OVERLAY
+           ========================================= */
+      .layout-adm {
+        display: flex;
+        height: 100vh;
+        overflow: hidden;
+        position: relative;
+      }
+      .overlay-adm {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 40;
+        display: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .overlay-active-adm {
+        display: block;
+        opacity: 1;
+      }
+
+      /* =========================================
+           BARRA LATERAL (SIDEBAR)
+           ========================================= */
+      .sidebar-adm {
+        width: 280px;
+        background-color: var(--sidebar-bg-adm);
+        border-right: 1px solid var(--border-adm);
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem 1rem;
+        flex-shrink: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -100%;
+        z-index: 50;
+        transition: left 0.3s ease;
+        box-shadow: var(--shadow-lg-adm);
+      }
+      .sidebar-active-adm {
+        left: 0;
+      }
+      .sidebar-header-adm {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding: 0 0.5rem;
+      }
+      .brand-title-adm {
+        font-size: 1.125rem;
+        font-weight: 800;
+        color: var(--primary-adm);
+      }
+      .brand-subtitle-adm {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-muted-adm);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+      .btn-close-sidebar-adm {
+        background: none;
+        border: none;
+        color: var(--text-muted-adm);
+        cursor: pointer;
+        display: block;
+      }
+      .nav-adm {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        overflow-y: auto;
+      }
+      .nav-link-adm,
+      .submenu-btn-adm {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        color: var(--text-muted-adm);
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        background: none;
+        border: none;
+        width: 100%;
+      }
+      .nav-link-content-adm {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .nav-link-adm:hover,
+      .submenu-btn-adm:hover {
+        background-color: var(--border-adm);
+        color: var(--primary-adm);
+      }
+      .nav-link-active-adm {
+        background-color: var(--surface-adm);
+        color: var(--primary-container-adm);
+        font-weight: 700;
+        box-shadow: var(--shadow-sm-adm);
+        border-left: 4px solid var(--primary-adm);
+      }
+      .submenu-content-adm {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        padding-left: 2.5rem;
+        gap: 0.25rem;
+      }
+      .submenu-open-adm .submenu-content-adm {
+        max-height: 250px;
+        margin-top: 0.25rem;
+      }
+      .submenu-open-adm .submenu-icon-chevron-adm {
+        transform: rotate(180deg);
+      }
+      .submenu-icon-chevron-adm {
+        transition: transform 0.3s ease;
+        font-size: 20px;
+      }
+      .btn-primary-adm {
+        width: 100%;
+        background: linear-gradient(
+          to right,
+          var(--primary-adm),
+          var(--primary-container-adm)
+        );
+        color: white;
+        border: none;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        box-shadow: var(--shadow-md-adm);
+        margin-top: 1rem;
+        transition: opacity 0.2s;
+      }
+      .btn-primary-adm:active {
+        opacity: 0.8;
+      }
+
+      /* =========================================
+           BOTONES Y ACCIONES
+           ========================================= */
+      .btn-secondary-adm {
+        background-color: var(--surface-alt-adm);
+        color: var(--primary-adm);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.15s;
+      }
+      .btn-secondary-adm:hover {
+        background-color: var(--surface-hover-adm);
+      }
+      .btn-add-adm {
+        background-color: var(--primary-adm);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        transition: opacity 0.15s;
+      }
+      .btn-add-adm:hover {
+        opacity: 0.9;
+      }
+      .btn-dashed-adm {
+        width: 100%;
+        margin-top: 1.5rem;
+        padding: 0.75rem;
+        border: 2px dashed var(--border-dark-adm);
+        background: none;
+        color: var(--text-muted-adm);
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.15s;
+      }
+      .btn-dashed-adm:hover {
+        border-color: var(--primary-adm);
+        color: var(--primary-adm);
+      }
+      .hide-mobile-adm {
+        display: none;
+      }
+
+      /* =========================================
+           NOTIFICACIONES (TOAST - H0005)
+           ========================================= */
+      .toast-container-adm {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .toast-adm {
+        min-width: 250px;
+        padding: 1rem 1.25rem;
+        border-radius: 0.5rem;
+        background: var(--surface-adm);
+        box-shadow: var(--shadow-lg-adm);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        transform: translateX(120%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid var(--border-adm);
+      }
+      .toast-show-adm {
+        transform: translateX(0);
+      }
+      .toast-success-adm {
+        border-left: 4px solid var(--tertiary-adm);
+      }
+      .toast-error-adm {
+        border-left: 4px solid var(--danger-adm);
+      }
+      .toast-info-adm {
+        border-left: 4px solid var(--primary-container-adm);
+      }
+      .toast-icon-adm {
+        font-size: 20px;
+      }
+      .toast-text-adm {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-main-adm);
+      }
+
+      /* Widget Especial */
+      .widget-adm {
+        background: linear-gradient(
+          to bottom right,
+          var(--primary-adm),
+          var(--primary-container-adm)
+        );
+        padding: 1.5rem;
+        border-radius: 1rem;
+        color: white;
+        box-shadow: var(--shadow-lg-adm);
+        position: relative;
+        overflow: hidden;
+        margin-top: 1.5rem;
+      }
+      .widget-content-adm {
+        position: relative;
+        z-index: 10;
+      }
+      .widget-title-adm {
+        font-size: 1.125rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .widget-text-adm {
+        font-size: 0.875rem;
+        opacity: 0.9;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+      }
+      .btn-widget-adm {
+        background-color: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        transition: background-color 0.15s;
+      }
+      .btn-widget-adm:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+      }
+      .widget-bg-icon-adm {
+        position: absolute;
+        bottom: -1.5rem;
+        right: -1.5rem;
+        font-size: 8rem;
+        opacity: 0.1;
+        transform: rotate(12deg);
+        pointer-events: none;
+      }
+
+      /* =========================================
+           CONTENIDO PRINCIPAL Y CABECERA (DROPDOWN)
+           ========================================= */
+      .main-content-adm {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        width: 100%;
+      }
+      .header-adm {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border-adm);
+      }
+      .header-left-adm {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .btn-menu-adm {
+        background: none;
+        border: none;
+        color: var(--text-main-adm);
+        cursor: pointer;
+        display: block;
+      }
+      .header-title-adm {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: var(--primary-adm);
+      }
+      .header-subtitle-adm {
+        font-size: 0.875rem;
+        color: var(--text-muted-adm);
+        display: none;
+      }
+      .header-actions-adm {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .profile-dropdown-wrapper-adm {
+        position: relative;
+      }
+      .profile-btn-adm {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+      .avatar-adm {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: var(--primary-light-adm);
+        overflow: hidden;
+      }
+      .avatar-adm img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .profile-info-adm {
+        display: none;
+        text-align: left;
+      }
+      .profile-name-adm {
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: var(--text-main-adm);
+      }
+      .profile-role-adm {
+        font-size: 0.75rem;
+        color: var(--text-muted-adm);
+      }
+
+      .dropdown-menu-adm {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        width: 200px;
+        background: var(--surface-adm);
+        border: 1px solid var(--border-adm);
+        border-radius: 0.5rem;
+        box-shadow: var(--shadow-lg-adm);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.2s ease;
+        z-index: 20;
+      }
+      .dropdown-open-adm .dropdown-menu-adm {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      .dropdown-item-adm {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+        color: var(--text-muted-adm);
+        text-decoration: none;
+        font-size: 0.875rem;
+        border-bottom: 1px solid var(--surface-hover-adm);
+      }
+      .dropdown-item-adm:hover {
+        background-color: var(--surface-alt-adm);
+        color: var(--primary-adm);
+      }
+
+      /* =========================================
+           SECCIONES, GRID Y TARJETAS (MÓVIL POR DEFECTO)
+           ========================================= */
+      .section-target-adm {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      .hidden-adm {
+        display: none !important;
+      }
+
+      /* GRID MÓVIL: Cuadrados pequeños, 2 por fila */
+      .grid-insights-adm {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(130px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .card-adm {
+        background-color: var(--surface-adm);
+        padding: 1rem;
+        border-radius: 1.25rem;
+        box-shadow: var(--shadow-sm-adm);
+        aspect-ratio: 1 / 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .metric-header-adm {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        width: 100%;
+      }
+      .icon-box-primary-adm {
+        padding: 0.5rem;
+        background-color: var(--primary-light-adm);
+        color: var(--primary-adm);
+        border-radius: 0.5rem;
+        display: inline-flex;
+      }
+      .icon-box-secondary-adm {
+        padding: 0.5rem;
+        background-color: var(--secondary-light-adm);
+        color: var(--secondary-adm);
+        border-radius: 0.5rem;
+        display: inline-flex;
+      }
+      .icon-box-tertiary-adm {
+        padding: 0.5rem;
+        background-color: var(--tertiary-light-adm);
+        color: var(--tertiary-adm);
+        border-radius: 0.5rem;
+        display: inline-flex;
+      }
+      .tag-positive-adm {
+        font-size: 0.6rem;
+        font-weight: 700;
+        color: var(--tertiary-adm);
+        background-color: rgba(121, 246, 237, 0.3);
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.3rem;
+      }
+      .metric-content-adm {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+      }
+      .metric-label-adm {
+        color: var(--text-muted-adm);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+      .metric-value-wrapper-adm {
+        display: flex;
+        align-items: baseline;
+        gap: 0.25rem;
+      }
+      .metric-value-adm {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--primary-adm);
+        line-height: 1;
+      }
+      .metric-target-adm {
+        font-size: 0.65rem;
+        color: var(--text-muted-adm);
+        font-weight: 500;
+      }
+      .progress-track-adm {
+        margin-top: 0.5rem;
+        width: 100%;
+        background-color: var(--surface-alt-adm);
+        border-radius: 999px;
+        height: 0.4rem;
+      }
+      .progress-fill-adm {
+        background-color: var(--primary-adm);
+        height: 0.4rem;
+        border-radius: 999px;
+        width: 84.2%;
+      }
+
+      /* Contenido Tablas y Reportes */
+      .grid-content-adm {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .table-container-adm {
+        background-color: var(--surface-alt-adm);
+        border-radius: 1rem;
+        padding: 1.5rem;
+        overflow: hidden;
+      }
+      .table-header-adm {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .table-actions-adm {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      .section-title-adm {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--primary-adm);
+      }
+      .search-wrapper-adm {
+        position: relative;
+        width: 100%;
+      }
+      .search-icon-adm {
+        position: absolute;
+        left: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted-adm);
+        font-size: 1.2rem;
+      }
+      .search-input-adm,
+      .select-input-adm {
+        width: 100%;
+        background-color: var(--surface-adm);
+        border: 1px solid var(--border-adm);
+        border-radius: 0.5rem;
+        padding: 0.6rem 1rem 0.6rem 2.25rem;
+        font-size: 0.875rem;
+        font-family: "Inter", sans-serif;
+      }
+      .select-input-adm {
+        padding-left: 1rem;
+        cursor: pointer;
+      }
+
+      .table-responsive-adm {
+        overflow-x: auto;
+        width: 100%;
+      }
+      .data-table-adm {
+        width: 100%;
+        min-width: 600px;
+        text-align: left;
+        border-collapse: separate;
+        border-spacing: 0 0.5rem;
+      }
+      .data-table-adm th {
+        padding: 0.5rem;
+        color: var(--text-muted-adm);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .row-adm {
+        background-color: var(--surface-adm);
+        box-shadow: var(--shadow-sm-adm);
+        border-radius: 0.5rem;
+      }
+      .data-table-adm td {
+        padding: 1rem 0.75rem;
+        font-size: 0.875rem;
+      }
+      .data-table-adm td:first-child {
+        border-top-left-radius: 0.5rem;
+        border-bottom-left-radius: 0.5rem;
+      }
+      .data-table-adm td:last-child {
+        border-top-right-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+      }
+      .room-info-adm {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .room-img-adm {
+        width: 3.5rem;
+        height: 2.5rem;
+        object-fit: cover;
+        border-radius: 0.375rem;
+      }
+      .room-name-adm {
+        font-weight: 700;
+        color: var(--text-main-adm);
+      }
+      .room-type-adm {
+        font-size: 0.7rem;
+        color: var(--text-muted-adm);
+      }
+      .status-badge-adm {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        font-weight: 700;
+        padding: 0.3rem 0.6rem;
+        border-radius: 0.375rem;
+      }
+      .status-ok-adm {
+        background-color: rgba(121, 246, 237, 0.3);
+        color: var(--tertiary-adm);
+      }
+      .status-busy-adm {
+        background-color: var(--primary-light-adm);
+        color: var(--primary-adm);
+      }
+
+      .reports-container-adm {
+        background-color: var(--surface-adm);
+        padding: 1.5rem;
+        border-radius: 1rem;
+        box-shadow: var(--shadow-sm-adm);
+      }
+      .report-item-adm {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem;
+        background-color: var(--surface-alt-adm);
+        border-radius: 0.75rem;
+        margin-bottom: 0.75rem;
+        transition: background-color 0.2s;
+        cursor: pointer;
+      }
+      .report-item-adm:hover {
+        background-color: var(--surface-hover-adm);
+      }
+      .report-icon-adm {
+        padding: 0.6rem;
+        border-radius: 0.5rem;
+      }
+      .report-title-adm {
+        font-size: 0.875rem;
+        font-weight: 700;
+        color: var(--text-main-adm);
+      }
+      .report-date-adm {
+        font-size: 0.75rem;
+        color: var(--text-muted-adm);
+      }
+      .blank-canvas-adm {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        min-height: 50vh;
+        background-color: var(--surface-adm);
+        border-radius: 1rem;
+        border: 2px dashed var(--border-dark-adm);
+        padding: 2rem;
+      }
+      .blank-title-adm {
+        font-size: 1.25rem;
+        color: var(--primary-adm);
+        margin: 0.5rem 0;
+        font-weight: 800;
+      }
+
+      .footer-adm {
+        margin-top: auto;
+        padding: 2rem 1.5rem;
+        background-color: var(--sidebar-bg-adm);
+        border-top: 1px solid var(--border-adm);
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        text-align: center;
+      }
+      .footer-col-adm {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      /* =========================================
+           MEDIA QUERIES (DESKTOP) RESTAURACIÓN
+           ========================================= */
+      @media (min-width: 768px) {
+        .table-header-adm {
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .search-wrapper-adm {
+          width: 250px;
+        }
+        .footer-adm {
+          grid-template-columns: repeat(2, 1fr);
+          text-align: left;
+        }
+        .header-subtitle-adm {
+          display: block;
+        }
+        .profile-info-adm {
+          display: block;
+        }
+        .hide-mobile-adm {
+          display: flex;
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .sidebar-adm {
+          position: relative;
+          left: 0;
+          box-shadow: none;
+        }
+        .btn-close-sidebar-adm {
+          display: none;
+        }
+        .btn-menu-adm {
+          display: none;
+        }
+
+        /* RESTAURAR DISEÑO ORIGINAL EN DESKTOP (Rectángulos, no cuadrados) */
+        .grid-insights-adm {
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1.5rem;
+          margin-bottom: 2rem;
+        }
+        .col-span-2-adm {
+          grid-column: span 2;
+        }
+
+        .card-adm {
+          aspect-ratio: auto;
+          padding: 1.5rem;
+          border-radius: 0.75rem;
+        }
+        .metric-content-adm {
+          gap: 0.25rem;
+          margin-top: 0.5rem;
+        }
+        .metric-label-adm {
+          font-size: 0.875rem;
+        }
+        .metric-value-adm {
+          font-size: 2.25rem;
+        }
+        .metric-target-adm {
+          font-size: 0.875rem;
+        }
+        .tag-positive-adm {
+          font-size: 0.75rem;
+          padding: 0.25rem 0.5rem;
+        }
+        .icon-box-primary-adm,
+        .icon-box-secondary-adm,
+        .icon-box-tertiary-adm {
+          padding: 0.75rem;
+          border-radius: 0.5rem;
+        }
+        .progress-track-adm {
+          margin-top: 1.5rem;
+          height: 0.5rem;
+        }
+        .progress-fill-adm {
+          height: 0.5rem;
+        }
+
+        .grid-content-adm {
+          grid-template-columns: 2fr 1fr;
+        }
+        .footer-adm {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        .section-target-adm {
+          padding: 2rem;
+        }
+        .header-adm {
+          padding: 1.5rem 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body class="body-adm">
+    <div class="layout-adm">
+      <div class="overlay-adm" id="overlay-adm"></div>
+
+      <aside class="sidebar-adm" id="sidebar-adm">
+        <div class="sidebar-header-adm">
+          <div>
+            <h1 class="brand-title-adm">Admin Panel</h1>
+            <p class="brand-subtitle-adm">Conserje Digital</p>
+          </div>
+          <button class="btn-close-sidebar-adm" id="btn-close-sidebar-adm">
+            <span class="icon-adm">close</span>
+          </button>
+        </div>
+
+        <nav class="nav-adm">
+          <a
+            class="nav-link-adm nav-link-active-adm nav-item-adm"
+            href="#"
+            data-target="section-dashboard-adm"
+          >
+            <div class="nav-link-content-adm">
+              <span class="icon-adm">dashboard</span>
+              <span>Panel Principal</span>
+            </div>
+          </a>
+          <a
+            class="nav-link-adm nav-item-adm"
+            href="#"
+            data-target="section-reservas-adm"
+          >
+            <div class="nav-link-content-adm">
+              <span class="icon-adm">calendar_today</span>
+              <span>Reservas</span>
+            </div>
+          </a>
+
+          <div class="submenu-wrapper-adm" id="submenu-inventario-adm">
+            <button class="submenu-btn-adm">
+              <div class="nav-link-content-adm">
+                <span class="icon-adm">inventory_2</span>
+                <span>Gestión e Inventario</span>
+              </div>
+              <span class="icon-adm submenu-icon-chevron-adm">expand_more</span>
+            </button>
+            <div class="submenu-content-adm">
+              <a
+                class="nav-link-adm nav-item-adm"
+                href="#"
+                data-target="section-habitaciones-adm"
+                style="padding: 0.5rem"
+              >
+                <div class="nav-link-content-adm">
+                  <span class="icon-adm icon-sm-adm">bed</span>
+                  <span>Habitaciones</span>
+                </div>
+              </a>
+              <a
+                class="nav-link-adm nav-item-adm"
+                href="#"
+                data-target="section-tarifas-adm"
+                style="padding: 0.5rem"
+              >
+                <div class="nav-link-content-adm">
+                  <span class="icon-adm icon-sm-adm">payments</span>
+                  <span>Tarifas y Precios</span>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <a
+            class="nav-link-adm nav-item-adm"
+            href="#"
+            data-target="section-clientes-adm"
+          >
+            <div class="nav-link-content-adm">
+              <span class="icon-adm">group</span>
+              <span>Clientes</span>
+            </div>
+          </a>
+
+          <a
+            class="nav-link-adm nav-item-adm"
+            href="#"
+            data-target="section-reportes-operativos-adm"
+          >
+            <div class="nav-link-content-adm">
+              <span class="icon-adm">bar_chart</span>
+              <span>Reportes Operativos</span>
+            </div>
+          </a>
+
+          <a
+            class="nav-link-adm nav-item-adm"
+            href="#"
+            data-target="section-configuracion-adm"
+          >
+            <div class="nav-link-content-adm">
+              <span class="icon-adm">settings</span>
+              <span>Configuración</span>
+            </div>
+          </a>
+        </nav>
+
+        <div>
+          <button
+            class="btn-primary-adm trigger-async-adm"
+            data-action="crear_reserva"
+          >
+            <span class="icon-adm">add</span>
+            <span>Nueva Reserva</span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-content-adm">
+        <header class="header-adm">
+          <div class="header-left-adm">
+            <button class="btn-menu-adm" id="btn-menu-adm">
+              <span class="icon-adm">menu</span>
+            </button>
+            <div>
+              <h2 id="header-title-adm" class="header-title-adm">
+                Panel Principal
+              </h2>
+              <p id="header-subtitle-adm" class="header-subtitle-adm">
+                Resumen y métricas de hoy.
+              </p>
+            </div>
+          </div>
+
+          <div class="header-actions-adm">
+            <button
+              class="btn-secondary-adm hide-mobile-adm trigger-async-adm"
+              data-action="exportar_datos"
+            >
+              <span class="icon-adm">file_download</span>
+              Exportar Datos
+            </button>
+
+            <div class="profile-dropdown-wrapper-adm" id="profile-dropdown-adm">
+              <button class="profile-btn-adm" id="profile-btn-adm">
+                <div class="profile-info-adm">
+                  <p class="profile-name-adm">Alex Rivera</p>
+                  <p class="profile-role-adm">Administrador</p>
+                </div>
+                <div class="avatar-adm">
+                  <img
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLRKRnFD7UqIDptdhLO429h9eA1CFgtQHqUUEY8NxuleZvusAAWQi8CQho_kbwBaSsrHXRooHzVWvhv-7Opl069k0qtMIx5C-cuHA78D_lL9wjZH0mH1Bt4W2nAGrYwuQsqdbhJWylN0rA3YdUTQu7q3HES5-MHpIauEHO2MbINrlPEiJ9l7JayQpsR4apEzx1Pknk9Dgr9dtRp__ABDWhAh5-7s1gT0CdqiftglpPMpF5eZdylQ_hWUJ4TLfDRQqAGZqiQZHUGyk"
+                    alt="Avatar"
+                  />
+                </div>
+                <span
+                  class="icon-adm"
+                  style="font-size: 20px; color: var(--text-muted-adm)"
+                  >arrow_drop_down</span
+                >
+              </button>
+
+              <div class="dropdown-menu-adm">
+                <a href="#" class="dropdown-item-adm"
+                  ><span class="icon-adm icon-sm-adm">account_circle</span> Mi
+                  Perfil</a
+                >
+                <a href="#" class="dropdown-item-adm"
+                  ><span class="icon-adm icon-sm-adm">settings</span> Ajustes de
+                  Cuenta</a
+                >
+                <a href="#" class="dropdown-item-adm"
+                  ><span class="icon-adm icon-sm-adm">help</span> Soporte</a
+                >
+                <a href="#" class="dropdown-item-adm"
+                  ><span class="icon-adm icon-sm-adm">logout</span> Cerrar
+                  Sesión</a
+                >
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section id="section-dashboard-adm" class="section-target-adm">
+          <div class="grid-insights-adm">
+            <div class="card-adm col-span-2-adm">
+              <div class="metric-header-adm">
+                <div class="icon-box-primary-adm">
+                  <span class="icon-adm icon-fill-adm">leaderboard</span>
+                </div>
+                <span class="tag-positive-adm">+12%</span>
+              </div>
+              <div class="metric-content-adm">
+                <p class="metric-label-adm">Ocupación</p>
+                <div class="metric-value-wrapper-adm">
+                  <h3 class="metric-value-adm">84.2%</h3>
+                  <span class="metric-target-adm">Meta: 90%</span>
+                </div>
+                <div class="progress-track-adm">
+                  <div class="progress-fill-adm"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-adm">
+              <div class="metric-header-adm">
+                <div class="icon-box-secondary-adm">
+                  <span class="icon-adm">payments</span>
+                </div>
+              </div>
+              <div class="metric-content-adm">
+                <p class="metric-label-adm">Ingresos</p>
+                <h3 class="metric-value-adm">$142.5k</h3>
+                <p class="metric-target-adm">Octubre</p>
+              </div>
+            </div>
+
+            <div class="card-adm">
+              <div class="metric-header-adm">
+                <div class="icon-box-tertiary-adm">
+                  <span class="icon-adm">book_online</span>
+                </div>
+              </div>
+              <div class="metric-content-adm">
+                <p class="metric-label-adm">Reservas</p>
+                <h3 class="metric-value-adm">1,204</h3>
+                <p class="metric-target-adm">Hoy: 42</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-content-adm">
+            <div class="table-container-adm">
+              <div class="table-header-adm">
+                <h4 class="section-title-adm">Inventario Rápido</h4>
+                <div class="table-actions-adm">
+                  <div class="search-wrapper-adm" style="max-width: 250px">
+                    <span class="icon-adm search-icon-adm">search</span>
+                    <input
+                      type="text"
+                      class="search-input-adm"
+                      placeholder="Buscar..."
+                    />
+                  </div>
+                  <button
+                    class="btn-add-adm trigger-async-adm"
+                    data-action="anadir_hab"
+                  >
+                    <span class="icon-adm">add_circle</span> Añadir Hab.
+                  </button>
+                </div>
+              </div>
+              <div class="table-responsive-adm">
+                <table class="data-table-adm">
+                  <thead>
+                    <tr>
+                      <th>Habitación</th>
+                      <th>Categoría</th>
+                      <th>Precio</th>
+                      <th>Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="row-adm">
+                      <td>
+                        <div class="room-info-adm">
+                          <img
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAweBRF4B0qger2m8ZG2-vL7c7PyeKZaR_PJ3OtzRR1asNfauK2k32rp1J4_wQkIZMPZMc_jzPsMYujIPiQEJrvtTG7UmRaHlpXIA6Pd3L6MOlVv2QPK1yX55-AVGtv1njcUOyY_Wni3oYfyItWGFH6H8f89E6HRNTUeWeiPEiq7vThGB4jt6GlT57tMT5mAtRiMSrJOYl97HoxhaBvdwYc-rxBVRzCCqxX77ifY0ZpIz08ecoCdxLLLd_ZRcoIEGlqscM_WBP6kb8"
+                            alt="Suite"
+                            class="room-img-adm"
+                          />
+                          <div>
+                            <p class="room-name-adm">Hab. 402</p>
+                            <p class="room-type-adm">Piso 4</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>Suite Lujo</td>
+                      <td style="color: var(--tertiary-adm); font-weight: 800">
+                        $349/n
+                      </td>
+                      <td>
+                        <span class="status-badge-adm status-ok-adm"
+                          >Disponible</span
+                        >
+                      </td>
+                    </tr>
+                    <tr class="row-adm">
+                      <td>
+                        <div class="room-info-adm">
+                          <img
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8bRKF5fHj4Swb9evFvMq0GUr7Agp9jHcdZjahSTClAKjs17PN9IQYSAoqrkpLxpxO44OagV61shzo0A6brE4dKDWHumZe40zYjPhq_Hj-I9fy7e3XCg_4djSTKwZNziAl5tSaIhwSv0uX454sFjpUPRUTCdxwGx_Oy5_X8nDYiWMWk5H4yeOl46Ky9bQ_khGAX0NznTFmCqkPuTq6vj0eQVrwTpY-yqZeinReR1pmOqAP82LXtvTlM9Dj41TaWrHHYH2hPmVgjsM"
+                            alt="Std"
+                            class="room-img-adm"
+                          />
+                          <div>
+                            <p class="room-name-adm">Hab. 215</p>
+                            <p class="room-type-adm">Piso 2</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td>Estándar</td>
+                      <td style="color: var(--tertiary-adm); font-weight: 800">
+                        $189/n
+                      </td>
+                      <td>
+                        <span class="status-badge-adm status-busy-adm"
+                          >Ocupada</span
+                        >
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <div class="reports-container-adm">
+                <h4 class="section-title-adm" style="margin-bottom: 1.5rem">
+                  Reportes Recientes
+                </h4>
+                <div class="report-item-adm">
+                  <div
+                    class="report-icon-adm"
+                    style="
+                      background: var(--danger-light-adm);
+                      color: var(--danger-adm);
+                    "
+                  >
+                    <span class="icon-adm">picture_as_pdf</span>
+                  </div>
+                  <div>
+                    <p class="report-title-adm">Ingresos Mensuales Q3</p>
+                    <p class="report-date-adm">Oct 01, 2024</p>
+                  </div>
+                </div>
+                <div class="report-item-adm">
+                  <div
+                    class="report-icon-adm"
+                    style="
+                      background: var(--primary-light-adm);
+                      color: var(--primary-adm);
+                    "
+                  >
+                    <span class="icon-adm">table_chart</span>
+                  </div>
+                  <div>
+                    <p class="report-title-adm">Auditoría de Inventario</p>
+                    <p class="report-date-adm">Sep 24, 2024</p>
+                  </div>
+                </div>
+                <button
+                  class="btn-dashed-adm trigger-async-adm"
+                  data-action="generar_reporte"
+                >
+                  <span class="icon-adm">add</span> Generar Nuevo Reporte
+                </button>
+              </div>
+              <div class="widget-adm">
+                <div class="widget-content-adm">
+                  <h4 class="widget-title-adm">Consejo del Conserje</h4>
+                  <p class="widget-text-adm">
+                    Alta demanda de <strong>Suites de Lujo</strong> esperada
+                    este fin de semana. Ajusta los precios correspondientemente.
+                  </p>
+                  <button class="btn-widget-adm">Revisar Precios</button>
+                </div>
+                <span class="icon-adm icon-fill-adm widget-bg-icon-adm"
+                  >hotel</span
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="section-reportes-operativos-adm"
+          class="section-target-adm hidden-adm"
+        >
+          <div class="table-container-adm" style="flex-grow: 1">
+            <div class="table-header-adm">
+              <div>
+                <h4 class="section-title-adm">Reporte Detallado de Reservas</h4>
+                <p
+                  style="
+                    font-size: 0.875rem;
+                    color: var(--text-muted-adm);
+                    margin-top: 0.25rem;
+                  "
+                >
+                  H0005: Filtra el reporte para visualizar el nivel de ocupación
+                  del hotel.
+                </p>
+              </div>
+              <div class="table-actions-adm">
+                <select
+                  class="select-input-adm"
+                  style="width: auto"
+                  id="select-mes-adm"
+                >
+                  <option value="10-2024">Octubre 2024</option>
+                  <option value="09-2024">Septiembre 2024</option>
+                  <option value="08-2024">Agosto 2024</option>
+                </select>
+                <button
+                  class="btn-secondary-adm trigger-async-adm"
+                  data-action="filtrar_ocupacion"
+                >
+                  <span class="icon-adm">filter_alt</span> Filtrar Ocupación
+                </button>
+              </div>
+            </div>
+
+            <div class="table-responsive-adm" style="margin-top: 1rem">
+              <table class="data-table-adm">
+                <thead>
+                  <tr>
+                    <th>ID Reserva</th>
+                    <th>Huésped</th>
+                    <th>Habitación</th>
+                    <th>Check-In / Check-Out</th>
+                    <th>Estado BD</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="row-adm">
+                    <td style="font-weight: 700; color: var(--primary-adm)">
+                      #RES-8891
+                    </td>
+                    <td>Carlos Mendoza</td>
+                    <td>Suite Lujo (402)</td>
+                    <td>15 Oct - 18 Oct</td>
+                    <td>
+                      <span class="status-badge-adm status-busy-adm"
+                        >En Curso</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="row-adm">
+                    <td style="font-weight: 700; color: var(--primary-adm)">
+                      #RES-8892
+                    </td>
+                    <td>Ana Sofía Ríos</td>
+                    <td>Estándar (215)</td>
+                    <td>16 Oct - 17 Oct</td>
+                    <td>
+                      <span class="status-badge-adm status-ok-adm"
+                        >Confirmada</span
+                      >
+                    </td>
+                  </tr>
+                  <tr class="row-adm">
+                    <td style="font-weight: 700; color: var(--primary-adm)">
+                      #RES-8893
+                    </td>
+                    <td>Empresa Tech LTDA</td>
+                    <td>Ejecutiva (301)</td>
+                    <td>18 Oct - 22 Oct</td>
+                    <td>
+                      <span class="status-badge-adm status-ok-adm"
+                        >Confirmada</span
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="section-habitaciones-adm"
+          class="section-target-adm hidden-adm"
+        >
+          <div class="blank-canvas-adm">
+            <span
+              class="icon-adm"
+              style="font-size: 4rem; color: var(--primary-light-adm)"
+              >bed</span
+            >
+            <h2 class="blank-title-adm">Gestión de Habitaciones</h2>
+            <p style="color: var(--text-muted-adm); max-width: 500px">
+              Crea, edita o inhabilita habitaciones en el inventario.
+            </p>
+          </div>
+        </section>
+        <section id="section-tarifas-adm" class="section-target-adm hidden-adm">
+          <div class="blank-canvas-adm">
+            <span
+              class="icon-adm"
+              style="font-size: 4rem; color: var(--primary-light-adm)"
+              >payments</span
+            >
+            <h2 class="blank-title-adm">Gestión de Tarifas</h2>
+            <p style="color: var(--text-muted-adm); max-width: 500px">
+              Modifica los precios base por temporada.
+            </p>
+          </div>
+        </section>
+        <section
+          id="section-reservas-adm"
+          class="section-target-adm hidden-adm"
+        >
+          <div class="blank-canvas-adm">
+            <span
+              class="icon-adm"
+              style="font-size: 4rem; color: var(--primary-light-adm)"
+              >calendar_today</span
+            >
+            <h2 class="blank-title-adm">Detalle de Reservas</h2>
+            <p style="color: var(--text-muted-adm)">
+              Actualiza manualmente el estado de pago y el seguimiento de
+              huéspedes.
+            </p>
+          </div>
+        </section>
+        <section
+          id="section-clientes-adm"
+          class="section-target-adm hidden-adm"
+        >
+          <div class="blank-canvas-adm">
+            <span
+              class="icon-adm"
+              style="font-size: 4rem; color: var(--primary-light-adm)"
+              >group</span
+            >
+            <h2 class="blank-title-adm">Directorio de Clientes</h2>
+            <p style="color: var(--text-muted-adm)">
+              Base de datos y perfiles históricos.
+            </p>
+          </div>
+        </section>
+        <section
+          id="section-configuracion-adm"
+          class="section-target-adm hidden-adm"
+        >
+          <div class="blank-canvas-adm">
+            <span
+              class="icon-adm"
+              style="font-size: 4rem; color: var(--primary-light-adm)"
+              >settings</span
+            >
+            <h2 class="blank-title-adm">Configuración del Sistema</h2>
+            <p style="color: var(--text-muted-adm)">
+              Ajustes globales y roles de administrador.
+            </p>
+          </div>
+        </section>
+
+        <footer class="footer-adm">
+          <div class="footer-col-adm">
+            <p style="font-weight: 800; color: var(--primary-adm)">
+              El Arquitecto Fluido
+            </p>
+            <p style="font-size: 0.75rem; color: var(--text-muted-adm)">
+              Precisión digital y diseño de lujo.
+            </p>
+          </div>
+          <div class="footer-col-adm">
+            <p
+              style="
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-transform: uppercase;
+              "
+            >
+              Enlaces
+            </p>
+            <a
+              href="#"
+              style="
+                text-decoration: none;
+                color: var(--text-muted-adm);
+                font-size: 0.875rem;
+              "
+              >Privacidad</a
+            >
+          </div>
+          <div class="footer-col-adm">
+            <p
+              style="
+                font-size: 0.75rem;
+                font-weight: 700;
+                text-transform: uppercase;
+              "
+            >
+              Soporte
+            </p>
+            <a
+              href="#"
+              style="
+                text-decoration: none;
+                color: var(--text-muted-adm);
+                font-size: 0.875rem;
+              "
+              >Contacto</a
+            >
+          </div>
+          <div
+            class="footer-col-adm"
+            style="font-size: 0.75rem; color: var(--text-muted-adm)"
+          >
+            <p>© 2024 Arquitecto Fluido.</p>
+          </div>
+        </footer>
+      </main>
+    </div>
+
+    <div id="toast-container-adm" class="toast-container-adm"></div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // NAVEGACIÓN
+        const navItems = document.querySelectorAll(".nav-item-adm");
+        const sections = document.querySelectorAll(".section-target-adm");
+        const headerTitle = document.getElementById("header-title-adm");
+        const headerSubtitle = document.getElementById("header-subtitle-adm");
+
+        navItems.forEach((item) => {
+          item.addEventListener("click", (e) => {
+            e.preventDefault();
+            navItems.forEach((l) => l.classList.remove("nav-link-active-adm"));
+            sections.forEach((s) => s.classList.add("hidden-adm"));
+
+            item.classList.add("nav-link-active-adm");
+            const targetId = item.getAttribute("data-target");
+            document.getElementById(targetId).classList.remove("hidden-adm");
+
+            const text = item.querySelector("span:not(.icon-adm)").innerText;
+            headerTitle.innerText = text;
+            headerSubtitle.innerText = `Visualizando el módulo de ${text.toLowerCase()}.`;
+
+            if (window.innerWidth < 1024) closeSidebar();
+          });
+        });
+
+        // ACORDEÓN
+        const submenuWrapper = document.getElementById(
+          "submenu-inventario-adm",
+        );
+        const submenuBtn = submenuWrapper.querySelector(".submenu-btn-adm");
+        submenuBtn.addEventListener("click", () =>
+          submenuWrapper.classList.toggle("submenu-open-adm"),
+        );
+
+        // DROPDOWN PERFIL
+        const profileDropdown = document.getElementById("profile-dropdown-adm");
+        const profileBtn = document.getElementById("profile-btn-adm");
+        profileBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          profileDropdown.classList.toggle("dropdown-open-adm");
+        });
+        document.addEventListener("click", (e) => {
+          if (!profileDropdown.contains(e.target))
+            profileDropdown.classList.remove("dropdown-open-adm");
+        });
+
+        // SIDEBAR MÓVIL
+        const sidebar = document.getElementById("sidebar-adm");
+        const overlay = document.getElementById("overlay-adm");
+        const btnMenu = document.getElementById("btn-menu-adm");
+        const btnCloseSidebar = document.getElementById(
+          "btn-close-sidebar-adm",
+        );
+        function openSidebar() {
+          sidebar.classList.add("sidebar-active-adm");
+          overlay.classList.add("overlay-active-adm");
+        }
+        function closeSidebar() {
+          sidebar.classList.remove("sidebar-active-adm");
+          overlay.classList.remove("overlay-active-adm");
+        }
+        btnMenu.addEventListener("click", openSidebar);
+        btnCloseSidebar.addEventListener("click", closeSidebar);
+        overlay.addEventListener("click", closeSidebar);
+
+        // ==========================================
+        // LÓGICA DE NOTIFICACIONES Y PETICIONES (H0005)
+        // ==========================================
+        const toastContainer = document.getElementById("toast-container-adm");
+
+        function showToast(message, type = "success") {
+          const toast = document.createElement("div");
+          toast.className = `toast-adm toast-${type}-adm`;
+
+          let icon = "check_circle";
+          let colorClass = "tertiary";
+          if (type === "error") {
+            icon = "error";
+            colorClass = "danger";
+          }
+          if (type === "info") {
+            icon = "sync";
+            colorClass = "primary-container";
+          }
+
+          toast.innerHTML = `
+                    <span class="icon-adm toast-icon-adm" style="color: var(--${colorClass}-adm)">${icon}</span>
+                    <span class="toast-text-adm">${message}</span>
+                `;
+
+          toastContainer.appendChild(toast);
+
+          // Trigger reflow para animación
+          setTimeout(() => toast.classList.add("toast-show-adm"), 10);
+
+          // Eliminar después de 3.5 segundos
+          setTimeout(() => {
+            toast.classList.remove("toast-show-adm");
+            setTimeout(() => toast.remove(), 300);
+          }, 3500);
+        }
+
+        // Simulación asíncrona de conexión a Base de Datos en la nube
+        const asyncButtons = document.querySelectorAll(".trigger-async-adm");
+        asyncButtons.forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            const action = btn.getAttribute("data-action");
+
+            // 1. Mostrar notificación de procesamiento en segundo plano
+            showToast("Conectando con la base de datos en la nube...", "info");
+
+            // 2. Simular latencia de red (1.5 segundos)
+            setTimeout(() => {
+              // 3. Respuesta de éxito según la acción
+              switch (action) {
+                case "anadir_hab":
+                  showToast(
+                    "Habitación guardada y sincronizada con éxito.",
+                    "success",
+                  );
+                  break;
+                case "exportar_datos":
+                  showToast("Datos exportados correctamente.", "success");
+                  break;
+                case "generar_reporte":
+                  showToast(
+                    "Reporte generado y guardado en la nube.",
+                    "success",
+                  );
+                  break;
+                case "filtrar_ocupacion":
+                  showToast(
+                    "Reporte de ocupación filtrado exitosamente.",
+                    "success",
+                  );
+                  break;
+                case "crear_reserva":
+                  showToast(
+                    "Formulario de nueva reserva preparado.",
+                    "success",
+                  );
+                  break;
+                default:
+                  showToast("Operación completada.", "success");
+              }
+            }, 1500);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,905 +1,2254 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Fluid Architect | Reserva de Hotel de Lujo</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-    
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>El cielo | Reserva de Hotel</title>
+
+    <!-- Supabase Auth -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase-config.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
-        /* ==================== VARIABLES ==================== */
-        :root {
-            --primary: #00478d;
-            --primary-container: #005eb8;
-            --on-primary: #ffffff;
-            --secondary-container: #8cf3f3;
-            --on-secondary-container: #007070;
-            --tertiary: #00514d;
-            --surface: #f7f9fb;
-            --on-surface: #191c1e;
-            --on-surface-variant: #424752;
-            --surface-container-low: #f2f4f6;
-            --surface-container-lowest: #ffffff;
-            --outline-variant: #c2c6d4;
-            
-            --font-headline: 'Manrope', sans-serif;
-            --font-body: 'Inter', sans-serif;
-            
-            --editorial-shadow: 0 8px 32px -4px rgba(25, 28, 30, 0.06);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      /* ==================== VARIABLES ==================== */
+      :root {
+        --primary: #00478d;
+        --primary-container: #005eb8;
+        --on-primary: #ffffff;
+        --secondary-container: #8cf3f3;
+        --on-secondary-container: #007070;
+        --tertiary: #00514d;
+        --surface: #f7f9fb;
+        --on-surface: #191c1e;
+        --on-surface-variant: #424752;
+        --surface-container-low: #f2f4f6;
+        --surface-container-lowest: #ffffff;
+        --outline-variant: #c2c6d4;
+
+        --font-headline: "Manrope", sans-serif;
+        --font-body: "Inter", sans-serif;
+
+        --editorial-shadow: 0 8px 32px -4px rgba(25, 28, 30, 0.06);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+
+      /* ==================== RESET ==================== */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: var(--font-body);
+        background-color: var(--surface);
+        color: var(--on-surface);
+        line-height: 1.5;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      button {
+        cursor: pointer;
+        border: none;
+        background: none;
+        font-family: inherit;
+      }
+      input {
+        font-family: inherit;
+        outline: none;
+      }
+
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        vertical-align: middle;
+      }
+
+      .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 6%;
+      }
+
+      /* ==================== ANIMATED NAVBAR ==================== */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 90px;
+        z-index: 50;
+        background-color: transparent;
+        border-radius: 0;
+        border: 1px solid transparent;
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(0px);
+
+        transition:
+          top 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          width 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s,
+          left 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s,
+          background-color 0.4s ease,
+          backdrop-filter 0.4s ease,
+          box-shadow 0.4s ease;
+      }
+
+      .navbar.scrolled {
+        top: 24px;
+        left: 24px;
+        width: 80px;
+        height: calc(100vh - 48px);
+        border-radius: 40px;
+        background-image: url(https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/POINTSAQP.webp);
+        background-position: center;
+        background-size: cover;
+        backdrop-filter: blur(20px) saturate(120%);
+        -webkit-backdrop-filter: blur(20px) saturate(120%);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+
+        transition:
+          width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          left 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          top 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s,
+          height 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s,
+          border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s,
+          background-color 0.4s ease,
+          backdrop-filter 0.4s ease,
+          box-shadow 0.4s ease;
+      }
+
+      .nav-horizontal {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 90px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 4%;
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+        transition:
+          opacity 0.3s ease 0.4s,
+          transform 0.3s ease 0.4s;
+      }
+      .navbar.scrolled .nav-horizontal {
+        opacity: 0;
+        transform: translateY(-10px);
+        pointer-events: none;
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .nav-brand {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #ffffff;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
+      .nav-links {
+        display: none;
+        gap: 2rem;
+        align-items: center;
+      }
+      .nav-links a {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s ease;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: #ffffff;
+        border-bottom: 2px solid #ffffff;
+        padding-bottom: 0.25rem;
+      }
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .btn-signin {
+        color: #ffffff;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+      }
+      .btn-book {
+        background: linear-gradient(
+          to bottom right,
+          var(--primary),
+          var(--primary-container)
+        );
+        color: white;
+        padding: 0.625rem 1.5rem;
+        border-radius: 999px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+      .btn-book:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+      }
+
+      .nav-vertical {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2.5rem 0;
+        gap: 2.5rem;
+        opacity: 0;
+        pointer-events: none;
+        transform: scale(0.9);
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+      }
+      .navbar.scrolled .nav-vertical {
+        opacity: 1;
+        pointer-events: auto;
+        transform: scale(1);
+        transition:
+          opacity 0.4s ease 0.6s,
+          transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s;
+      }
+
+      .vert-brand {
+        width: 48px;
+        height: 48px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+      .vert-links {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.25rem;
+        flex: 1;
+        width: 100%;
+      }
+
+      .vert-links a {
+        color: rgba(255, 255, 255, 0.9);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        position: relative;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 16px;
+        width: 48px;
+        height: 48px;
+        padding: 0; /* Candado de estructura */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      .vert-links a:hover,
+      .vert-links a.active {
+        background: var(--primary);
+        border-color: rgba(255, 255, 255, 0.3);
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+      }
+
+      .vert-icon {
+        font-size: 1.5rem;
+      }
+      .vert-divider {
+        width: 32px;
+        height: 1px;
+        background-color: rgba(255, 255, 255, 0.3);
+        margin: 0.25rem 0;
+        border-radius: 2px;
+      }
+      .vert-actions {
+        margin-top: auto;
+      }
+
+      .btn-book-vert {
+        padding: 0;
+        background: rgba(255, 255, 255, 0.95);
+        color: var(--primary);
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .btn-book-vert:hover {
+        transform: scale(1.1);
+        background: #ffffff;
+      }
+
+      /* ==================== SIDEBAR EXPANSION (PC & TABLET) ==================== */
+      @media (min-width: 768px) {
+        .navbar.scrolled {
+          overflow: hidden;
+        }
+        .navbar.scrolled:hover {
+          width: 240px;
+          border-radius: 24px;
+          transition:
+            width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+            border-radius 0.4s;
         }
 
-        /* ==================== RESET ==================== */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        body { font-family: var(--font-body); background-color: var(--surface); color: var(--on-surface); line-height: 1.5; }
-        a { text-decoration: none; color: inherit; }
-        button { cursor: pointer; border: none; background: none; font-family: inherit; }
-        input { font-family: inherit; outline: none; }
-        
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            vertical-align: middle;
+        .nav-vertical {
+          align-items: flex-start;
+          padding-left: 0;
+        }
+        .vert-brand {
+          margin-left: 16px;
+          transition: all 0.4s ease;
         }
 
-        .container { max-width: 1280px; margin: 0 auto; padding: 0 6%; }
-
-        /* ==================== ANIMATED NAVBAR ==================== */
-        .navbar { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 90px; 
-            z-index: 50; 
-            background-color: transparent; 
-            border-radius: 0; 
-            border: 1px solid transparent; 
-            backdrop-filter: blur(0px); 
-            -webkit-backdrop-filter: blur(0px);
-            
-            transition: 
-                top 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                height 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                width 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s,
-                left 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s,
-                background-color 0.4s ease,
-                backdrop-filter 0.4s ease,
-                box-shadow 0.4s ease;
+        /* --- MAGIA DE CENTRADO: Contenedor con margen izquierdo fijo --- */
+        .vert-links {
+          align-items: flex-start;
+          padding-left: 16px;
+        }
+        .vert-links a {
+          flex-direction: row;
+          justify-content: flex-start;
+          border-radius: 24px;
+          overflow: hidden;
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .navbar.scrolled:hover .vert-links a {
+          width: 208px;
         }
 
-        .navbar.scrolled { 
-            top: 24px; 
-            left: 24px; 
-            width: 80px; 
-            height: calc(100vh - 48px); 
-            border-radius: 40px; 
-            background-image: url(https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/POINTSAQP.webp);
-            background-position: center;
-            background-size: cover;
-            backdrop-filter: blur(20px) saturate(120%); 
-            -webkit-backdrop-filter: blur(20px) saturate(120%); 
-            border: 1px solid rgba(255, 255, 255, 0.15); 
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3); 
-            
-            transition: 
-                width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                left 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                top 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s,
-                height 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s,
-                border-radius 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s,
-                background-color 0.4s ease,
-                backdrop-filter 0.4s ease,
-                box-shadow 0.4s ease;
+        /* Caja rígida para el icono: Evita que el texto empuje la alineación */
+        .vert-icon {
+          width: 48px;
+          height: 48px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
         }
 
-        .nav-horizontal { position: absolute; top: 0; left: 0; width: 100vw; height: 90px; display: flex; justify-content: space-between; align-items: center; padding: 0 4%; opacity: 1; pointer-events: auto; transform: translateY(0); transition: opacity 0.3s ease 0.4s, transform 0.3s ease 0.4s; }
-        .navbar.scrolled .nav-horizontal { opacity: 0; transform: translateY(-10px); pointer-events: none; transition: opacity 0.2s ease, transform 0.2s ease; }
-
-        .nav-brand { font-size: 1.25rem; font-weight: 700; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.4); }
-        .nav-links { display: none; gap: 2rem; align-items: center; }
-        .nav-links a { font-size: 0.875rem; font-weight: 600; color: rgba(255, 255, 255, 0.85); text-shadow: 0 2px 4px rgba(0,0,0,0.4); transition: all 0.3s ease; }
-        .nav-links a:hover, .nav-links a.active { color: #ffffff; border-bottom: 2px solid #ffffff; padding-bottom: 0.25rem; }
-        .nav-actions { display: flex; align-items: center; gap: 1rem; }
-        .btn-signin { color: #ffffff; font-weight: 500; padding: 0.5rem 1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.4); }
-        .btn-book { background: linear-gradient(to bottom right, var(--primary), var(--primary-container)); color: white; padding: 0.625rem 1.5rem; border-radius: 999px; font-weight: 600; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); transition: transform 0.3s ease, box-shadow 0.3s ease; }
-        .btn-book:hover { transform: scale(1.02); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3); }
-
-        .nav-vertical { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; padding: 2.5rem 0; gap: 2.5rem; opacity: 0; pointer-events: none; transform: scale(0.9); transition: opacity 0.2s ease, transform 0.2s ease; }
-        .navbar.scrolled .nav-vertical { opacity: 1; pointer-events: auto; transform: scale(1); transition: opacity 0.4s ease 0.6s, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.6s; }
-        
-        .vert-brand { width: 48px; height: 48px; background: rgba(255, 255, 255, 0.1); color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 1rem; margin-bottom: 0.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        .vert-links { display: flex; flex-direction: column; align-items: center; gap: 1.25rem; flex: 1; width: 100%; }
-        
-        .vert-links a { 
-            color: rgba(255, 255, 255, 0.9); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center;
-            transition: all 0.3s ease; 
-            position: relative; 
-            background: rgba(0, 0, 0, 0.4); 
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 16px;
-            width: 48px;
-            height: 48px;
-            padding: 0; /* Candado de estructura */
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        .vert-text {
+          opacity: 0;
+          white-space: nowrap;
+          transition: all 0.3s ease;
+          transform: translateX(-10px);
+          font-size: 0.95rem;
+          font-weight: 600;
+          pointer-events: none;
+          padding-right: 1.5rem;
         }
-        .vert-links a:hover, .vert-links a.active { background: var(--primary); border-color: rgba(255, 255, 255, 0.3); color: #ffffff; transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4); }
-        
-        .vert-icon { font-size: 1.5rem; }
-        .vert-divider { width: 32px; height: 1px; background-color: rgba(255, 255, 255, 0.3); margin: 0.25rem 0; border-radius: 2px; }
-        .vert-actions { margin-top: auto; }
-        
-        .btn-book-vert { padding: 0; background: rgba(255, 255, 255, 0.95); color: var(--primary); width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-        .btn-book-vert:hover { transform: scale(1.1); background: #ffffff; }
-
-        /* ==================== SIDEBAR EXPANSION (PC & TABLET) ==================== */
-        @media (min-width: 768px) {
-            .navbar.scrolled { overflow: hidden; }
-            .navbar.scrolled:hover { width: 240px; border-radius: 24px; transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.4s; }
-            
-            .nav-vertical { align-items: flex-start; padding-left: 0; }
-            .vert-brand { margin-left: 16px; transition: all 0.4s ease; }
-            
-            /* --- MAGIA DE CENTRADO: Contenedor con margen izquierdo fijo --- */
-            .vert-links { align-items: flex-start; padding-left: 16px; }
-            .vert-links a { 
-                flex-direction: row; 
-                justify-content: flex-start; 
-                border-radius: 24px; 
-                overflow: hidden; 
-                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
-            }
-            .navbar.scrolled:hover .vert-links a { width: 208px; }
-            
-            /* Caja rígida para el icono: Evita que el texto empuje la alineación */
-            .vert-icon { 
-                width: 48px; 
-                height: 48px; 
-                display: flex; 
-                align-items: center; 
-                justify-content: center; 
-                flex-shrink: 0; 
-            }
-            
-            .vert-text { opacity: 0; white-space: nowrap; transition: all 0.3s ease; transform: translateX(-10px); font-size: 0.95rem; font-weight: 600; pointer-events: none; padding-right: 1.5rem; }
-            .navbar.scrolled:hover .vert-text { opacity: 1; transform: translateX(0); pointer-events: auto; transition-delay: 0.1s; } 
-            
-            .vert-divider { margin-left: 24px; transition: width 0.4s ease; }
-            .navbar.scrolled:hover .vert-divider { width: 192px; }
-            
-            .vert-actions { padding-left: 16px; width: 100%; }
-            .btn-book-vert { 
-                justify-content: flex-start; 
-                width: 48px; 
-                border-radius: 24px; 
-                overflow: hidden; 
-                transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
-            }
-            .navbar.scrolled:hover .btn-book-vert { width: 208px; }
-            .btn-book-vert .vert-text { color: var(--primary); }
-            .btn-book-vert:hover .vert-text { color: #ffffff; }
+        .navbar.scrolled:hover .vert-text {
+          opacity: 1;
+          transform: translateX(0);
+          pointer-events: auto;
+          transition-delay: 0.1s;
         }
 
-        /* ==================== HERO ==================== */
-        .hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 0 1.5rem; overflow: hidden; }
-        .hero-bg { position: absolute; inset: 0; z-index: 0; }
-        .hero-bg img { width: 100%; height: 100%; object-fit: cover; }
-        .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.4) 100%); }
-        .hero-content { position: relative; z-index: 10; width: 100%; max-width: 64rem; text-align: center; display: flex; flex-direction: column; gap: 3rem; }
-        .hero-title { font-family: var(--font-headline); font-size: 3rem; font-weight: 800; letter-spacing: -0.025em; color: white; text-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); margin-bottom: 1rem; }
-        .text-accent { color: var(--secondary-fixed); }
-        .hero-subtitle { font-size: 1.25rem; color: rgba(255, 255, 255, 0.95); font-weight: 500; max-width: 42rem; margin: 0 auto; text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); }
-
-        /* ==================== SEARCH BAR ==================== */
-        .search-bar { background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); padding: 1.25rem; border-radius: 1.5rem; box-shadow: 0 20px 40px rgba(0,0,0,0.2); display: flex; flex-direction: column; align-items: center; gap: 1rem; max-width: 60rem; margin: 0 auto; }
-        .search-inputs { display: grid; grid-template-columns: 1fr; gap: 1rem; width: 100%; padding: 0; flex: 1; }
-        
-        .search-field { display: flex; flex-direction: column; align-items: flex-start; padding: 0.75rem 1rem; position: relative; cursor: pointer; border-radius: 1rem; transition: background 0.3s ease; }
-        .search-field:hover { background-color: rgba(0,0,0,0.02); }
-        
-        .search-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--on-surface-variant); font-weight: 700; margin-bottom: 0.5rem; }
-        .search-value { color: #727783; font-weight: 600; font-size: 1.1rem; padding: 0.25rem 0; width: 100%; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .search-value.selected { color: var(--on-surface); }
-
-        .btn-search { background-color: var(--primary); color: white; height: 3.5rem; width: 100%; border-radius: 999px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; font-weight: 700; font-size: 1.1rem; }
-        .btn-search:hover { transform: scale(1.05); box-shadow: 0 8px 16px rgba(0,71,141,0.3); }
-
-        /* --- POPOVERS --- */
-        .search-popover { position: absolute; top: calc(100% + 15px); left: 0; width: max-content; min-width: 100%; background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(0,0,0,0.05); border-radius: 1.25rem; box-shadow: 0 15px 35px rgba(0,0,0,0.15); padding: 1.25rem; opacity: 0; pointer-events: none; transform: translateY(-10px); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); z-index: 100; }
-        .search-popover.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
-        .search-popover::before { content: ''; position: absolute; top: -6px; left: 2rem; width: 12px; height: 12px; background: rgba(255, 255, 255, 0.98); transform: rotate(45deg); border-left: 1px solid rgba(0,0,0,0.05); border-top: 1px solid rgba(0,0,0,0.05); }
-
-        .popover-option { padding: 0.875rem 1.25rem; border-radius: 0.75rem; transition: background 0.2s; font-weight: 600; color: var(--on-surface); display: flex; align-items: center; gap: 0.75rem; }
-        .popover-option:hover { background: var(--surface-container-low); color: var(--primary); }
-        .popover-option .material-symbols-outlined { color: var(--outline-variant); font-size: 1.25rem; }
-        .popover-option:hover .material-symbols-outlined { color: var(--primary); }
-
-        .date-inputs { display: flex; gap: 1rem; }
-        .date-inputs div { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
-        .date-inputs label { font-size: 0.75rem; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; }
-        .date-inputs input[type="date"] { border: 1px solid var(--outline-variant); border-radius: 0.5rem; padding: 0.75rem; font-family: inherit; font-weight: 600; color: var(--on-surface); outline: none; transition: border-color 0.3s ease; cursor: pointer; }
-        .date-inputs input[type="date"]:focus { border-color: var(--primary); }
-
-        .guest-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; font-weight: 600; color: var(--on-surface); gap: 2rem; }
-        .guest-row:last-child { margin-bottom: 0; }
-        .guest-controls { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
-        .btn-guest { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--outline-variant); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; transition: all 0.2s; color: var(--on-surface-variant); }
-        .btn-guest:hover { border-color: var(--primary); color: var(--primary); background: var(--surface-container-low); }
-        .guest-count { min-width: 20px; text-align: center; }
-
-        /* ==================== ROOMS SECTION ==================== */
-        .rooms-section { position: relative; padding: 6rem 0; background-image: url('https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/fondosillar.webp'); background-size: cover; background-position: center; background-attachment: fixed; }
-        .rooms-section::before { content: ''; position: absolute; inset: 0; background: rgba(247, 249, 251, 0.85); z-index: 0; }
-        .rooms-wrapper { position: relative; z-index: 10; display: flex; flex-direction: column; gap: 3rem; }
-        
-        .section-header { display: flex; flex-direction: column; gap: 1.5rem; }
-        .section-title-wrap { display: flex; flex-direction: column; gap: 1rem; width: 100%; }
-        .section-kicker { color: var(--primary); font-weight: 700; letter-spacing: 0.1em; font-size: 0.75rem; text-transform: uppercase; }
-        .section-title { font-family: var(--font-headline); font-size: 2.25rem; font-weight: 800; color: var(--on-surface); margin-bottom: 0.5rem; }
-        .section-desc { color: var(--on-surface-variant); font-size: 1.125rem; line-height: 1.625; max-width: 32rem; }
-        
-        .carousel-controls { display: flex; gap: 0.75rem; align-items: center; }
-        .carousel-btn { width: 44px; height: 44px; border-radius: 50%; background-color: var(--surface-container-lowest); border: 1px solid var(--outline-variant); display: flex; align-items: center; justify-content: center; color: var(--on-surface); transition: all 0.3s ease; box-shadow: var(--shadow-md); }
-        .carousel-btn:hover { background-color: var(--primary); color: white; border-color: var(--primary); transform: translateY(-2px); }
-        
-        .rooms-carousel-wrapper { position: relative; }
-        .rooms-grid { display: grid; grid-template-columns: 1fr; gap: 2rem; }
-        
-        .carousel-dots { display: flex; gap: 12px; align-items: center; }
-        .dot { width: 12px; height: 12px; border-radius: 50%; background-color: transparent; border: 2px solid var(--outline-variant); padding: 0; cursor: pointer; transition: all 0.3s ease; }
-        .dot:hover { border-color: var(--primary); }
-        .dot.active { background-color: var(--primary); border-color: var(--primary); transform: scale(1.3); }
-
-        .room-card { background-color: var(--surface-container-low); border-radius: 1.25rem; overflow: hidden; box-shadow: var(--editorial-shadow); display: flex; flex-direction: column; height: 100%; transition: opacity 0.6s ease, transform 0.3s ease, box-shadow 0.3s ease; opacity: 1; }
-        .fade-out { opacity: 0 !important; pointer-events: none; }
-        .room-card:not(.fade-out):hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
-        
-        .room-image-wrap { position: relative; width: 100%; height: 220px; flex-shrink: 0; overflow: hidden; }
-        .large-room .room-image-wrap { height: 300px; }
-        .room-image { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
-        .badge-featured { position: absolute; top: 1.5rem; left: 1.5rem; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(4px); color: var(--primary); font-size: 0.75rem; font-weight: 700; padding: 0.5rem 1.25rem; border-radius: 9999px; text-transform: uppercase; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        
-        .room-content { padding: 2rem; background-color: white; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .room-info-left { flex: 1; padding-right: 0; }
-        .room-description { color: var(--on-surface-variant); font-size: 0.95rem; line-height: 1.6; margin: 0.75rem 0 1.25rem 0; }
-        .room-info-right { margin-top: 1.5rem; text-align: left; }
-        .room-title { font-family: var(--font-headline); font-size: 1.25rem; font-weight: 700; margin-bottom: 0.25rem; }
-        .room-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; color: var(--on-surface-variant); font-size: 0.875rem; font-weight: 500; }
-        .room-price { color: var(--tertiary); font-family: var(--font-headline); font-size: 1.5rem; font-weight: 800; margin-top: 0.5rem; }
-        .price-period { font-size: 0.875rem; font-weight: 400; color: var(--on-surface-variant); }
-        .btn-view { background-color: var(--surface-container-low); color: var(--on-surface); padding: 0.75rem; border-radius: 0.75rem; font-weight: 700; width: 100%; margin-top: 1rem; transition: all 0.3s ease; }
-        .btn-view:hover { background-color: var(--secondary-container); color: var(--on-secondary-container); transform: scale(1.02); }
-
-        .view-more-wrap { text-align: center; margin-top: 1rem; }
-        .btn-outline { background-color: transparent; color: var(--primary); border: 2px solid var(--primary); padding: 0.875rem 2rem; border-radius: 999px; font-weight: 700; font-size: 1rem; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.5rem; }
-        .btn-outline:hover { background-color: var(--primary); color: white; transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,71,141,0.2); }
-
-        /* ==================== EXPERIENCE & FOOTER ==================== */
-        .experience-section { padding: 6rem 0; background-image: url(https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/fondoexp.webp); overflow: hidden; }
-        .experience-grid { display: grid; grid-template-columns: 1fr; gap: 4rem; align-items: center; }
-        .exp-image-wrap { border-radius: 1.5rem; overflow: hidden; box-shadow: var(--editorial-shadow); transform: rotate(2deg); transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); position: relative; z-index: 10; }
-        .exp-image-wrap:hover { transform: rotate(0deg); }
-        .exp-image-wrap img { width: 100%; aspect-ratio: 4/5; object-fit: cover; display: block; }
-        .exp-content { display: flex; flex-direction: column; gap: 2rem; }
-        .exp-title { font-family: var(--font-headline); font-size: 2.5rem; font-weight: 800; line-height: 1.2; }
-        .exp-desc { font-size: 1.125rem; color: var(--on-surface-variant); line-height: 1.625; }
-        .features-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
-        .feature-icon { color: var(--primary); font-size: 2rem; margin-bottom: 0.5rem; }
-        .feature-title { font-weight: 700; font-size: 1.125rem; }
-        .btn-explore { background-color: var(--primary); color: white; padding: 1rem 2rem; border-radius: 999px; font-weight: 700; align-self: flex-start; }
-
-        .footer { background-color: #f8fafc; padding: 4rem 0 2rem; margin-top: auto; border-top: 1px solid rgba(226, 232, 240, 0.5); }
-        .footer-grid { display: grid; grid-template-columns: 1fr; gap: 3rem; padding-bottom: 3rem; }
-        .footer-title { font-weight: 700; color: #1e3a8a; font-size: 0.875rem; text-transform: uppercase; margin-bottom: 1.5rem;}
-        .footer-links { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
-        .footer-links a { color: #64748b; font-size: 0.875rem; transition: color 0.3s ease;}
-        .footer-links a:hover { color: var(--primary); }
-        .social-icons { display: flex; gap: 1rem; padding-top: 0.5rem; color: #94a3b8; }
-        .social-icons span { cursor: pointer; transition: color 0.3s ease;}
-        .social-icons span:hover { color: var(--primary); }
-        .footer-bottom { border-top: 1px solid rgba(226, 232, 240, 0.5); padding-top: 2rem; text-align: center; color: #94a3b8; font-size: 0.75rem; }
-
-        /* ==================== RESPONSIVIDAD ==================== */
-        @media (max-width: 767px) {
-            .container { padding: 0 1.5rem; }
-            .hero-title { font-size: 2.5rem; }
-            .hero-subtitle { font-size: 1.125rem; }
-            .section-title { font-size: 2rem; }
-            
-            .nav-horizontal { padding: 0 1.5rem; }
-            .nav-horizontal > div:first-child { gap: 1rem !important; }
-            .nav-brand { font-size: 1.1rem; }
-            .btn-signin { display: none; }
-            .btn-book { padding: 0.5rem 1rem; font-size: 0.875rem; }
-            
-            .navbar.scrolled { 
-                top: auto !important; 
-                bottom: 1.5rem !important; 
-                left: 5% !important; 
-                width: 90% !important; 
-                height: 70px !important; 
-                border-radius: 35px !important; 
-                background-image: url('https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1000&auto=format&fit=crop') !important; 
-            }
-            
-            .navbar.scrolled .nav-vertical { flex-direction: row !important; padding: 0 1.5rem !important; gap: 1rem !important; justify-content: space-between; transform: scale(1); }
-            .vert-brand, .vert-divider { display: none !important; }
-            .vert-links { flex-direction: row !important; gap: 1rem !important; width: auto !important; flex: unset !important; align-items: center; padding-left: 0; }
-            .vert-links a { flex-direction: row !important; width: 44px !important; height: 44px !important; border-radius: 12px !important; padding: 0 !important; }
-            .vert-actions { margin-top: 0 !important; display: flex; align-items: center; padding-left: 0; width: auto; }
-            .btn-book-vert { width: 44px !important; height: 44px !important; padding: 0 !important; justify-content: center !important; }
-            .vert-text { display: none !important; }
-
-            .search-popover { position: absolute; top: calc(100% + 10px); left: 0; width: 100%; min-width: 100%; border-radius: 1rem; padding: 1.25rem; box-shadow: 0 15px 35px rgba(0,0,0,0.15); z-index: 1000; }
-            .search-popover::before { display: none; } 
-            .date-inputs { flex-direction: column; gap: 1rem; }
-            .guest-row { gap: 0.5rem; }
-            .btn-guest { width: 32px; height: 32px; font-size: 1.1rem; } 
-            .guest-count { min-width: 16px; }
-
-            .carousel-controls { display: none !important; }
-            .carousel-dots { justify-content: center; margin-top: 1.5rem; }
-
-            .rooms-grid { display: flex; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory; gap: 1.25rem; padding-bottom: 0.5rem; scrollbar-width: none; -ms-overflow-style: none; align-items: stretch; scroll-behavior: smooth; }
-            .rooms-grid::-webkit-scrollbar { display: none; }
-            .small-rooms-wrap { display: contents; }
-            
-            .room-card { flex: 0 0 85vw !important; scroll-snap-align: center; transition: transform 0.3s ease, box-shadow 0.3s ease !important; opacity: 1 !important; }
-            .large-room .room-image-wrap { height: 220px; }
-            .room-content { flex-direction: column; }
-            .room-info-right { text-align: left; margin-top: auto; }
+        .vert-divider {
+          margin-left: 24px;
+          transition: width 0.4s ease;
+        }
+        .navbar.scrolled:hover .vert-divider {
+          width: 192px;
         }
 
-        @media (min-width: 768px) and (max-width: 1023px) {
-            .nav-links { display: flex; }
-            .hero-title { font-size: 4rem; }
-            
-            .search-bar { flex-direction: row; border-radius: 9999px; padding: 0.75rem 1rem; gap: 0.5rem; }
-            .search-inputs { grid-template-columns: repeat(3, 1fr); padding: 0 1rem; gap: 0; }
-            .search-field { padding: 0.5rem 1.5rem; }
-            .search-field:not(:last-child) { border-right: 1px solid var(--outline-variant); }
-            .btn-search { width: 4rem; height: 4rem; } 
-            .search-popover { min-width: 300px; }
+        .vert-actions {
+          padding-left: 16px;
+          width: 100%;
+        }
+        .btn-book-vert {
+          justify-content: flex-start;
+          width: 48px;
+          border-radius: 24px;
+          overflow: hidden;
+          transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .navbar.scrolled:hover .btn-book-vert {
+          width: 208px;
+        }
+        .btn-book-vert .vert-text {
+          color: var(--primary);
+        }
+        .btn-book-vert:hover .vert-text {
+          color: #ffffff;
+        }
+      }
 
-            .section-header { flex-direction: row; align-items: flex-end; justify-content: space-between; }
-            .section-title-wrap { width: auto; }
-            .carousel-dots { justify-content: center; margin-top: 2rem; }
-            
-            .small-rooms-wrap { flex-direction: row; display: flex; gap: 2rem; }
-            .small-rooms-wrap .room-card { flex: 1; }
-            .js-hide-desktop { display: none !important; }
-            .small-rooms-wrap .room-info-right { margin-top: auto; }
-            .experience-grid { grid-template-columns: 1fr 1fr; }
-            .footer-grid { grid-template-columns: repeat(2, 1fr); }
+      /* ==================== HERO ==================== */
+      .hero {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 1.5rem;
+        overflow: hidden;
+      }
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+      }
+      .hero-bg img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.4) 0%,
+          rgba(0, 0, 0, 0.1) 40%,
+          rgba(0, 0, 0, 0.4) 100%
+        );
+      }
+      .hero-content {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 64rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+      }
+      .hero-title {
+        font-family: var(--font-headline);
+        font-size: 3rem;
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        color: white;
+        text-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        margin-bottom: 1rem;
+      }
+      .text-accent {
+        color: var(--secondary-fixed);
+      }
+      .hero-subtitle {
+        font-size: 1.25rem;
+        color: rgba(255, 255, 255, 0.95);
+        font-weight: 500;
+        max-width: 42rem;
+        margin: 0 auto;
+        text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      /* ==================== SEARCH BAR ==================== */
+      .search-bar {
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        padding: 1.25rem;
+        border-radius: 1.5rem;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        max-width: 60rem;
+        margin: 0 auto;
+      }
+      .search-inputs {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        width: 100%;
+        padding: 0;
+        flex: 1;
+      }
+
+      .search-field {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0.75rem 1rem;
+        position: relative;
+        cursor: pointer;
+        border-radius: 1rem;
+        transition: background 0.3s ease;
+      }
+      .search-field:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+      }
+
+      .search-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--on-surface-variant);
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .search-value {
+        color: #727783;
+        font-weight: 600;
+        font-size: 1.1rem;
+        padding: 0.25rem 0;
+        width: 100%;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .search-value.selected {
+        color: var(--on-surface);
+      }
+
+      .btn-search {
+        background-color: var(--primary);
+        color: white;
+        height: 3.5rem;
+        width: 100%;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+      .btn-search:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(0, 71, 141, 0.3);
+      }
+
+      /* --- POPOVERS --- */
+      .search-popover {
+        position: absolute;
+        top: calc(100% + 15px);
+        left: 0;
+        width: max-content;
+        min-width: 100%;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        border-radius: 1.25rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        padding: 1.25rem;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-10px);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 100;
+      }
+      .search-popover.active {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+      .search-popover::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        left: 2rem;
+        width: 12px;
+        height: 12px;
+        background: rgba(255, 255, 255, 0.98);
+        transform: rotate(45deg);
+        border-left: 1px solid rgba(0, 0, 0, 0.05);
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .popover-option {
+        padding: 0.875rem 1.25rem;
+        border-radius: 0.75rem;
+        transition: background 0.2s;
+        font-weight: 600;
+        color: var(--on-surface);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .popover-option:hover {
+        background: var(--surface-container-low);
+        color: var(--primary);
+      }
+      .popover-option .material-symbols-outlined {
+        color: var(--outline-variant);
+        font-size: 1.25rem;
+      }
+      .popover-option:hover .material-symbols-outlined {
+        color: var(--primary);
+      }
+
+      .date-inputs {
+        display: flex;
+        gap: 1rem;
+      }
+      .date-inputs div {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .date-inputs label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--on-surface-variant);
+        text-transform: uppercase;
+      }
+      .date-inputs input[type="date"] {
+        border: 1px solid var(--outline-variant);
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        font-family: inherit;
+        font-weight: 600;
+        color: var(--on-surface);
+        outline: none;
+        transition: border-color 0.3s ease;
+        cursor: pointer;
+      }
+      .date-inputs input[type="date"]:focus {
+        border-color: var(--primary);
+      }
+
+      .guest-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.25rem;
+        font-weight: 600;
+        color: var(--on-surface);
+        gap: 2rem;
+      }
+      .guest-row:last-child {
+        margin-bottom: 0;
+      }
+      .guest-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-shrink: 0;
+      }
+      .btn-guest {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid var(--outline-variant);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        transition: all 0.2s;
+        color: var(--on-surface-variant);
+      }
+      .btn-guest:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: var(--surface-container-low);
+      }
+      .guest-count {
+        min-width: 20px;
+        text-align: center;
+      }
+
+      /* ==================== ROOMS SECTION ==================== */
+      .rooms-section {
+        position: relative;
+        padding: 6rem 0;
+        background-image: url("https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/fondosillar.webp");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+      }
+      .rooms-section::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(247, 249, 251, 0.85);
+        z-index: 0;
+      }
+      .rooms-wrapper {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+      }
+
+      .section-header {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+      .section-title-wrap {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+      }
+      .section-kicker {
+        color: var(--primary);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+      }
+      .section-title {
+        font-family: var(--font-headline);
+        font-size: 2.25rem;
+        font-weight: 800;
+        color: var(--on-surface);
+        margin-bottom: 0.5rem;
+      }
+      .section-desc {
+        color: var(--on-surface-variant);
+        font-size: 1.125rem;
+        line-height: 1.625;
+        max-width: 32rem;
+      }
+
+      .carousel-controls {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+      }
+      .carousel-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background-color: var(--surface-container-lowest);
+        border: 1px solid var(--outline-variant);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--on-surface);
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow-md);
+      }
+      .carousel-btn:hover {
+        background-color: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        transform: translateY(-2px);
+      }
+
+      .rooms-carousel-wrapper {
+        position: relative;
+      }
+      .rooms-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .carousel-dots {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: transparent;
+        border: 2px solid var(--outline-variant);
+        padding: 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .dot:hover {
+        border-color: var(--primary);
+      }
+      .dot.active {
+        background-color: var(--primary);
+        border-color: var(--primary);
+        transform: scale(1.3);
+      }
+
+      .room-card {
+        background-color: var(--surface-container-low);
+        border-radius: 1.25rem;
+        overflow: hidden;
+        box-shadow: var(--editorial-shadow);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        transition:
+          opacity 0.6s ease,
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+        opacity: 1;
+      }
+      .fade-out {
+        opacity: 0 !important;
+        pointer-events: none;
+      }
+      .room-card:not(.fade-out):hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+      }
+
+      .room-image-wrap {
+        position: relative;
+        width: 100%;
+        height: 220px;
+        flex-shrink: 0;
+        overflow: hidden;
+      }
+      .large-room .room-image-wrap {
+        height: 300px;
+      }
+      .room-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+      }
+      .badge-featured {
+        position: absolute;
+        top: 1.5rem;
+        left: 1.5rem;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(4px);
+        color: var(--primary);
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.5rem 1.25rem;
+        border-radius: 9999px;
+        text-transform: uppercase;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .room-content {
+        padding: 2rem;
+        background-color: white;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .room-info-left {
+        flex: 1;
+        padding-right: 0;
+      }
+      .room-description {
+        color: var(--on-surface-variant);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0.75rem 0 1.25rem 0;
+      }
+      .room-info-right {
+        margin-top: 1.5rem;
+        text-align: left;
+      }
+      .room-title {
+        font-family: var(--font-headline);
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+      }
+      .room-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem;
+        color: var(--on-surface-variant);
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+      .room-price {
+        color: var(--tertiary);
+        font-family: var(--font-headline);
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin-top: 0.5rem;
+      }
+      .price-period {
+        font-size: 0.875rem;
+        font-weight: 400;
+        color: var(--on-surface-variant);
+      }
+      .btn-view {
+        background-color: var(--surface-container-low);
+        color: var(--on-surface);
+        padding: 0.75rem;
+        border-radius: 0.75rem;
+        font-weight: 700;
+        width: 100%;
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+      }
+      .btn-view:hover {
+        background-color: var(--secondary-container);
+        color: var(--on-secondary-container);
+        transform: scale(1.02);
+      }
+
+      .view-more-wrap {
+        text-align: center;
+        margin-top: 1rem;
+      }
+      .btn-outline {
+        background-color: transparent;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+        padding: 0.875rem 2rem;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .btn-outline:hover {
+        background-color: var(--primary);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(0, 71, 141, 0.2);
+      }
+
+      /* ==================== EXPERIENCE & FOOTER ==================== */
+      .experience-section {
+        padding: 6rem 0;
+        background-image: url(https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/fondoexp.webp);
+        overflow: hidden;
+      }
+      .experience-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 4rem;
+        align-items: center;
+      }
+      .exp-image-wrap {
+        border-radius: 1.5rem;
+        overflow: hidden;
+        box-shadow: var(--editorial-shadow);
+        transform: rotate(2deg);
+        transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        z-index: 10;
+      }
+      .exp-image-wrap:hover {
+        transform: rotate(0deg);
+      }
+      .exp-image-wrap img {
+        width: 100%;
+        aspect-ratio: 4/5;
+        object-fit: cover;
+        display: block;
+      }
+      .exp-content {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+      .exp-title {
+        font-family: var(--font-headline);
+        font-size: 2.5rem;
+        font-weight: 800;
+        line-height: 1.2;
+      }
+      .exp-desc {
+        font-size: 1.125rem;
+        color: var(--on-surface-variant);
+        line-height: 1.625;
+      }
+      .features-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+      .feature-icon {
+        color: var(--primary);
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      .feature-title {
+        font-weight: 700;
+        font-size: 1.125rem;
+      }
+      .btn-explore {
+        background-color: var(--primary);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 999px;
+        font-weight: 700;
+        align-self: flex-start;
+      }
+
+      .footer {
+        background-color: #f8fafc;
+        padding: 4rem 0 2rem;
+        margin-top: auto;
+        border-top: 1px solid rgba(226, 232, 240, 0.5);
+      }
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        padding-bottom: 3rem;
+      }
+      .footer-title {
+        font-weight: 700;
+        color: #1e3a8a;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        margin-bottom: 1.5rem;
+      }
+      .footer-links {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+      .footer-links a {
+        color: #64748b;
+        font-size: 0.875rem;
+        transition: color 0.3s ease;
+      }
+      .footer-links a:hover {
+        color: var(--primary);
+      }
+      .social-icons {
+        display: flex;
+        gap: 1rem;
+        padding-top: 0.5rem;
+        color: #94a3b8;
+      }
+      .social-icons span {
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+      .social-icons span:hover {
+        color: var(--primary);
+      }
+      .footer-bottom {
+        border-top: 1px solid rgba(226, 232, 240, 0.5);
+        padding-top: 2rem;
+        text-align: center;
+        color: #94a3b8;
+        font-size: 0.75rem;
+      }
+
+      /* ==================== RESPONSIVIDAD ==================== */
+      @media (max-width: 767px) {
+        .container {
+          padding: 0 1.5rem;
+        }
+        .hero-title {
+          font-size: 2.5rem;
+        }
+        .hero-subtitle {
+          font-size: 1.125rem;
+        }
+        .section-title {
+          font-size: 2rem;
         }
 
-        @media (min-width: 1024px) {
-            .nav-links { display: flex; }
-            .hero-title { font-size: 4.5rem; }
-            
-            .search-bar { flex-direction: row; border-radius: 9999px; padding: 0.75rem 1rem; gap: 1rem; max-width: 65rem; }
-            .search-inputs { grid-template-columns: repeat(3, 1fr); padding: 0 2rem; gap: 0; }
-            .search-field { padding: 0.5rem 2rem; } 
-            .search-field:not(:last-child) { border-right: 1px solid var(--outline-variant); }
-            .btn-search { width: 4rem; height: 4rem; } 
-            .search-popover { min-width: 320px; }
-
-            .section-header { flex-direction: row; align-items: flex-end; justify-content: space-between; }
-            .section-title-wrap { width: auto; }
-            .section-title { font-size: 3rem; }
-            main section:not(.hero) { padding-left: 100px; } 
-            
-            .rooms-carousel-wrapper { padding-right: 50px; }
-            .carousel-dots { flex-direction: column; position: absolute; right: 0; top: 50%; transform: translateY(-50%); }
-            
-            .rooms-grid { grid-template-columns: repeat(12, 1fr); }
-            .large-room { grid-column: span 8; }
-            .small-rooms-wrap { grid-column: span 4; display: flex; flex-direction: column; gap: 2rem; }
-            
-            .js-hide-desktop { display: none !important; }
-            .large-room .room-image-wrap { height: 500px; }
-            .large-room .room-content { flex-direction: row; align-items: center; gap: 2.5rem; }
-            .large-room .room-info-left { padding-right: 1rem; }
-            .large-room .room-info-right { text-align: right; margin-top: 0; min-width: max-content; }
-            .large-room .room-price { margin-top: 0; font-size: 1.875rem; }
-            .large-room .btn-view { width: auto; margin-top: 0.5rem; }
-            .small-rooms-wrap .room-info-right { margin-top: auto; }
-            
-            .experience-grid { grid-template-columns: 1fr 1fr; }
-            .features-grid { grid-template-columns: 1fr 1fr; }
-            .exp-title { font-size: 3rem; }
-            .footer-grid { grid-template-columns: repeat(4, 1fr); }
-            .footer-bottom { text-align: left; }
+        .nav-horizontal {
+          padding: 0 1.5rem;
         }
+        .nav-horizontal > div:first-child {
+          gap: 1rem !important;
+        }
+        .nav-brand {
+          font-size: 1.1rem;
+        }
+        .btn-signin {
+          display: none;
+        }
+        .btn-book {
+          padding: 0.5rem 1rem;
+          font-size: 0.875rem;
+        }
+
+        .navbar.scrolled {
+          top: auto !important;
+          bottom: 1.5rem !important;
+          left: 5% !important;
+          width: 90% !important;
+          height: 70px !important;
+          border-radius: 35px !important;
+          background-image: url("https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1000&auto=format&fit=crop") !important;
+        }
+
+        .navbar.scrolled .nav-vertical {
+          flex-direction: row !important;
+          padding: 0 1.5rem !important;
+          gap: 1rem !important;
+          justify-content: space-between;
+          transform: scale(1);
+        }
+        .vert-brand,
+        .vert-divider {
+          display: none !important;
+        }
+        .vert-links {
+          flex-direction: row !important;
+          gap: 1rem !important;
+          width: auto !important;
+          flex: unset !important;
+          align-items: center;
+          padding-left: 0;
+        }
+        .vert-links a {
+          flex-direction: row !important;
+          width: 44px !important;
+          height: 44px !important;
+          border-radius: 12px !important;
+          padding: 0 !important;
+        }
+        .vert-actions {
+          margin-top: 0 !important;
+          display: flex;
+          align-items: center;
+          padding-left: 0;
+          width: auto;
+        }
+        .btn-book-vert {
+          width: 44px !important;
+          height: 44px !important;
+          padding: 0 !important;
+          justify-content: center !important;
+        }
+        .vert-text {
+          display: none !important;
+        }
+
+        .search-popover {
+          position: absolute;
+          top: calc(100% + 10px);
+          left: 0;
+          width: 100%;
+          min-width: 100%;
+          border-radius: 1rem;
+          padding: 1.25rem;
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+          z-index: 1000;
+        }
+        .search-popover::before {
+          display: none;
+        }
+        .date-inputs {
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .guest-row {
+          gap: 0.5rem;
+        }
+        .btn-guest {
+          width: 32px;
+          height: 32px;
+          font-size: 1.1rem;
+        }
+        .guest-count {
+          min-width: 16px;
+        }
+
+        .carousel-controls {
+          display: none !important;
+        }
+        .carousel-dots {
+          justify-content: center;
+          margin-top: 1.5rem;
+        }
+
+        .rooms-grid {
+          display: flex;
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          scroll-snap-type: x mandatory;
+          gap: 1.25rem;
+          padding-bottom: 0.5rem;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          align-items: stretch;
+          scroll-behavior: smooth;
+        }
+        .rooms-grid::-webkit-scrollbar {
+          display: none;
+        }
+        .small-rooms-wrap {
+          display: contents;
+        }
+
+        .room-card {
+          flex: 0 0 85vw !important;
+          scroll-snap-align: center;
+          transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease !important;
+          opacity: 1 !important;
+        }
+        .large-room .room-image-wrap {
+          height: 220px;
+        }
+        .room-content {
+          flex-direction: column;
+        }
+        .room-info-right {
+          text-align: left;
+          margin-top: auto;
+        }
+      }
+
+      @media (min-width: 768px) and (max-width: 1023px) {
+        .nav-links {
+          display: flex;
+        }
+        .hero-title {
+          font-size: 4rem;
+        }
+
+        .search-bar {
+          flex-direction: row;
+          border-radius: 9999px;
+          padding: 0.75rem 1rem;
+          gap: 0.5rem;
+        }
+        .search-inputs {
+          grid-template-columns: repeat(3, 1fr);
+          padding: 0 1rem;
+          gap: 0;
+        }
+        .search-field {
+          padding: 0.5rem 1.5rem;
+        }
+        .search-field:not(:last-child) {
+          border-right: 1px solid var(--outline-variant);
+        }
+        .btn-search {
+          width: 4rem;
+          height: 4rem;
+        }
+        .search-popover {
+          min-width: 300px;
+        }
+
+        .section-header {
+          flex-direction: row;
+          align-items: flex-end;
+          justify-content: space-between;
+        }
+        .section-title-wrap {
+          width: auto;
+        }
+        .carousel-dots {
+          justify-content: center;
+          margin-top: 2rem;
+        }
+
+        .small-rooms-wrap {
+          flex-direction: row;
+          display: flex;
+          gap: 2rem;
+        }
+        .small-rooms-wrap .room-card {
+          flex: 1;
+        }
+        .js-hide-desktop {
+          display: none !important;
+        }
+        .small-rooms-wrap .room-info-right {
+          margin-top: auto;
+        }
+        .experience-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .footer-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .nav-links {
+          display: flex;
+        }
+        .hero-title {
+          font-size: 4.5rem;
+        }
+
+        .search-bar {
+          flex-direction: row;
+          border-radius: 9999px;
+          padding: 0.75rem 1rem;
+          gap: 1rem;
+          max-width: 65rem;
+        }
+        .search-inputs {
+          grid-template-columns: repeat(3, 1fr);
+          padding: 0 2rem;
+          gap: 0;
+        }
+        .search-field {
+          padding: 0.5rem 2rem;
+        }
+        .search-field:not(:last-child) {
+          border-right: 1px solid var(--outline-variant);
+        }
+        .btn-search {
+          width: 4rem;
+          height: 4rem;
+        }
+        .search-popover {
+          min-width: 320px;
+        }
+
+        .section-header {
+          flex-direction: row;
+          align-items: flex-end;
+          justify-content: space-between;
+        }
+        .section-title-wrap {
+          width: auto;
+        }
+        .section-title {
+          font-size: 3rem;
+        }
+        main section:not(.hero) {
+          padding-left: 100px;
+        }
+
+        .rooms-carousel-wrapper {
+          padding-right: 50px;
+        }
+        .carousel-dots {
+          flex-direction: column;
+          position: absolute;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+
+        .rooms-grid {
+          grid-template-columns: repeat(12, 1fr);
+        }
+        .large-room {
+          grid-column: span 8;
+        }
+        .small-rooms-wrap {
+          grid-column: span 4;
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+        }
+
+        .js-hide-desktop {
+          display: none !important;
+        }
+        .large-room .room-image-wrap {
+          height: 500px;
+        }
+        .large-room .room-content {
+          flex-direction: row;
+          align-items: center;
+          gap: 2.5rem;
+        }
+        .large-room .room-info-left {
+          padding-right: 1rem;
+        }
+        .large-room .room-info-right {
+          text-align: right;
+          margin-top: 0;
+          min-width: max-content;
+        }
+        .large-room .room-price {
+          margin-top: 0;
+          font-size: 1.875rem;
+        }
+        .large-room .btn-view {
+          width: auto;
+          margin-top: 0.5rem;
+        }
+        .small-rooms-wrap .room-info-right {
+          margin-top: auto;
+        }
+
+        .experience-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .features-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .exp-title {
+          font-size: 3rem;
+        }
+        .footer-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        .footer-bottom {
+          text-align: left;
+        }
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <nav class="navbar" id="navbar">
-        <div class="nav-horizontal">
-            <div style="display: flex; align-items: center; gap: 2rem;">
-                <span class="nav-brand js-hotel-name">Nombre del Hotel</span>
-                <div class="nav-links">
-                    <a href="#habitaciones">Habitaciones</a>
-                    <a href="#experiencia">Experiencia</a>
-                    <a href="/ofertas.html">Ofertas</a>
-                </div>
-            </div>
-            <div class="nav-actions">
-                <button class="btn-signin">Iniciar Sesión</button>
-                <button class="btn-book">Reservar Ahora</button>
-            </div>
+      <div class="nav-horizontal">
+        <div style="display: flex; align-items: center; gap: 2rem">
+          <span class="nav-brand js-hotel-name">Nombre del Hotel</span>
+          <div class="nav-links">
+            <a href="#habitaciones">Habitaciones</a>
+            <a href="#experiencia">Experiencia</a>
+            <a href="/ofertas.html">Ofertas</a>
+          </div>
         </div>
+        <div class="nav-actions">
+          <button class="btn-signin">Iniciar Sesión</button>
+          <button class="btn-book">Reservar Ahora</button>
+        </div>
+      </div>
 
-        <div class="nav-vertical">
-            <a href="#inicio" style="text-decoration: none;"><div class="vert-brand js-hotel-initials">XX</div></a>
-            <div class="vert-links">
-                <a href="#inicio" title="Ir a Inicio">
-                    <span class="material-symbols-outlined vert-icon">home</span>
-                    <span class="vert-text">Inicio</span>
-                </a>
-                <a href="#habitaciones" title="Ir a Habitaciones">
-                    <span class="material-symbols-outlined vert-icon">king_bed</span>
-                    <span class="vert-text">Habitaciones</span>
-                </a>
-                <a href="#experiencia" title="Ir a Experiencias">
-                    <span class="material-symbols-outlined vert-icon">spa</span>
-                    <span class="vert-text">Experiencia</span>
-                </a>
-                <div class="vert-divider"></div>
-                <a href="/ofertas.html" title="Ver Ofertas Externas">
-                    <span class="material-symbols-outlined vert-icon">sell</span>
-                    <span class="vert-text">Ofertas</span>
-                </a>
-                <a href="/contacto.html" title="Ir a Contacto">
-                    <span class="material-symbols-outlined vert-icon">mail</span>
-                    <span class="vert-text">Contacto</span>
-                </a>
-            </div>
-            <div class="vert-actions">
-                <a href="#habitaciones" title="Reservar Ahora" class="btn-book-vert">
-                    <span class="material-symbols-outlined vert-icon">calendar_month</span>
-                    <span class="vert-text">Reservar</span>
-                </a>
-            </div>
+      <div class="nav-vertical">
+        <a href="#inicio" style="text-decoration: none"
+          ><div class="vert-brand js-hotel-initials">XX</div></a
+        >
+        <div class="vert-links">
+          <a href="#inicio" title="Ir a Inicio">
+            <span class="material-symbols-outlined vert-icon">home</span>
+            <span class="vert-text">Inicio</span>
+          </a>
+          <a href="#habitaciones" title="Ir a Habitaciones">
+            <span class="material-symbols-outlined vert-icon">king_bed</span>
+            <span class="vert-text">Habitaciones</span>
+          </a>
+          <a href="#experiencia" title="Ir a Experiencias">
+            <span class="material-symbols-outlined vert-icon">spa</span>
+            <span class="vert-text">Experiencia</span>
+          </a>
+          <div class="vert-divider"></div>
+          <a href="/ofertas.html" title="Ver Ofertas Externas">
+            <span class="material-symbols-outlined vert-icon">sell</span>
+            <span class="vert-text">Ofertas</span>
+          </a>
+          <a href="/contacto.html" title="Ir a Contacto">
+            <span class="material-symbols-outlined vert-icon">mail</span>
+            <span class="vert-text">Contacto</span>
+          </a>
         </div>
+        <div class="vert-actions">
+          <a href="#habitaciones" title="Reservar Ahora" class="btn-book-vert">
+            <span class="material-symbols-outlined vert-icon"
+              >calendar_month</span
+            >
+            <span class="vert-text">Reservar</span>
+          </a>
+        </div>
+      </div>
     </nav>
 
     <main>
-        <section id="inicio" class="hero">
-            <div class="hero-bg">
-                <img src="https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/Portada.webp" alt="Lobby de hotel de lujo">
-                <div class="hero-overlay"></div>
-            </div>
-            <div class="hero-content">
-                <div>
-                    <h1 class="hero-title">Elegancia en cada <span class="text-accent">Transición</span></h1>
-                    <p class="hero-subtitle">Experimenta el conserje digital—donde el lujo se encuentra con la intuición perfecta.</p>
+      <section id="inicio" class="hero">
+        <div class="hero-bg">
+          <img
+            src="https://akzqiyajwdfyufdubifw.supabase.co/storage/v1/object/public/Perrito/Portada.webp"
+            alt="Lobby de hotel de lujo"
+          />
+          <div class="hero-overlay"></div>
+        </div>
+        <div class="hero-content">
+          <div>
+            <h1 class="hero-title">
+              Lugar para <span class="text-accent">desconectar</span>
+            </h1>
+            <p class="hero-subtitle">
+              Experimenta la comodidad y el descanso que necesitas para tus
+              vacaciones
+            </p>
+          </div>
+
+          <div class="search-bar">
+            <div class="search-inputs">
+              <div class="search-field" id="trigger-sede">
+                <span class="search-label">Sede</span>
+                <div class="search-value" id="val-sede">¿A dónde vas?</div>
+
+                <div class="search-popover" id="popover-sede">
+                  <div class="popover-option js-opt-sede" data-val="Arequipa">
+                    <span class="material-symbols-outlined">location_on</span>
+                    Arequipa, Perú
+                  </div>
+                  <div class="popover-option js-opt-sede" data-val="Cuzco">
+                    <span class="material-symbols-outlined">location_on</span>
+                    Cuzco, Perú
+                  </div>
                 </div>
-                
-                <div class="search-bar">
-                    <div class="search-inputs">
-                        
-                        <div class="search-field" id="trigger-sede">
-                            <span class="search-label">Sede</span>
-                            <div class="search-value" id="val-sede">¿A dónde vas?</div>
-                            
-                            <div class="search-popover" id="popover-sede">
-                                <div class="popover-option js-opt-sede" data-val="Arequipa">
-                                    <span class="material-symbols-outlined">location_on</span> Arequipa, Perú
-                                </div>
-                                <div class="popover-option js-opt-sede" data-val="Cuzco">
-                                    <span class="material-symbols-outlined">location_on</span> Cuzco, Perú
-                                </div>
-                            </div>
-                        </div>
+              </div>
 
-                        <div class="search-field" id="trigger-fechas">
-                            <span class="search-label">Check-in / Check-out</span>
-                            <div class="search-value" id="val-fechas">Selecciona fechas</div>
-                            
-                            <div class="search-popover" id="popover-fechas">
-                                <div class="date-inputs">
-                                    <div>
-                                        <label>Llegada</label>
-                                        <input type="date" id="date-in">
-                                    </div>
-                                    <div>
-                                        <label>Salida</label>
-                                        <input type="date" id="date-out">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="search-field" id="trigger-huespedes">
-                            <span class="search-label">Huéspedes</span>
-                            <div class="search-value" id="val-huespedes">2 Adultos, 0 Niños</div>
-                            
-                            <div class="search-popover" id="popover-huespedes">
-                                <div class="guest-row">
-                                    <span>Adultos</span>
-                                    <div class="guest-controls">
-                                        <button class="btn-guest" id="btn-adults-minus">-</button>
-                                        <span class="guest-count" id="count-adults">2</span>
-                                        <button class="btn-guest" id="btn-adults-plus">+</button>
-                                    </div>
-                                </div>
-                                <div class="guest-row">
-                                    <span>Niños</span>
-                                    <div class="guest-controls">
-                                        <button class="btn-guest" id="btn-kids-minus">-</button>
-                                        <span class="guest-count" id="count-kids">0</span>
-                                        <button class="btn-guest" id="btn-kids-plus">+</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <button class="btn-search"><span class="material-symbols-outlined">search</span></button>
+              <div class="search-field" id="trigger-fechas">
+                <span class="search-label">Check-in / Check-out</span>
+                <div class="search-value" id="val-fechas">
+                  Selecciona fechas
                 </div>
-            </div>
-        </section>
 
-        <section id="habitaciones" class="rooms-section">
-            <div class="container rooms-wrapper">
-                <div class="section-header">
+                <div class="search-popover" id="popover-fechas">
+                  <div class="date-inputs">
                     <div>
-                        <div class="section-title-wrap">
-                            <span class="section-kicker">Colecciones Exclusivas</span>
-                            <h2 class="section-title">Espacios Excepcionales</h2>
-                        </div>
-                        <p class="section-desc">Diseñadas para el viajero moderno, nuestras habitaciones combinan precisión arquitectónica con un confort inigualable.</p>
+                      <label>Llegada</label>
+                      <input type="date" id="date-in" />
                     </div>
-                    <div class="carousel-controls">
-                        <button id="btn-prev" class="carousel-btn"><span class="material-symbols-outlined">arrow_back</span></button>
-                        <button id="btn-next" class="carousel-btn"><span class="material-symbols-outlined">arrow_forward</span></button>
+                    <div>
+                      <label>Salida</label>
+                      <input type="date" id="date-out" />
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="search-field" id="trigger-huespedes">
+                <span class="search-label">Huéspedes</span>
+                <div class="search-value" id="val-huespedes">
+                  2 Adultos, 0 Niños
                 </div>
 
-                <div class="rooms-carousel-wrapper">
-                    <div class="rooms-grid">
-                        <div class="room-card large-room" id="card-l">
-                            <div class="room-image-wrap">
-                                <img id="l-img" src="" alt="Habitación" class="room-image">
-                                <div class="badge-featured" id="l-badge"></div>
-                            </div>
-                            <div class="room-content">
-                                <div class="room-info-left">
-                                    <h3 class="room-title" id="l-title"></h3>
-                                    <p class="room-description" id="l-desc"></p>
-                                    <div class="room-meta">
-                                        <span><span class="material-symbols-outlined" style="font-size: 16px;">square_foot</span> <span id="l-size"></span></span>
-                                        <span><span class="material-symbols-outlined" style="font-size: 16px;">bed</span> <span id="l-bed"></span></span>
-                                        <span><span class="material-symbols-outlined" style="font-size: 16px;">hotel_class</span> <span id="l-extra"></span></span>
-                                    </div>
-                                </div>
-                                <div class="room-info-right">
-                                    <p class="room-price"><span id="l-price"></span><span class="price-period">/noche</span></p>
-                                    <button class="btn-view">Ver Detalles</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="small-rooms-wrap">
-                            <div class="room-card" id="card-s1">
-                                <div class="room-image-wrap">
-                                    <img id="s1-img" src="" alt="Habitación" class="room-image">
-                                    <div class="badge-featured js-hide-desktop" id="s1-badge"></div>
-                                </div>
-                                <div class="room-content">
-                                    <div class="room-info-left">
-                                        <h3 class="room-title" id="s1-title"></h3>
-                                        <p class="room-description js-hide-desktop" id="s1-desc"></p>
-                                        <div class="room-meta js-hide-desktop">
-                                            <span><span class="material-symbols-outlined" style="font-size: 16px;">square_foot</span> <span id="s1-size"></span></span>
-                                            <span><span class="material-symbols-outlined" style="font-size: 16px;">bed</span> <span id="s1-bed"></span></span>
-                                            <span><span class="material-symbols-outlined" style="font-size: 16px;">hotel_class</span> <span id="s1-extra"></span></span>
-                                        </div>
-                                    </div>
-                                    <div class="room-info-right">
-                                        <p class="room-price"><span id="s1-price"></span><span class="price-period">/noche</span></p>
-                                        <button class="btn-view">Ver Detalles</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="room-card" id="card-s2">
-                                <div class="room-image-wrap">
-                                    <img id="s2-img" src="" alt="Habitación" class="room-image">
-                                    <div class="badge-featured js-hide-desktop" id="s2-badge"></div>
-                                </div>
-                                <div class="room-content">
-                                    <div class="room-info-left">
-                                        <h3 class="room-title" id="s2-title"></h3>
-                                        <p class="room-description js-hide-desktop" id="s2-desc"></p>
-                                        <div class="room-meta js-hide-desktop">
-                                            <span><span class="material-symbols-outlined" style="font-size: 16px;">square_foot</span> <span id="s2-size"></span></span>
-                                            <span><span class="material-symbols-outlined" style="font-size: 16px;">bed</span> <span id="s2-bed"></span></span>
-                                            <span><span class="material-symbols-outlined" style="font-size: 16px;">hotel_class</span> <span id="s2-extra"></span></span>
-                                        </div>
-                                    </div>
-                                    <div class="room-info-right">
-                                        <p class="room-price"><span id="s2-price"></span><span class="price-period">/noche</span></p>
-                                        <button class="btn-view">Ver Detalles</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="search-popover" id="popover-huespedes">
+                  <div class="guest-row">
+                    <span>Adultos</span>
+                    <div class="guest-controls">
+                      <button class="btn-guest" id="btn-adults-minus">-</button>
+                      <span class="guest-count" id="count-adults">2</span>
+                      <button class="btn-guest" id="btn-adults-plus">+</button>
                     </div>
-
-                    <div class="carousel-dots">
-                        <button class="dot active" data-index="0"></button>
-                        <button class="dot" data-index="1"></button>
-                        <button class="dot" data-index="2"></button>
+                  </div>
+                  <div class="guest-row">
+                    <span>Niños</span>
+                    <div class="guest-controls">
+                      <button class="btn-guest" id="btn-kids-minus">-</button>
+                      <span class="guest-count" id="count-kids">0</span>
+                      <button class="btn-guest" id="btn-kids-plus">+</button>
                     </div>
+                  </div>
                 </div>
-
-                <div class="view-more-wrap">
-                    <button class="btn-outline">Ver todas las habitaciones <span class="material-symbols-outlined" style="font-size: 20px;">arrow_forward</span></button>
-                </div>
+              </div>
             </div>
-        </section>
+            <button class="btn-search">
+              <span class="material-symbols-outlined">search</span>
+            </button>
+          </div>
+        </div>
+      </section>
 
-        <section id="experiencia" class="experience-section">
-            <div class="container experience-grid">
-                <div class="exp-image-wrap"><img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1000&auto=format&fit=crop" alt="Experiencia en el Spa"></div>
-                <div class="exp-content">
-                    <div><span class="section-kicker">El Santuario</span><h2 class="exp-title">Más Allá de tus Cuatro Paredes</h2></div>
-                    <p class="exp-desc">En The Fluid Architect, creemos que un hotel es más que un lugar para dormir. Es un lienzo para los recuerdos, un centro de inspiración y un refugio para los sentidos.</p>
-                    <div class="features-grid">
-                        <div><span class="material-symbols-outlined feature-icon">spa</span><h4 class="feature-title">Bienestar Holístico</h4><p style="font-size: 0.875rem; color: var(--on-surface-variant); margin-top: 0.25rem;">Tratamientos de clase mundial para el cuerpo y el alma.</p></div>
-                        <div><span class="material-symbols-outlined feature-icon">restaurant</span><h4 class="feature-title">Arte Culinario</h4><p style="font-size: 0.875rem; color: var(--on-surface-variant); margin-top: 0.25rem;">Gastronomía con estrellas Michelin a pasos de tu cama.</p></div>
-                    </div>
-                    <button class="btn-explore">Explorar Servicios</button>
-                </div>
+      <section id="habitaciones" class="rooms-section">
+        <div class="container rooms-wrapper">
+          <div class="section-header">
+            <div>
+              <div class="section-title-wrap">
+                <span class="section-kicker">Colecciones Exclusivas</span>
+                <h2 class="section-title">Espacios Excepcionales</h2>
+              </div>
+              <p class="section-desc">
+                Diseñadas para el viajero moderno, nuestras habitaciones
+                combinan precisión arquitectónica con un confort inigualable.
+              </p>
             </div>
-        </section>
+            <div class="carousel-controls">
+              <button id="btn-prev" class="carousel-btn">
+                <span class="material-symbols-outlined">arrow_back</span>
+              </button>
+              <button id="btn-next" class="carousel-btn">
+                <span class="material-symbols-outlined">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="rooms-carousel-wrapper">
+            <div class="rooms-grid">
+              <div class="room-card large-room" id="card-l">
+                <div class="room-image-wrap">
+                  <img id="l-img" src="" alt="Habitación" class="room-image" />
+                  <div class="badge-featured" id="l-badge"></div>
+                </div>
+                <div class="room-content">
+                  <div class="room-info-left">
+                    <h3 class="room-title" id="l-title"></h3>
+                    <p class="room-description" id="l-desc"></p>
+                    <div class="room-meta">
+                      <span
+                        ><span
+                          class="material-symbols-outlined"
+                          style="font-size: 16px"
+                          >square_foot</span
+                        >
+                        <span id="l-size"></span
+                      ></span>
+                      <span
+                        ><span
+                          class="material-symbols-outlined"
+                          style="font-size: 16px"
+                          >bed</span
+                        >
+                        <span id="l-bed"></span
+                      ></span>
+                      <span
+                        ><span
+                          class="material-symbols-outlined"
+                          style="font-size: 16px"
+                          >hotel_class</span
+                        >
+                        <span id="l-extra"></span
+                      ></span>
+                    </div>
+                  </div>
+                  <div class="room-info-right">
+                    <p class="room-price">
+                      <span id="l-price"></span
+                      ><span class="price-period">/noche</span>
+                    </p>
+                    <button class="btn-view">Ver Detalles</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="small-rooms-wrap">
+                <div class="room-card" id="card-s1">
+                  <div class="room-image-wrap">
+                    <img
+                      id="s1-img"
+                      src=""
+                      alt="Habitación"
+                      class="room-image"
+                    />
+                    <div
+                      class="badge-featured js-hide-desktop"
+                      id="s1-badge"
+                    ></div>
+                  </div>
+                  <div class="room-content">
+                    <div class="room-info-left">
+                      <h3 class="room-title" id="s1-title"></h3>
+                      <p
+                        class="room-description js-hide-desktop"
+                        id="s1-desc"
+                      ></p>
+                      <div class="room-meta js-hide-desktop">
+                        <span
+                          ><span
+                            class="material-symbols-outlined"
+                            style="font-size: 16px"
+                            >square_foot</span
+                          >
+                          <span id="s1-size"></span
+                        ></span>
+                        <span
+                          ><span
+                            class="material-symbols-outlined"
+                            style="font-size: 16px"
+                            >bed</span
+                          >
+                          <span id="s1-bed"></span
+                        ></span>
+                        <span
+                          ><span
+                            class="material-symbols-outlined"
+                            style="font-size: 16px"
+                            >hotel_class</span
+                          >
+                          <span id="s1-extra"></span
+                        ></span>
+                      </div>
+                    </div>
+                    <div class="room-info-right">
+                      <p class="room-price">
+                        <span id="s1-price"></span
+                        ><span class="price-period">/noche</span>
+                      </p>
+                      <button class="btn-view">Ver Detalles</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="room-card" id="card-s2">
+                  <div class="room-image-wrap">
+                    <img
+                      id="s2-img"
+                      src=""
+                      alt="Habitación"
+                      class="room-image"
+                    />
+                    <div
+                      class="badge-featured js-hide-desktop"
+                      id="s2-badge"
+                    ></div>
+                  </div>
+                  <div class="room-content">
+                    <div class="room-info-left">
+                      <h3 class="room-title" id="s2-title"></h3>
+                      <p
+                        class="room-description js-hide-desktop"
+                        id="s2-desc"
+                      ></p>
+                      <div class="room-meta js-hide-desktop">
+                        <span
+                          ><span
+                            class="material-symbols-outlined"
+                            style="font-size: 16px"
+                            >square_foot</span
+                          >
+                          <span id="s2-size"></span
+                        ></span>
+                        <span
+                          ><span
+                            class="material-symbols-outlined"
+                            style="font-size: 16px"
+                            >bed</span
+                          >
+                          <span id="s2-bed"></span
+                        ></span>
+                        <span
+                          ><span
+                            class="material-symbols-outlined"
+                            style="font-size: 16px"
+                            >hotel_class</span
+                          >
+                          <span id="s2-extra"></span
+                        ></span>
+                      </div>
+                    </div>
+                    <div class="room-info-right">
+                      <p class="room-price">
+                        <span id="s2-price"></span
+                        ><span class="price-period">/noche</span>
+                      </p>
+                      <button class="btn-view">Ver Detalles</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="carousel-dots">
+              <button class="dot active" data-index="0"></button>
+              <button class="dot" data-index="1"></button>
+              <button class="dot" data-index="2"></button>
+            </div>
+          </div>
+
+          <div class="view-more-wrap">
+            <button
+              class="btn-outline"
+              onclick="window.location.href = '/catalogo.html'"
+            >
+              Ver todas las habitaciones
+              <span class="material-symbols-outlined" style="font-size: 20px"
+                >arrow_forward</span
+              >
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="experiencia" class="experience-section">
+        <div class="container experience-grid">
+          <div class="exp-image-wrap">
+            <img
+              src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=1000&auto=format&fit=crop"
+              alt="Experiencia en el Spa"
+            />
+          </div>
+          <div class="exp-content">
+            <div>
+              <span class="section-kicker">El Santuario</span>
+              <h2 class="exp-title">Más Allá de tus Cuatro Paredes</h2>
+            </div>
+            <p class="exp-desc">
+              En The Fluid Architect, creemos que un hotel es más que un lugar
+              para dormir. Es un lienzo para los recuerdos, un centro de
+              inspiración y un refugio para los sentidos.
+            </p>
+            <div class="features-grid">
+              <div>
+                <span class="material-symbols-outlined feature-icon">spa</span>
+                <h4 class="feature-title">Bienestar Holístico</h4>
+                <p
+                  style="
+                    font-size: 0.875rem;
+                    color: var(--on-surface-variant);
+                    margin-top: 0.25rem;
+                  "
+                >
+                  Tratamientos de clase mundial para el cuerpo y el alma.
+                </p>
+              </div>
+              <div>
+                <span class="material-symbols-outlined feature-icon"
+                  >restaurant</span
+                >
+                <h4 class="feature-title">Arte Culinario</h4>
+                <p
+                  style="
+                    font-size: 0.875rem;
+                    color: var(--on-surface-variant);
+                    margin-top: 0.25rem;
+                  "
+                >
+                  Gastronomía con estrellas Michelin a pasos de tu cama.
+                </p>
+              </div>
+            </div>
+            <button class="btn-explore">Explorar Servicios</button>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div><h4 class="footer-title js-hotel-name" style="text-transform: none; font-size: 1.25rem;"></h4><p class="js-hotel-desc" style="color: #64748b; font-size: 0.875rem; line-height: 1.6;"></p></div>
-                <div><h4 class="footer-title">Navegación</h4><ul class="footer-links"><li><a href="#habitaciones">Habitaciones</a></li><li><a href="#experiencia">Experiencia</a></li><li><a href="/ofertas.html">Ofertas</a></li></ul></div>
-                <div><h4 class="footer-title">Legal</h4><ul class="footer-links"><li><a href="#">Política de Privacidad</a></li><li><a href="#">Términos de Servicio</a></li></ul></div>
-                <div><h4 class="footer-title">Conectar</h4><ul class="footer-links"><li><a href="#" class="js-hotel-email"></a></li></ul><div class="social-icons"><span class="material-symbols-outlined">public</span><span class="material-symbols-outlined">chat</span></div></div>
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <h4
+              class="footer-title js-hotel-name"
+              style="text-transform: none; font-size: 1.25rem"
+            ></h4>
+            <p
+              class="js-hotel-desc"
+              style="color: #64748b; font-size: 0.875rem; line-height: 1.6"
+            ></p>
+          </div>
+          <div>
+            <h4 class="footer-title">Navegación</h4>
+            <ul class="footer-links">
+              <li><a href="#habitaciones">Habitaciones</a></li>
+              <li><a href="#experiencia">Experiencia</a></li>
+              <li><a href="/ofertas.html">Ofertas</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="footer-title">Legal</h4>
+            <ul class="footer-links">
+              <li><a href="#">Política de Privacidad</a></li>
+              <li><a href="#">Términos de Servicio</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="footer-title">Conectar</h4>
+            <ul class="footer-links">
+              <li><a href="#" class="js-hotel-email"></a></li>
+            </ul>
+            <div class="social-icons">
+              <span class="material-symbols-outlined">public</span
+              ><span class="material-symbols-outlined">chat</span>
             </div>
-            <div class="footer-bottom"><p>© <span class="js-hotel-year"></span> <span class="js-hotel-name"></span>. Todos los derechos reservados.</p></div>
+          </div>
         </div>
+        <div class="footer-bottom">
+          <p>
+            © <span class="js-hotel-year"></span>
+            <span class="js-hotel-name"></span>. Todos los derechos reservados.
+          </p>
+        </div>
+      </div>
     </footer>
 
+    <script src="data.js"></script>
+
     <script>
-        const hotelInfo = {
-            nombre: "El Cielo",
-            iniciales: "EC", 
-            descripcion: "Redefiniendo el panorama de la hospitalidad a través de un diseño meticuloso y un servicio intuitivo.",
-            correo: "reservas@hotelelielo.com",
-            anioActual: new Date().getFullYear()
+      document.addEventListener("DOMContentLoaded", () => {
+        // Inicializar Info Hotel
+        document
+          .querySelectorAll(".js-hotel-name")
+          .forEach((el) => (el.textContent = hotelInfo.nombre));
+        document
+          .querySelectorAll(".js-hotel-initials")
+          .forEach((el) => (el.textContent = hotelInfo.iniciales));
+        document
+          .querySelectorAll(".js-hotel-desc")
+          .forEach((el) => (el.textContent = hotelInfo.descripcion));
+        document
+          .querySelectorAll(".js-hotel-year")
+          .forEach((el) => (el.textContent = hotelInfo.anioActual));
+        document.querySelectorAll(".js-hotel-email").forEach((el) => {
+          el.textContent = hotelInfo.correo;
+          el.href = `mailto:${hotelInfo.correo}`;
+        });
+
+        // Navbar Scroll
+        window.addEventListener("scroll", () => {
+          document
+            .getElementById("navbar")
+            .classList.toggle("scrolled", window.scrollY > 150);
+        });
+
+        // --- LÓGICA SEARCH BAR ---
+        const fields = document.querySelectorAll(".search-field");
+        const popovers = document.querySelectorAll(".search-popover");
+
+        fields.forEach((field) => {
+          field.addEventListener("click", (e) => {
+            if (e.target.closest(".search-popover")) return;
+            const myPopover = field.querySelector(".search-popover");
+            const isActive = myPopover.classList.contains("active");
+            popovers.forEach((p) => p.classList.remove("active"));
+            if (!isActive) myPopover.classList.add("active");
+          });
+        });
+
+        document.addEventListener("click", (e) => {
+          if (!e.target.closest(".search-field")) {
+            popovers.forEach((p) => p.classList.remove("active"));
+          }
+        });
+
+        // Sede (Dinámico desde Supabase)
+        const valSede = document.getElementById("val-sede");
+        const popoverSede = document.getElementById("popover-sede");
+
+        const cargarSedesEnUI = async () => {
+          const sedes = await window.obtenerSedesActivas();
+          if (sedes && sedes.length > 0) {
+            popoverSede.innerHTML = ""; // Limpiamos opciones estáticas
+            sedes.forEach((sede) => {
+              const opt = document.createElement("div");
+              opt.className = "popover-option js-opt-sede";
+              opt.dataset.val = sede.nombre;
+              opt.innerHTML = `
+                <span class="material-symbols-outlined">location_on</span>
+                ${sede.nombre}
+              `;
+              opt.addEventListener("click", () => {
+                valSede.textContent = sede.nombre;
+                valSede.classList.add("selected");
+                popoverSede.classList.remove("active");
+              });
+              popoverSede.appendChild(opt);
+            });
+          }
+        };
+        cargarSedesEnUI();
+
+        // Fechas
+        const dateIn = document.getElementById("date-in"),
+          dateOut = document.getElementById("date-out"),
+          valFechas = document.getElementById("val-fechas");
+
+        const today = new Date();
+        const future = new Date();
+        future.setFullYear(today.getFullYear() + 2);
+
+        const formatDateInput = (date) => {
+          const y = date.getFullYear();
+          const m = String(date.getMonth() + 1).padStart(2, "0");
+          const d = String(date.getDate()).padStart(2, "0");
+          return `${y}-${m}-${d}`;
         };
 
-        const roomsData = [
-            {
-                img: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1000&auto=format&fit=crop",
-                title: "El Penthouse Horizon",
-                desc: "Sumérgete en el máximo lujo con vistas panorámicas a la ciudad, servicio de conserjería privado 24/7, sala de estar envolvente y lujosos acabados en mármol italiano.",
-                size: "110 m²",
-                bed: "Cama King",
-                extra: "Minibar Premium",
-                price: "$850",
-                badge: "Suite Destacada"
-            },
-            {
-                img: "https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1000&auto=format&fit=crop",
-                title: "El Estudio Ejecutivo",
-                desc: "Un espacio diseñado para la máxima productividad y el descanso perfecto. Cuenta con área de trabajo ergonómica y ventanales con control de luz inteligente.",
-                size: "65 m²",
-                bed: "Cama Queen",
-                extra: "Escritorio Ejecutivo",
-                price: "$420",
-                badge: "Favorito Ejecutivos"
-            },
-            {
-                img: "https://images.unsplash.com/photo-1590490360182-c33d57733427?q=80&w=1000&auto=format&fit=crop",
-                title: "Skyline Deluxe",
-                desc: "Despierta con la mejor vista de la ciudad. Una habitación moderna con diseño minimalista, sistema de sonido envolvente y baño con hidromasaje.",
-                size: "80 m²",
-                bed: "Cama King",
-                extra: "Baño Hidromasaje",
-                price: "$350",
-                badge: "Mejor Vista"
+        dateIn.min = formatDateInput(today);
+        dateIn.max = formatDateInput(future);
+        dateOut.min = formatDateInput(today);
+        dateOut.max = formatDateInput(future);
+
+        const formatFechas = () => {
+          if (dateIn.value) {
+            dateOut.min = dateIn.value;
+            if (dateOut.value && dateOut.value < dateIn.value) {
+              dateOut.value = dateIn.value;
             }
+          }
+
+          if (dateIn.value && dateOut.value) {
+            const [y1, m1, d1] = dateIn.value.split("-");
+            const [y2, m2, d2] = dateOut.value.split("-");
+
+            const objIn = new Date(y1, m1 - 1, d1);
+            const objOut = new Date(y2, m2 - 1, d2);
+
+            const strIn = objIn.toLocaleDateString("es-ES", {
+              day: "numeric",
+              month: "short",
+            });
+            const strOut = objOut.toLocaleDateString("es-ES", {
+              day: "numeric",
+              month: "short",
+            });
+
+            valFechas.textContent = `${strIn} - ${strOut}`;
+            valFechas.classList.add("selected");
+          }
+        };
+        dateIn.addEventListener("change", formatFechas);
+        dateOut.addEventListener("change", formatFechas);
+
+        // Huéspedes
+        let adults = 2,
+          kids = 0;
+        const valHuespedes = document.getElementById("val-huespedes"),
+          cAdults = document.getElementById("count-adults"),
+          cKids = document.getElementById("count-kids");
+        const updateHuespedesText = () => {
+          cAdults.textContent = adults;
+          cKids.textContent = kids;
+          valHuespedes.textContent = `${adults} Adulto${adults !== 1 ? "s" : ""}, ${kids} Niño${kids !== 1 ? "s" : ""}`;
+          valHuespedes.classList.add("selected");
+        };
+        document
+          .getElementById("btn-adults-plus")
+          .addEventListener("click", () => {
+            adults++;
+            updateHuespedesText();
+          });
+        document
+          .getElementById("btn-adults-minus")
+          .addEventListener("click", () => {
+            if (adults > 1) adults--;
+            updateHuespedesText();
+          });
+        document
+          .getElementById("btn-kids-plus")
+          .addEventListener("click", () => {
+            kids++;
+            updateHuespedesText();
+          });
+        document
+          .getElementById("btn-kids-minus")
+          .addEventListener("click", () => {
+            if (kids > 0) kids--;
+            updateHuespedesText();
+          });
+
+        // --- LÓGICA DEL CARRUSEL ---
+        let currentIndex = 0;
+        let mobileIndex = 0;
+        let autoPlayTimer;
+        let isAnimating = false;
+        const cycleTime = 12000;
+        const cards = [
+          document.getElementById("card-l"),
+          document.getElementById("card-s1"),
+          document.getElementById("card-s2"),
         ];
-    </script>
+        const dots = document.querySelectorAll(".dot");
+        const roomsGrid = document.querySelector(".rooms-grid");
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Inicializar Info Hotel
-            document.querySelectorAll('.js-hotel-name').forEach(el => el.textContent = hotelInfo.nombre);
-            document.querySelectorAll('.js-hotel-initials').forEach(el => el.textContent = hotelInfo.iniciales);
-            document.querySelectorAll('.js-hotel-desc').forEach(el => el.textContent = hotelInfo.descripcion);
-            document.querySelectorAll('.js-hotel-year').forEach(el => el.textContent = hotelInfo.anioActual);
-            document.querySelectorAll('.js-hotel-email').forEach(el => { el.textContent = hotelInfo.correo; el.href = `mailto:${hotelInfo.correo}`; });
+        function injectData(cardPrefix, data) {
+          document.getElementById(`${cardPrefix}-img`).src = data.images[0];
+          document.getElementById(`${cardPrefix}-badge`).textContent =
+            data.badge;
+          document.getElementById(`${cardPrefix}-title`).textContent =
+            data.name;
+          document.getElementById(`${cardPrefix}-desc`).textContent =
+            data.description;
+          document.getElementById(`${cardPrefix}-size`).textContent = data.size;
+          document.getElementById(`${cardPrefix}-bed`).textContent = data.bed;
+          document.getElementById(`${cardPrefix}-extra`).textContent =
+            data.extra;
+          document.getElementById(`${cardPrefix}-price`).textContent =
+            "$" + data.price;
+        }
+        injectData("l", roomsData[0]);
+        injectData("s1", roomsData[1]);
+        injectData("s2", roomsData[2]);
 
-            // Navbar Scroll
-            window.addEventListener('scroll', () => { document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 150); });
+        function updateDesktopSequence(targetIndex) {
+          if (isAnimating || targetIndex === currentIndex) return;
+          isAnimating = true;
+          currentIndex = targetIndex;
+          const roomL = roomsData[currentIndex],
+            roomS1 = roomsData[(currentIndex + 1) % 3],
+            roomS2 = roomsData[(currentIndex + 2) % 3];
 
-            // --- LÓGICA SEARCH BAR ---
-            const fields = document.querySelectorAll('.search-field');
-            const popovers = document.querySelectorAll('.search-popover');
+          const triggerFade = (cardElement, prefix, data, delay) => {
+            setTimeout(() => {
+              cardElement.classList.add("fade-out");
+              setTimeout(() => {
+                injectData(prefix, data);
+                cardElement.classList.remove("fade-out");
+              }, 600);
+            }, delay);
+          };
 
-            fields.forEach(field => {
-                field.addEventListener('click', (e) => {
-                    if(e.target.closest('.search-popover')) return; 
-                    const myPopover = field.querySelector('.search-popover');
-                    const isActive = myPopover.classList.contains('active');
-                    popovers.forEach(p => p.classList.remove('active')); 
-                    if (!isActive) myPopover.classList.add('active'); 
-                });
-            });
+          triggerFade(cards[0], "l", roomL, 0);
+          triggerFade(cards[1], "s1", roomS1, 400);
+          triggerFade(cards[2], "s2", roomS2, 800);
+          updateDots(currentIndex);
+          setTimeout(() => {
+            isAnimating = false;
+          }, 2000);
+        }
 
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.search-field')) { popovers.forEach(p => p.classList.remove('active')); }
-            });
+        function updateMobileScroll(targetIndex) {
+          mobileIndex = targetIndex;
+          const scrollPos =
+            cards[targetIndex].offsetLeft - roomsGrid.offsetLeft;
+          roomsGrid.scrollTo({ left: scrollPos, behavior: "smooth" });
+          updateDots(targetIndex);
+        }
 
-            // Sede
-            const valSede = document.getElementById('val-sede');
-            document.querySelectorAll('.js-opt-sede').forEach(opt => {
-                opt.addEventListener('click', () => {
-                    valSede.textContent = opt.dataset.val; valSede.classList.add('selected');
-                    opt.closest('.search-popover').classList.remove('active');
-                });
-            });
+        function updateDots(activeIndex) {
+          dots.forEach((dot, idx) =>
+            dot.classList.toggle("active", idx === activeIndex),
+          );
+        }
+        function goNext() {
+          if (window.innerWidth < 768) {
+            updateMobileScroll((mobileIndex + 1) % 3);
+          } else {
+            updateDesktopSequence((currentIndex + 1) % 3);
+          }
+        }
+        function goPrev() {
+          if (window.innerWidth < 768) {
+            updateMobileScroll((mobileIndex - 1 + 3) % 3);
+          } else {
+            updateDesktopSequence((currentIndex - 1 + 3) % 3);
+          }
+        }
+        function startTimer() {
+          clearInterval(autoPlayTimer);
+          autoPlayTimer = setInterval(goNext, cycleTime);
+        }
 
-            // Fechas
-            const dateIn = document.getElementById('date-in'), 
-                  dateOut = document.getElementById('date-out'), 
-                  valFechas = document.getElementById('val-fechas');
-
-            const today = new Date();
-            const future = new Date();
-            future.setFullYear(today.getFullYear() + 2);
-
-            const formatDateInput = (date) => {
-                const y = date.getFullYear();
-                const m = String(date.getMonth() + 1).padStart(2, '0');
-                const d = String(date.getDate()).padStart(2, '0');
-                return `${y}-${m}-${d}`;
-            };
-
-            dateIn.min = formatDateInput(today); dateIn.max = formatDateInput(future);
-            dateOut.min = formatDateInput(today); dateOut.max = formatDateInput(future);
-
-            const formatFechas = () => {
-                if(dateIn.value) {
-                    dateOut.min = dateIn.value;
-                    if(dateOut.value && dateOut.value < dateIn.value) { dateOut.value = dateIn.value; }
-                }
-
-                if(dateIn.value && dateOut.value) {
-                    const [y1, m1, d1] = dateIn.value.split('-');
-                    const [y2, m2, d2] = dateOut.value.split('-');
-                    
-                    const objIn = new Date(y1, m1 - 1, d1);
-                    const objOut = new Date(y2, m2 - 1, d2);
-
-                    const strIn = objIn.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-                    const strOut = objOut.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
-                    
-                    valFechas.textContent = `${strIn} - ${strOut}`; 
-                    valFechas.classList.add('selected');
-                }
-            };
-            dateIn.addEventListener('change', formatFechas); 
-            dateOut.addEventListener('change', formatFechas);
-
-            // Huéspedes
-            let adults = 2, kids = 0;
-            const valHuespedes = document.getElementById('val-huespedes'), cAdults = document.getElementById('count-adults'), cKids = document.getElementById('count-kids');
-            const updateHuespedesText = () => {
-                cAdults.textContent = adults; cKids.textContent = kids;
-                valHuespedes.textContent = `${adults} Adulto${adults!==1?'s':''}, ${kids} Niño${kids!==1?'s':''}`;
-                valHuespedes.classList.add('selected');
-            };
-            document.getElementById('btn-adults-plus').addEventListener('click', () => { adults++; updateHuespedesText(); });
-            document.getElementById('btn-adults-minus').addEventListener('click', () => { if(adults>1) adults--; updateHuespedesText(); });
-            document.getElementById('btn-kids-plus').addEventListener('click', () => { kids++; updateHuespedesText(); });
-            document.getElementById('btn-kids-minus').addEventListener('click', () => { if(kids>0) kids--; updateHuespedesText(); });
-
-            // --- LÓGICA DEL CARRUSEL ---
-            let currentIndex = 0; let mobileIndex = 0; let autoPlayTimer; let isAnimating = false; const cycleTime = 12000;
-            const cards = [document.getElementById('card-l'), document.getElementById('card-s1'), document.getElementById('card-s2')];
-            const dots = document.querySelectorAll('.dot'); const roomsGrid = document.querySelector('.rooms-grid');
-
-            function injectData(cardPrefix, data) {
-                document.getElementById(`${cardPrefix}-img`).src = data.img; document.getElementById(`${cardPrefix}-badge`).textContent = data.badge; document.getElementById(`${cardPrefix}-title`).textContent = data.title; document.getElementById(`${cardPrefix}-desc`).textContent = data.desc; document.getElementById(`${cardPrefix}-size`).textContent = data.size; document.getElementById(`${cardPrefix}-bed`).textContent = data.bed; document.getElementById(`${cardPrefix}-extra`).textContent = data.extra; document.getElementById(`${cardPrefix}-price`).textContent = data.price;
-            }
-            injectData('l', roomsData[0]); injectData('s1', roomsData[1]); injectData('s2', roomsData[2]);
-
-            function updateDesktopSequence(targetIndex) {
-                if (isAnimating || targetIndex === currentIndex) return;
-                isAnimating = true; currentIndex = targetIndex;
-                const roomL = roomsData[currentIndex], roomS1 = roomsData[(currentIndex + 1) % 3], roomS2 = roomsData[(currentIndex + 2) % 3];
-
-                const triggerFade = (cardElement, prefix, data, delay) => {
-                    setTimeout(() => { cardElement.classList.add('fade-out'); setTimeout(() => { injectData(prefix, data); cardElement.classList.remove('fade-out'); }, 600); }, delay);
-                };
-
-                triggerFade(cards[0], 'l', roomL, 0); triggerFade(cards[1], 's1', roomS1, 400); triggerFade(cards[2], 's2', roomS2, 800); 
-                updateDots(currentIndex); setTimeout(() => { isAnimating = false; }, 2000); 
-            }
-
-            function updateMobileScroll(targetIndex) {
-                mobileIndex = targetIndex;
-                const scrollPos = cards[targetIndex].offsetLeft - roomsGrid.offsetLeft;
-                roomsGrid.scrollTo({ left: scrollPos, behavior: 'smooth' });
-                updateDots(targetIndex);
-            }
-
-            function updateDots(activeIndex) { dots.forEach((dot, idx) => dot.classList.toggle('active', idx === activeIndex)); }
-            function goNext() { if (window.innerWidth < 768) { updateMobileScroll((mobileIndex + 1) % 3); } else { updateDesktopSequence((currentIndex + 1) % 3); } }
-            function goPrev() { if (window.innerWidth < 768) { updateMobileScroll((mobileIndex - 1 + 3) % 3); } else { updateDesktopSequence((currentIndex - 1 + 3) % 3); } }
-            function startTimer() { clearInterval(autoPlayTimer); autoPlayTimer = setInterval(goNext, cycleTime); }
-
-            document.getElementById('btn-next').addEventListener('click', () => { goNext(); startTimer(); });
-            document.getElementById('btn-prev').addEventListener('click', () => { goPrev(); startTimer(); });
-            dots.forEach((dot, index) => { dot.addEventListener('click', () => { if (window.innerWidth < 768) { updateMobileScroll(index); } else { updateDesktopSequence(index); } startTimer(); }); });
-
-            let scrollTimeout;
-            roomsGrid.addEventListener('scroll', () => {
-                if (window.innerWidth >= 768) return;
-                clearTimeout(scrollTimeout);
-                scrollTimeout = setTimeout(() => {
-                    const gridCenter = roomsGrid.getBoundingClientRect().left + (roomsGrid.clientWidth / 2);
-                    let closestIdx = 0, minDistance = Infinity;
-                    cards.forEach((card, idx) => {
-                        const cardCenter = card.getBoundingClientRect().left + (card.clientWidth / 2);
-                        const distance = Math.abs(gridCenter - cardCenter);
-                        if (distance < minDistance) { minDistance = distance; closestIdx = idx; }
-                    });
-                    if (mobileIndex !== closestIdx) { mobileIndex = closestIdx; updateDots(mobileIndex); startTimer(); }
-                }, 100);
-            });
-
-            const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) { startTimer(); } else { clearInterval(autoPlayTimer); } }); }, { threshold: 0.15 });
-            observer.observe(document.getElementById('habitaciones'));
-
-            // --- LÓGICA DE SCROLLSPY (NAVEGACIÓN DINÁMICA) ---
-            const sections = document.querySelectorAll('section');
-            const navLinks = document.querySelectorAll('.nav-links a, .vert-links a');
-
-            window.addEventListener('scroll', () => {
-                let current = '';
-                sections.forEach(section => {
-                    const sectionTop = section.offsetTop;
-                    const sectionHeight = section.clientHeight;
-                    // Detecta qué sección está actualmente en vista (con un margen de gracia)
-                    if (pageYOffset >= (sectionTop - sectionHeight / 3)) {
-                        current = section.getAttribute('id');
-                    }
-                });
-
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    // Si el link apunta a la sección actual, se marca como activo
-                    if (link.getAttribute('href').includes(current)) {
-                        link.classList.add('active');
-                    }
-                });
-            });
-
+        document.getElementById("btn-next").addEventListener("click", () => {
+          goNext();
+          startTimer();
         });
+        document.getElementById("btn-prev").addEventListener("click", () => {
+          goPrev();
+          startTimer();
+        });
+        dots.forEach((dot, index) => {
+          dot.addEventListener("click", () => {
+            if (window.innerWidth < 768) {
+              updateMobileScroll(index);
+            } else {
+              updateDesktopSequence(index);
+            }
+            startTimer();
+          });
+        });
+
+        let scrollTimeout;
+        roomsGrid.addEventListener("scroll", () => {
+          if (window.innerWidth >= 768) return;
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(() => {
+            const gridCenter =
+              roomsGrid.getBoundingClientRect().left +
+              roomsGrid.clientWidth / 2;
+            let closestIdx = 0,
+              minDistance = Infinity;
+            cards.forEach((card, idx) => {
+              const cardCenter =
+                card.getBoundingClientRect().left + card.clientWidth / 2;
+              const distance = Math.abs(gridCenter - cardCenter);
+              if (distance < minDistance) {
+                minDistance = distance;
+                closestIdx = idx;
+              }
+            });
+            if (mobileIndex !== closestIdx) {
+              mobileIndex = closestIdx;
+              updateDots(mobileIndex);
+              startTimer();
+            }
+          }, 100);
+        });
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                startTimer();
+              } else {
+                clearInterval(autoPlayTimer);
+              }
+            });
+          },
+          { threshold: 0.15 },
+        );
+        observer.observe(document.getElementById("habitaciones"));
+
+        // --- LÓGICA DE SCROLLSPY (NAVEGACIÓN DINÁMICA) ---
+        const sections = document.querySelectorAll("section");
+        const navLinks = document.querySelectorAll(
+          ".nav-links a, .vert-links a",
+        );
+
+        window.addEventListener("scroll", () => {
+          let current = "";
+          sections.forEach((section) => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            // Detecta qué sección está actualmente en vista (con un margen de gracia)
+            if (pageYOffset >= sectionTop - sectionHeight / 3) {
+              current = section.getAttribute("id");
+            }
+          });
+
+          navLinks.forEach((link) => {
+            link.classList.remove("active");
+            // Si el link apunta a la sección actual, se marca como activo
+            if (link.getAttribute("href").includes(current)) {
+              link.classList.add("active");
+            }
+          });
+        });
+
+        // --- REDIRECCIÓN AL CATÁLOGO CON FILTROS ---
+        const btnSearch = document.querySelector(".btn-search");
+        if (btnSearch) {
+          btnSearch.addEventListener("click", () => {
+            const sedeSeleccionada =
+              document.getElementById("val-sede").textContent;
+            const fechaIn = document.getElementById("date-in").value;
+            const fechaOut = document.getElementById("date-out").value;
+
+            const queryParams = new URLSearchParams();
+            if (sedeSeleccionada && sedeSeleccionada !== "¿A dónde vas?") {
+              queryParams.append("sede", sedeSeleccionada);
+            }
+            if (fechaIn) queryParams.append("checkin", fechaIn);
+            if (fechaOut) queryParams.append("checkout", fechaOut);
+            queryParams.append("adults", adults);
+            queryParams.append("kids", kids);
+
+            window.location.href = `catalogo.html?${queryParams.toString()}`;
+          });
+        }
+      });
     </script>
-</body>
+  </body>
 </html>

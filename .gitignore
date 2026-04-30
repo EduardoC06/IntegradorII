@@ -4,3 +4,7 @@
 .idea
 __pycache__
 .claude
+.gitignore
+.AGENTS.md
+AGENTS.md
+opencode.json
